@@ -1,0 +1,36 @@
+{
+  "name": "@aninix-inc/renderer",
+  "author": "Aninix Inc.",
+  "repository": "https://github.com/aninix-inc/figma-binding.git",
+  "// this version would be auto set to proper one on the release trigger in github": true,
+  "version": "0.0.0",
+  "main": "index.js",
+  "module": "index.esm.js",
+  "types": "index.d.ts",
+  "scripts": {
+    "prebuild": "rm -rf ./dist",
+    "build:declaration": "tsc --emitDeclarationOnly",
+    "build:docs": "cp ./package.json ./dist && cp ./README.md ./dist",
+    "build": "bun run build:declaration && bun run build:docs && bun ./esbuild.build.ts",
+    "build:dev": "bun run build:declaration && bun run build:docs && bun ./esbuild.build.ts",
+    "lint": "bunx @biomejs/biome lint ./src --diagnostic-level=error",
+    "lint:dev": "bunx @biomejs/biome lint ./src",
+    "test": "bun test",
+    "test:coverage": "bun test --coverage",
+    "test:watch": "bun test --watch",
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "^1.5.3",
+    "@figma/plugin-typings": "^1.86.0",
+    "@types/bun": "^1.0.5",
+    "esbuild": "^0.20.1",
+    "prettier": "^3.2.5",
+    "prettier-plugin-organize-imports": "^3.2.4",
+    "typescript": "^5.3.3"
+  },
+  "peerDependencies": {},
+  "dependencies": {
+    "mathjs": "^12.3.2"
+  }
+}

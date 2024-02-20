@@ -1,0 +1,16 @@
+# Source files
+./src/*
+./scripts/*
+
+# Configs
+./eslintignore
+./eslintrc.js
+./gitignore
+./npmignore
+./prettierignore
+./prettier.config.js
+./tsconfig.json
+./github
+
+# Lockfiles
+./bun.lockb
