@@ -1,10 +1,9 @@
-import { describe, test, expect } from 'bun:test'
+import { describe, expect, test } from 'bun:test'
 import { generateId } from './generate-id'
 
 describe('generateId', () => {
   test('length', () => {
     const result = generateId()
-    console.log({ result })
     expect(result.length).toEqual(16)
   })
 

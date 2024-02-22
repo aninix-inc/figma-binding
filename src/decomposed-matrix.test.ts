@@ -1,17 +1,10 @@
-import { describe, test, expect } from 'bun:test'
+import { describe, expect, test } from 'bun:test'
 import {
   decomposedMatrix,
-  type DecomposedMatrix,
   unflatten,
+  type DecomposedMatrix,
 } from './decomposed-matrix'
 import { round } from './round'
-
-export type ComponentMatrices = {
-  translationMatrix: number[]
-  rotationMatrix: number[]
-  scalingMatrix: number[]
-  skewingMatrix: number[]
-}
 
 const multiplyMatrices = (...matrices: number[][]): number[] => {
   return matrices.reduce(
@@ -71,7 +64,7 @@ const testMatrix = [
 describe('decomposedMatrix', () => {
   test('decomposedMatrix', () => {
     const components = decomposedMatrix(testMatrix)
-    const result = composeMatrix(components).map((i) => round(i, { fixed: 2 }))
+    const result = composeMatrix(components).map((i) => round(i, 2))
     expect(unflatten(result as any)).toMatchSnapshot()
     expect(result).toMatchSnapshot()
   })

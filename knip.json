@@ -1,0 +1,17 @@
+{
+  "$schema": "https://unpkg.com/knip@5/schema.json",
+  "entry": [
+    "./src/index.ts"
+  ],
+  "ignore": [
+    "./src/**/*.test.ts",
+    "./src/types.ts",
+    "./scripts/generate-types-from-json-schema.ts",
+    "./src/decomposed-matrix.ts"
+  ],
+  "ignoreDependencies": [
+    "@biomejs/biome",
+    "@figma/plugin-typings",
+    "json-schema-to-typescript"
+  ]
+}
