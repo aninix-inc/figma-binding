@@ -1,5 +1,5 @@
 {
-  "name": "@aninix-inc/renderer",
+  "name": "@aninix-inc/figma-binding",
   "author": "Aninix Inc.",
   "repository": "https://github.com/aninix-inc/figma-binding.git",
   "// this version would be auto set to proper one on the release trigger in github": true,
