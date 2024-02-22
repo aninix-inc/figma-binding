@@ -34,6 +34,10 @@ jobs:
 
       - name: Setup nodejs
         uses: actions/setup-node@v4
+        with:
+          node-version: '20.x'
+          registry-url: 'https://registry.npmjs.org/'
+          scope: '@aninix-inc'
 
       - name: Publish to npm registry
         # @NOTE: required to publish only dist folder
