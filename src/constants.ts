@@ -9,6 +9,11 @@ export const ANINIX_NAME_PART = '▶ '
 export const ANINIX_WORKSPACE_KEY = 'aninix'
 
 /**
- * Used to store Aninix project id on nodes
+ * Used to get Aninix project id on nodes
  */
 export const ANINIX_PROJECT_KEY = 'aninix_project_id'
+
+/**
+ * Used to get Aninix node id on nodes
+ */
+export const ANINIX_NODE_KEY = 'aninix_node_id'
