@@ -790,6 +790,7 @@ const mapFrame = (
   entities: Entity[],
   node: FrameNode,
   nodeId: string,
+  getNodeId: (node: SceneNode) => string,
   nodeParentId?: string
 ): void => {
   entities.push({
@@ -804,7 +805,7 @@ const mapFrame = (
       ...mapEntitySceneProperties(entities, node),
       ...mapEntityBlendProperties(entities, node, nodeId),
       ...mapEntityChildrenProperties(entities, node, (_entities, _node) =>
-        mapNode(_entities, _node, nodeId)
+        mapNode(_entities, _node, getNodeId, nodeId)
       ),
       ...mapEntityCornerProperties(entities, node),
       ...mapEntityIndividualCornerProperties(entities, node),
@@ -822,6 +823,7 @@ const mapGroup = (
   entities: Entity[],
   node: GroupNode,
   nodeId: string,
+  getNodeId: (node: SceneNode) => string,
   nodeParentId?: string
 ): void => {
   entities.push({
@@ -834,7 +836,7 @@ const mapGroup = (
       ...mapEntitySceneProperties(entities, node),
       ...mapEntityBlendProperties(entities, node, nodeId),
       ...mapEntityChildrenProperties(entities, node, (_entities, _node) =>
-        mapNode(_entities, _node, nodeId)
+        mapNode(_entities, _node, getNodeId, nodeId)
       ),
       ...mapEntityLayoutProperties(entities, node),
     },
@@ -848,6 +850,7 @@ const mapInstance = (
   entities: Entity[],
   node: InstanceNode,
   nodeId: string,
+  getNodeId: (node: SceneNode) => string,
   nodeParentId?: string
 ): void => {
   entities.push({
@@ -861,7 +864,7 @@ const mapInstance = (
       ...mapEntitySceneProperties(entities, node),
       ...mapEntityBlendProperties(entities, node, nodeId),
       ...mapEntityChildrenProperties(entities, node, (_entities, _node) =>
-        mapNode(_entities, _node, nodeId)
+        mapNode(_entities, _node, getNodeId, nodeId)
       ),
       ...mapEntityCornerProperties(entities, node),
       ...mapEntityIndividualCornerProperties(entities, node),
@@ -1029,11 +1032,10 @@ const mapText = (
 const mapNode = (
   entities: Entity[],
   node: SceneNode,
+  getNodeId: (node: SceneNode) => string,
   nodeParentId?: string
 ): string => {
-  // @TODO: rebuild with some kind of middleware
-  const attachedNodeId = node.getPluginData('aninix_node_id')
-  const nodeId = !!attachedNodeId ? attachedNodeId : generateId()
+  const nodeId = getNodeId(node)
 
   switch (node.type) {
     case 'ELLIPSE': {
@@ -1041,15 +1043,15 @@ const mapNode = (
       break
     }
     case 'FRAME': {
-      mapFrame(entities, node, nodeId, nodeParentId)
+      mapFrame(entities, node, nodeId, getNodeId, nodeParentId)
       break
     }
     case 'GROUP': {
-      mapGroup(entities, node, nodeId, nodeParentId)
+      mapGroup(entities, node, nodeId, getNodeId, nodeParentId)
       break
     }
     case 'INSTANCE': {
-      mapInstance(entities, node, nodeId, nodeParentId)
+      mapInstance(entities, node, nodeId, getNodeId, nodeParentId)
       break
     }
     case 'LINE': {
@@ -1121,40 +1123,47 @@ const getProjectId = (node: SceneNode): string => {
   return !!storedProjectId ? storedProjectId : generateId()
 }
 
-const mapFigmaNodeToEntities = (
-  node: SceneNode,
-  projectId: string
-): Entity[] => {
-  const entities: Entity[] = []
-  mapRoot(entities, node, projectId)
-  mapNode(entities, node)
-  return entities
+type Options = {
+  /**
+   * Middleware function to receive node ids.
+   * By default it will try to grab public node id or generate a new one.
+   * You can change behavior by providing custom function.
+   *
+   * @example
+   * (node: SceneNode) => {
+   *   const attachedNodeId = node.getPluginData('NODE_KEY') // or any other key you have used
+   *   return !!attachedNodeId ? attachedNodeId : generateId()
+   * }
+   */
+  getNodeId?: (node: SceneNode) => string
 }
-
-const mapFigmaNodeToSnapshot = (
-  node: SceneNode,
-  projectId: string
-): AninixSnapshot => ({
-  id: projectId,
-  schemaVersion: 2,
-  entities: Object.fromEntries(
-    mapFigmaNodeToEntities(node, projectId).map((entity) => [entity.id, entity])
-  ),
-})
 
 // @NOTE: using a class here improves performance in case of high mapper utilization
 class Bind {
-  constructor(private readonly node: SceneNode) {}
+  constructor(
+    private readonly node: SceneNode,
+    private readonly options?: Options
+  ) {}
 
-  getSnapshot = () => {
+  getSnapshot = (): AninixSnapshot => {
     const projectId = getProjectId(this.node)
-    return mapFigmaNodeToSnapshot(this.node, projectId)
+    return {
+      id: projectId,
+      schemaVersion: 2,
+      entities: Object.fromEntries(
+        this.getEntities().map((entity) => [entity.id, entity])
+      ),
+    }
   }
 
-  getEntities = () => {
+  getEntities = (): Entity[] => {
     const projectId = getProjectId(this.node)
-    return mapFigmaNodeToEntities(this.node, projectId)
+    const entities: Entity[] = []
+    mapRoot(entities, this.node, projectId)
+    mapNode(entities, this.node, this.options?.getNodeId ?? generateId)
+    return entities
   }
 }
 
 export const bind = (node: SceneNode) => new Bind(node)
+export { generateId }
