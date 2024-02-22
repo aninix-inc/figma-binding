@@ -2,6 +2,8 @@
 
 A small utility package that helps you easily convert any Figma nodes to Aninix snapshots.
 
+‼️ This is an experimental repository, so if you have any questions, feel free to open a new issue. We will be happy to answer and help.
+
 ## Installation
 
 ```bash
@@ -19,11 +21,19 @@ pnpm add -D @aninix-inc/figma-binding
 A quick example of how to get the necessary data from a node and pass it to the server for rendering.
 
 ```ts
+// code.ts
 import * as aninix from '@aninix-inc/figma-binding'
 
 const token = 'put your aninix token here'
+
+// Get current selected node inside of the figma
 const node = figma.currentPage.selection[0]
+
+// Returns AninixSnapshot object which can be send to our API
 const snapshot = aninix.bind(node).getSnapshot()
+
+// This API endpoint does not work at the moment and will be available as soon as we have a new API release.
+// Probably in March 2024.
 fetch('https://apipi.aninix.com/renders', {
     method: 'POST',
     headers: {
@@ -42,7 +52,7 @@ fetch('https://apipi.aninix.com/renders', {
     .catch(console.error)
 ```
 
-Unfortunately, it is not safe to store tokens in plaintext in the Figma plugin code. If an attacker gains access to this token, they can create a large account in your name. Therefore, we recommend using `proxy` and hosting the solution on your backend. So that security is in your hands.
+Unfortunately, it is not safe to store tokens in the Figma plugin code. If an attacker gets access to this token, he can create a large number of rendering jobs. Therefore, we recommend using `proxy` and hosting the solution on your backend. This way, security and full access control will be in your hands.
 
 > TBD proxy solution
 
