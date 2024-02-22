@@ -10,7 +10,7 @@
   "scripts": {
     "prebuild": "rm -rf ./dist",
     "build:declaration": "tsc --emitDeclarationOnly",
-    "build:docs": "cp ./package.json ./dist && cp ./README.md ./dist",
+    "build:docs": "cp ./package.json ./dist && cp ./README.md ./dist && cp ./LICENSE.md ./dist",
     "build": "bun run build:declaration && bun run build:docs && bun ./esbuild.build.ts",
     "build:dev": "bun run build:declaration && bun run build:docs && bun ./esbuild.build.ts",
     "generate:types": "bun ./scripts/generate-types-from-json-schema.ts",
