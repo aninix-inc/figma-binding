@@ -1104,9 +1104,10 @@ const mapRoot = (
       startTime: 0,
       duration: 5,
       rgba: [
-        round(color.r * 255, 0),
-        round(color.g * 255, 0),
-        round(color.b * 255, 0),
+        // @NOTE: for some reason those colors are in range 0...255 instead of 0...1 like others
+        round(color.r, 0),
+        round(color.g, 0),
+        round(color.b, 0),
         color.a,
       ],
       visibleInViewport: isVisible,
