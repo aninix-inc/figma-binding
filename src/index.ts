@@ -1,5 +1,9 @@
 import * as math from 'mathjs'
-import { ANINIX_PROJECT_KEY, ANINIX_WORKSPACE_KEY } from './constants'
+import {
+  ANINIX_NODE_KEY,
+  ANINIX_PROJECT_KEY,
+  ANINIX_WORKSPACE_KEY,
+} from './constants'
 import { decomposedMatrix } from './decomposed-matrix'
 import { generateId } from './generate-id'
 import { getNormalNodeName } from './get-normal-node-name'
@@ -1163,6 +1167,14 @@ const getProjectId = (node: SceneNode): string => {
   return !!storedProjectId ? storedProjectId : generateId()
 }
 
+const getNodeId = (node: SceneNode): string => {
+  const storedNodeId = node.getSharedPluginData(
+    ANINIX_WORKSPACE_KEY,
+    ANINIX_NODE_KEY
+  )
+  return !!storedNodeId ? storedNodeId : generateId()
+}
+
 type Options = {
   /**
    * Middleware function to receive node ids.
@@ -1200,7 +1212,7 @@ class Bind {
     const projectId = getProjectId(this.node)
     const entities: Entity[] = []
     mapRoot(entities, this.node, projectId)
-    mapNode(entities, this.node, this.options?.getNodeId ?? generateId)
+    mapNode(entities, this.node, this.options?.getNodeId ?? getNodeId)
     return entities
   }
 }
