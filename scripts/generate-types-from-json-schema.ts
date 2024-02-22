@@ -7,7 +7,7 @@ const run = async () => {
     // @TODO: replace protocol with `https` once infrastracture is ready.
     'http://static.aninix.com/schemas/snapshot-v2.json'
   ).then((response) => response.json())
-  const filePath = path.join(__dirname, '../src', 'types.ts')
+  const filePath = path.join(__dirname, '../src', 'types.d.ts')
   fs.writeFileSync(
     filePath,
     await generateTypescriptFile.compile(jsonSchema, 'snapshot-v2'),
