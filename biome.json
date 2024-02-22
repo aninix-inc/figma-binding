@@ -7,6 +7,9 @@
     "rules": {
       "suspicious": {
         "noExplicitAny": "warn"
+      },
+      "complexity": {
+        "noExtraBooleanCast": "warn"
       }
     }
   },

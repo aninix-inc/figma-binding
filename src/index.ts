@@ -1,5 +1,11 @@
 import * as math from 'mathjs'
-import { BlendModeType, EntityType, StrokeCap } from './constants'
+import {
+  ANINIX_PROJECT_KEY,
+  ANINIX_WORKSPACE_KEY,
+  BlendModeType,
+  EntityType,
+  StrokeCap,
+} from './constants'
 import { decomposedMatrix } from './decomposed-matrix'
 import { generateId } from './generate-id'
 import { getNormalNodeName } from './get-normal-node-name'
@@ -65,7 +71,7 @@ type Entity =
 
 /// mappers
 
-function mapStrokeCap(
+const mapStrokeCap = (
   strokeCap:
     | 'NONE'
     | 'ROUND'
@@ -75,7 +81,7 @@ function mapStrokeCap(
     | 'TRIANGLE_FILLED'
     | 'DIAMOND_FILLED'
     | 'CIRCLE_FILLED'
-): StrokeCap {
+): StrokeCap => {
   switch (strokeCap) {
     case 'NONE':
       return StrokeCap.None
@@ -98,10 +104,10 @@ function mapStrokeCap(
   }
 }
 
-function mapColorStops(
+const mapColorStops = (
   entities: Entity[],
   colorStops: readonly ColorStop[]
-): string[] {
+): string[] => {
   return colorStops.map((colorStop) => {
     const colorStopId = generateId()
 
@@ -128,13 +134,13 @@ function mapColorStops(
   })
 }
 
-function mapPaint(
+const mapPaint = (
   entities: Entity[],
   entityId: string,
   paint: Paint,
   type: 'f' | 's', // fill | stroke
   index: number
-) {
+) => {
   const paintId = `${entityId}p${type}${index}`
 
   switch (paint.type) {
@@ -234,10 +240,10 @@ function mapPaint(
 /**
  * @mutates entities
  */
-function mapEntityEntryProperties<In extends FrameNode, Out extends Frame>(
+const mapEntityEntryProperties = <In extends FrameNode, Out extends Frame>(
   entities: Entity[],
   entity: In
-): Pick<Out['components'], 'entry'> {
+): Pick<Out['components'], 'entry'> => {
   if (entity.parent?.type === 'PAGE') {
     return {
       entry: true,
@@ -250,7 +256,7 @@ function mapEntityEntryProperties<In extends FrameNode, Out extends Frame>(
 /**
  * @mutates entities
  */
-function mapEntityBaseProperties<
+const mapEntityBaseProperties = <
   In extends
     | EllipseNode
     | FrameNode
@@ -281,20 +287,18 @@ function mapEntityBaseProperties<
 ): Pick<
   Out['components'],
   'name' | 'entityType' | 'nodeType' | 'externalNodeId'
-> {
-  return {
-    name: getNormalNodeName(node.name),
-    entityType: EntityType.Node,
-    nodeType: node.type,
-    externalNodeId: node.id,
-    ...(nodeParentId != null && { parent: nodeParentId }),
-  }
-}
+> => ({
+  name: getNormalNodeName(node.name),
+  entityType: EntityType.Node,
+  nodeType: node.type,
+  externalNodeId: node.id,
+  ...(nodeParentId != null && { parent: nodeParentId }),
+})
 
 /**
  * @mutates entities
  */
-function mapEntitySceneProperties<
+const mapEntitySceneProperties = <
   In extends
     | EllipseNode
     | FrameNode
@@ -323,20 +327,18 @@ function mapEntitySceneProperties<
 ): Pick<
   Out['components'],
   'nodeColor' | 'solo' | 'locked' | 'visibleInViewport' | 'propertiesExpanded'
-> {
-  return {
-    nodeColor: 'BLUE',
-    solo: 'NONE',
-    locked: node.locked,
-    propertiesExpanded: false,
-    visibleInViewport: node.visible,
-  }
-}
+> => ({
+  nodeColor: 'BLUE',
+  solo: 'NONE',
+  locked: node.locked,
+  propertiesExpanded: false,
+  visibleInViewport: node.visible,
+})
 
 /**
  * @mutates entities
  */
-function mapEntityBlendProperties<
+const mapEntityBlendProperties = <
   In extends
     | EllipseNode
     | FrameNode
@@ -363,7 +365,7 @@ function mapEntityBlendProperties<
   entities: Entity[],
   node: In,
   nodeId: string
-): Pick<Out['components'], 'blendMode' | 'mask' | 'effects'> {
+): Pick<Out['components'], 'blendMode' | 'mask' | 'effects'> => {
   const effectIds = node.effects.map((effect, idx) => {
     const effectId = `${nodeId}e${idx}`
 
@@ -468,22 +470,20 @@ function mapEntityBlendProperties<
 /**
  * @mutates entities
  */
-function mapEntityChildrenProperties<
+const mapEntityChildrenProperties = <
   In extends FrameNode | GroupNode | InstanceNode,
 >(
   entities: Entity[],
   node: In,
   mapper: (entities: Entity[], entity: In) => string
-): { children: [string] } {
-  return {
-    children: node.children
-      // @TODO: remove ignorance once all nodes are implemented
-      // @ts-ignore
-      .map((child) => mapper(entities, child)) as [string],
-  }
-}
+): { children: [string] } => ({
+  children: node.children
+    // @TODO: remove ignorance once all nodes are implemented
+    // @ts-ignore
+    .map((child) => mapper(entities, child)) as [string],
+})
 
-function mapEntityCornerProperties<
+const mapEntityCornerProperties = <
   In extends
     | EllipseNode
     | FrameNode
@@ -496,17 +496,15 @@ function mapEntityCornerProperties<
 >(
   entities: Entity[],
   node: In
-): Pick<Out['components'], 'cornerRadius' | 'smoothCornerRadius'> {
-  return {
-    cornerRadius: node.cornerRadius === figma.mixed ? 0 : node.cornerRadius,
-    smoothCornerRadius: node.cornerSmoothing !== 0,
-  }
-}
+): Pick<Out['components'], 'cornerRadius' | 'smoothCornerRadius'> => ({
+  cornerRadius: node.cornerRadius === figma.mixed ? 0 : node.cornerRadius,
+  smoothCornerRadius: node.cornerSmoothing !== 0,
+})
 
 /**
  * @mutates entities
  */
-function mapEntityIndividualCornerProperties<
+const mapEntityIndividualCornerProperties = <
   In extends FrameNode | InstanceNode | RectangleNode,
   Out extends Frame | Instance | Rectangle,
 >(
@@ -519,20 +517,18 @@ function mapEntityIndividualCornerProperties<
   | 'topRightCornerRadius'
   | 'bottomRightCornerRadius'
   | 'bottomLeftCornerRadius'
-> {
-  return {
-    individualCornerRadius: node.cornerRadius === figma.mixed,
-    topLeftCornerRadius: round(node.topLeftRadius),
-    topRightCornerRadius: round(node.topRightRadius),
-    bottomRightCornerRadius: round(node.bottomRightRadius),
-    bottomLeftCornerRadius: round(node.bottomLeftRadius),
-  }
-}
+> => ({
+  individualCornerRadius: node.cornerRadius === figma.mixed,
+  topLeftCornerRadius: round(node.topLeftRadius),
+  topRightCornerRadius: round(node.topRightRadius),
+  bottomRightCornerRadius: round(node.bottomRightRadius),
+  bottomLeftCornerRadius: round(node.bottomLeftRadius),
+})
 
 /**
  * @mutates entities
  */
-function mapEntityGeometryProperties<
+const mapEntityGeometryProperties = <
   In extends
     | EllipseNode
     | FrameNode
@@ -573,7 +569,7 @@ function mapEntityGeometryProperties<
   | 'trimEnd'
   | 'trimOffset'
   | 'pathReversed'
-> {
+> => {
   const properties: Pick<
     Out['components'],
     | 'fills'
@@ -642,7 +638,7 @@ function mapEntityGeometryProperties<
 /**
  * @mutates entities
  */
-function mapEntityIndividualStrokesProperties<
+const mapEntityIndividualStrokesProperties = <
   In extends FrameNode | InstanceNode | RectangleNode,
   Out extends Frame | Instance | Rectangle,
 >(
@@ -655,24 +651,22 @@ function mapEntityIndividualStrokesProperties<
   | 'strokeRightWeight'
   | 'strokeBottomWeight'
   | 'strokeLeftWeight'
-> {
-  return {
-    individualStrokeWeight:
-      node.strokeTopWeight !== node.strokeWeight ||
-      node.strokeBottomWeight !== node.strokeWeight ||
-      node.strokeLeftWeight !== node.strokeWeight ||
-      node.strokeRightWeight !== node.strokeWeight,
-    strokeTopWeight: round(node.strokeTopWeight),
-    strokeRightWeight: round(node.strokeRightWeight),
-    strokeBottomWeight: round(node.strokeBottomWeight),
-    strokeLeftWeight: round(node.strokeLeftWeight),
-  }
-}
+> => ({
+  individualStrokeWeight:
+    node.strokeTopWeight !== node.strokeWeight ||
+    node.strokeBottomWeight !== node.strokeWeight ||
+    node.strokeLeftWeight !== node.strokeWeight ||
+    node.strokeRightWeight !== node.strokeWeight,
+  strokeTopWeight: round(node.strokeTopWeight),
+  strokeRightWeight: round(node.strokeRightWeight),
+  strokeBottomWeight: round(node.strokeBottomWeight),
+  strokeLeftWeight: round(node.strokeLeftWeight),
+})
 
 /**
  * @mutates entities
  */
-function mapEntityLayoutProperties<
+const mapEntityLayoutProperties = <
   In extends
     | EllipseNode
     | FrameNode
@@ -709,7 +703,7 @@ function mapEntityLayoutProperties<
   | 'size'
   | 'sizeLocked'
   | 'skew'
-> {
+> => {
   const nodeTransformMatrix = math.matrix([
     ...node.relativeTransform.map((values) =>
       values.map((number) => round(number))
@@ -805,12 +799,12 @@ function mapEntityLayoutProperties<
 /**
  * @mutates entities
  */
-function mapEllipse(
+const mapEllipse = (
   entities: Entity[],
   node: EllipseNode,
   nodeId: string,
   nodeParentId?: string
-) {
+) => {
   entities.push({
     id: nodeId,
     tag: 'ellipse',
@@ -833,12 +827,12 @@ function mapEllipse(
 /**
  * @mutates entities
  */
-function mapFrame(
+const mapFrame = (
   entities: Entity[],
   node: FrameNode,
   nodeId: string,
   nodeParentId?: string
-): void {
+): void => {
   entities.push({
     id: nodeId,
     tag: 'frame',
@@ -865,12 +859,12 @@ function mapFrame(
 /**
  * @mutates entities
  */
-function mapGroup(
+const mapGroup = (
   entities: Entity[],
   node: GroupNode,
   nodeId: string,
   nodeParentId?: string
-): void {
+): void => {
   entities.push({
     id: nodeId,
     tag: 'group',
@@ -891,12 +885,12 @@ function mapGroup(
 /**
  * @mutates entities
  */
-function mapInstance(
+const mapInstance = (
   entities: Entity[],
   node: InstanceNode,
   nodeId: string,
   nodeParentId?: string
-): void {
+): void => {
   entities.push({
     id: nodeId,
     tag: 'instance',
@@ -922,12 +916,12 @@ function mapInstance(
 /**
  * @mutates entities
  */
-function mapLine(
+const mapLine = (
   entities: Entity[],
   node: LineNode,
   nodeId: string,
   nodeParentId?: string
-): void {
+): void => {
   entities.push({
     id: nodeId,
     tag: 'line',
@@ -945,12 +939,12 @@ function mapLine(
 /**
  * @mutates entities
  */
-function mapPolygon(
+const mapPolygon = (
   entities: Entity[],
   node: PolygonNode,
   nodeId: string,
   nodeParentId?: string
-) {
+): void => {
   entities.push({
     id: nodeId,
     tag: 'polygon',
@@ -970,12 +964,12 @@ function mapPolygon(
 /**
  * @mutates entities
  */
-function mapRectangle(
+const mapRectangle = (
   entities: Entity[],
   node: RectangleNode,
   nodeId: string,
   nodeParentId?: string
-): void {
+): void => {
   entities.push({
     id: nodeId,
     tag: 'rectangle',
@@ -996,12 +990,12 @@ function mapRectangle(
 /**
  * @mutates entities
  */
-function mapStar(
+const mapStar = (
   entities: Entity[],
   node: StarNode,
   nodeId: string,
   nodeParentId?: string
-) {
+): void => {
   entities.push({
     id: nodeId,
     tag: 'star',
@@ -1022,12 +1016,12 @@ function mapStar(
 /**
  * @mutates entities
  */
-function mapVector(
+const mapVector = (
   entities: Entity[],
   node: VectorNode,
   nodeId: string,
   nodeParentId?: string
-) {
+): void => {
   entities.push({
     id: nodeId,
     tag: 'vector',
@@ -1048,12 +1042,12 @@ function mapVector(
   } satisfies Vector)
 }
 
-function mapText(
+const mapText = (
   entities: Entity[],
   node: TextNode,
   nodeId: string,
   nodeParentId?: string
-) {
+): void => {
   entities.push({
     id: nodeId,
     tag: 'text',
@@ -1073,14 +1067,14 @@ function mapText(
   } satisfies Text)
 }
 
-function mapNode(
+const mapNode = (
   entities: Entity[],
   node: SceneNode,
   nodeParentId?: string
-): string {
+): string => {
   // @TODO: rebuild with some kind of middleware
   const attachedNodeId = node.getPluginData('aninix_node_id')
-  const nodeId = attachedNodeId ?? generateId()
+  const nodeId = !!attachedNodeId ? attachedNodeId : generateId()
 
   switch (node.type) {
     case 'ELLIPSE': {
@@ -1131,7 +1125,11 @@ function mapNode(
   return nodeId
 }
 
-function mapRoot(entities: Entity[], node: SceneNode, projectId: string) {
+const mapRoot = (
+  entities: Entity[],
+  node: SceneNode,
+  projectId: string
+): void => {
   const { color, isVisible } = getPageBackgroundColor()
 
   entities.push({
@@ -1156,28 +1154,48 @@ function mapRoot(entities: Entity[], node: SceneNode, projectId: string) {
   } satisfies Root)
 }
 
-export function mapFigmaNodeToEntities(
+const getProjectId = (node: SceneNode): string => {
+  const storedProjectId = node.getSharedPluginData(
+    ANINIX_WORKSPACE_KEY,
+    ANINIX_PROJECT_KEY
+  )
+  return !!storedProjectId ? storedProjectId : generateId()
+}
+
+const mapFigmaNodeToEntities = (
   node: SceneNode,
   projectId: string
-): Entity[] {
+): Entity[] => {
   const entities: Entity[] = []
   mapRoot(entities, node, projectId)
   mapNode(entities, node)
   return entities
 }
 
-export function mapFigmaNodeToSnapshot(
+const mapFigmaNodeToSnapshot = (
   node: SceneNode,
   projectId: string
-): AninixSnapshot {
-  return {
-    id: projectId,
-    schemaVersion: 2,
-    entities: Object.fromEntries(
-      mapFigmaNodeToEntities(node, projectId).map((entity) => [
-        entity.id,
-        entity,
-      ])
-    ),
+): AninixSnapshot => ({
+  id: projectId,
+  schemaVersion: 2,
+  entities: Object.fromEntries(
+    mapFigmaNodeToEntities(node, projectId).map((entity) => [entity.id, entity])
+  ),
+})
+
+// @NOTE: using a class here improves performance in case of high mapper utilization
+class Bind {
+  constructor(private readonly node: SceneNode) {}
+
+  getSnapshot = () => {
+    const projectId = getProjectId(this.node)
+    return mapFigmaNodeToSnapshot(this.node, projectId)
+  }
+
+  getEntities = () => {
+    const projectId = getProjectId(this.node)
+    return mapFigmaNodeToEntities(this.node, projectId)
   }
 }
+
+export const bind = (node: SceneNode) => new Bind(node)

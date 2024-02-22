@@ -1,6 +1,6 @@
 # Aninix Figma Binding
 
-A small utility package that helps you easily convert any figma nodes to Aninix snapshots.
+A small utility package that helps you easily convert any Figma nodes to Aninix snapshots.
 
 ## Installation
 
@@ -42,7 +42,7 @@ fetch('https://apipi.aninix.com/renders', {
     .catch(console.error)
 ```
 
-Unfortunately, it is not safe to store tokens in plaintext in the figma plugin code. If an attacker gains access to this token, they can create a large account in your name. Therefore, we recommend using `proxy` and hosting the solution on your backend. So that security is in your hands.
+Unfortunately, it is not safe to store tokens in plaintext in the Figma plugin code. If an attacker gains access to this token, they can create a large account in your name. Therefore, we recommend using `proxy` and hosting the solution on your backend. So that security is in your hands.
 
 > TBD proxy solution
 
@@ -61,3 +61,7 @@ This data can be accessed by any plugin. So use carefully, if you delete the dat
 ## Contribution
 
 > TBD doc
+
+## TODO
+
+-   [ ] add tests with Figma mocks
