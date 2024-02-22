@@ -1,0 +1,49 @@
+name: Make checks
+
+on:
+  pull_request:
+    branches: [main]
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  validate_code_style_and_workability:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - uses: oven-sh/setup-bun@v1
+        with:
+          bun-version: latest
+
+      - name: Install dependencies
+        run: bun install --frozen-lockfile
+
+      - name: Lint
+        run: bun run lint
+
+      - name: Check unused
+        # @TODO: remove `--no-exit-code` once all issues fixed
+        run: bun run find-unused -- --no-exit-code
+
+      - name: Test
+        run: bun run test
+
+      - name: Make sure package is buildable and types are correct
+        run: bun run build
+
+      - name: Make sure new schema is generated
+        run: |
+          bun run generate:types
+          echo ---
+          git status --porcelain
+          echo ---
+          if [[ -n "$(git status --porcelain)" ]]; then
+            echo "There are changes in the generated types. Please run `bun run generate:types` and commit changed files."
+            # Exit with an error code to stop the job
+            exit 1
+          else
+            echo "No changes in generate types, everything is ok."
+          fi
