@@ -25,8 +25,7 @@ jobs:
         run: bun run lint
 
       - name: Check unused
-        # @TODO: remove `--no-exit-code` once all issues fixed
-        run: bun run find-unused -- --no-exit-code
+        run: bun run find-unused
 
       - name: Test
         run: bun run test
