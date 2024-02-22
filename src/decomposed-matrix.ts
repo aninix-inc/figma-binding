@@ -1,6 +1,6 @@
 import { round } from './round'
 
-export type DecomposedMatrix = {
+type DecomposedMatrix = {
   translation: {
     x: number
     y: number
@@ -16,36 +16,6 @@ export type DecomposedMatrix = {
     x: number
     y: number
   }
-}
-
-/**
- * from [[a, c, e], [b, d, f]]
- * to [a, b, c, d, e, f]
- */
-export const flatten = (
-  matrix: [[number, number, number], [number, number, number]]
-): [number, number, number, number, number, number] => {
-  return [
-    matrix[0][0],
-    matrix[1][0],
-    matrix[0][1],
-    matrix[1][1],
-    matrix[0][2],
-    matrix[1][2],
-  ]
-}
-
-/**
- * from [a, b, c, d, e, f]
- * to [[a, c, e], [b, d, f]]
- */
-export const unflatten = (
-  matrix: [number, number, number, number, number, number]
-): [[number, number, number], [number, number, number]] => {
-  return [
-    [matrix[0], matrix[2], matrix[4]],
-    [matrix[1], matrix[3], matrix[5]],
-  ]
 }
 
 // http://dev.w3.org/csswg/css3-2d-transforms/#matrix-decomposition

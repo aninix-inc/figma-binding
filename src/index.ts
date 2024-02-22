@@ -1,11 +1,5 @@
 import * as math from 'mathjs'
-import {
-  ANINIX_PROJECT_KEY,
-  ANINIX_WORKSPACE_KEY,
-  BlendModeType,
-  EntityType,
-  StrokeCap,
-} from './constants'
+import { ANINIX_PROJECT_KEY, ANINIX_WORKSPACE_KEY } from './constants'
 import { decomposedMatrix } from './decomposed-matrix'
 import { generateId } from './generate-id'
 import { getNormalNodeName } from './get-normal-node-name'
@@ -71,39 +65,6 @@ type Entity =
 
 /// mappers
 
-const mapStrokeCap = (
-  strokeCap:
-    | 'NONE'
-    | 'ROUND'
-    | 'SQUARE'
-    | 'ARROW_LINES'
-    | 'ARROW_EQUILATERAL'
-    | 'TRIANGLE_FILLED'
-    | 'DIAMOND_FILLED'
-    | 'CIRCLE_FILLED'
-): StrokeCap => {
-  switch (strokeCap) {
-    case 'NONE':
-      return StrokeCap.None
-    case 'ROUND':
-      return StrokeCap.Round
-    case 'SQUARE':
-      return StrokeCap.Square
-    case 'ARROW_LINES':
-      return StrokeCap.ArrowLines
-    case 'ARROW_EQUILATERAL':
-      return StrokeCap.ArrowEquilateral
-    case 'CIRCLE_FILLED':
-      return StrokeCap.CircleFilled
-    case 'DIAMOND_FILLED':
-      return StrokeCap.DiamondFilled
-    case 'TRIANGLE_FILLED':
-      return StrokeCap.TriangleFilled
-    default:
-      return StrokeCap.None
-  }
-}
-
 const mapColorStops = (
   entities: Entity[],
   colorStops: readonly ColorStop[]
@@ -117,7 +78,7 @@ const mapColorStops = (
       schemaVersion: 1,
       components: {
         entityType: 'propertyGroupSet',
-        blendMode: BlendModeType.Normal,
+        blendMode: 'NORMAL',
         visibleInViewport: true,
         propertiesExpanded: false,
         rgba: [
@@ -150,8 +111,8 @@ const mapPaint = (
         tag: 'solidPaint',
         schemaVersion: 1,
         components: {
-          entityType: EntityType.Paint,
-          blendMode: paint.blendMode ?? BlendModeType.Normal,
+          entityType: 'PAINT',
+          blendMode: paint.blendMode ?? 'NORMAL',
           visibleInViewport: paint.visible ?? true,
           propertiesExpanded: false,
           rgba: [
@@ -173,8 +134,8 @@ const mapPaint = (
         tag: 'linearGradientPaint',
         schemaVersion: 1,
         components: {
-          entityType: EntityType.Paint,
-          blendMode: paint.blendMode ?? BlendModeType.Normal,
+          entityType: 'PAINT',
+          blendMode: paint.blendMode ?? 'NORMAL',
           visibleInViewport: paint.visible ?? true,
           propertiesExpanded: false,
           colorStops: mapColorStops(entities, paint.gradientStops) as [string],
@@ -193,8 +154,8 @@ const mapPaint = (
         tag: 'radialGradientPaint',
         schemaVersion: 1,
         components: {
-          entityType: EntityType.Paint,
-          blendMode: paint.blendMode ?? BlendModeType.Normal,
+          entityType: 'PAINT',
+          blendMode: paint.blendMode ?? 'NORMAL',
           visibleInViewport: paint.visible ?? true,
           propertiesExpanded: false,
           colorStops: mapColorStops(entities, paint.gradientStops) as [string],
@@ -213,8 +174,8 @@ const mapPaint = (
         tag: 'imagePaint',
         schemaVersion: 1,
         components: {
-          entityType: EntityType.Paint,
-          blendMode: paint.blendMode ?? BlendModeType.Normal,
+          entityType: 'PAINT',
+          blendMode: paint.blendMode ?? 'NORMAL',
           visibleInViewport: paint.visible ?? true,
           propertiesExpanded: false,
           hash: paint.imageHash ?? '',
@@ -289,7 +250,7 @@ const mapEntityBaseProperties = <
   'name' | 'entityType' | 'nodeType' | 'externalNodeId'
 > => ({
   name: getNormalNodeName(node.name),
-  entityType: EntityType.Node,
+  entityType: 'NODE',
   nodeType: node.type,
   externalNodeId: node.id,
   ...(nodeParentId != null && { parent: nodeParentId }),
@@ -377,7 +338,7 @@ const mapEntityBlendProperties = <
           tag: 'dropShadow',
           schemaVersion: 1,
           components: {
-            entityType: EntityType.Effect,
+            entityType: 'EFFECT',
             propertiesExpanded: false,
             visibleInViewport: effect.visible,
             shadowRadius: effect.radius,
@@ -403,7 +364,7 @@ const mapEntityBlendProperties = <
           tag: 'innerShadow',
           schemaVersion: 1,
           components: {
-            entityType: EntityType.Effect,
+            entityType: 'EFFECT',
             propertiesExpanded: false,
             visibleInViewport: effect.visible,
             shadowRadius: effect.radius,
@@ -429,7 +390,7 @@ const mapEntityBlendProperties = <
           tag: 'layerBlur',
           schemaVersion: 1,
           components: {
-            entityType: EntityType.Effect,
+            entityType: 'EFFECT',
             propertiesExpanded: false,
             visibleInViewport: effect.visible,
             blurRadius: effect.radius,
@@ -446,7 +407,7 @@ const mapEntityBlendProperties = <
           tag: 'backgroundBlur',
           schemaVersion: 1,
           components: {
-            entityType: EntityType.Effect,
+            entityType: 'EFFECT',
             propertiesExpanded: false,
             visibleInViewport: effect.visible,
             blurRadius: effect.radius,
@@ -607,12 +568,10 @@ const mapEntityGeometryProperties = <
   }
 
   if (node.type === 'VECTOR') {
-    properties.strokeCapStart = mapStrokeCap(
+    properties.strokeCapStart =
       node.vectorNetwork.vertices.at(0)?.strokeCap ?? 'NONE'
-    )
-    properties.strokeCapEnd = mapStrokeCap(
+    properties.strokeCapEnd =
       node.vectorNetwork.vertices.at(-1)?.strokeCap ?? 'NONE'
-    )
   } else if (node.strokeCap !== figma.mixed) {
     properties.strokeCapStart = 'NONE'
     properties.strokeCapEnd = 'NONE'
@@ -1139,7 +1098,7 @@ const mapRoot = (
     // @NOTE: default values provided here
     components: {
       name: getNormalNodeName(node.name),
-      entityType: EntityType.Root,
+      entityType: 'ROOT',
       startTime: 0,
       duration: 5,
       rgba: [
