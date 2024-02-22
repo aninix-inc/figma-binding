@@ -3,7 +3,12 @@
     "enabled": false
   },
   "linter": {
-    "enabled": true
+    "enabled": true,
+    "rules": {
+      "suspicious": {
+        "noExplicitAny": "warn"
+      }
+    }
   },
   "organizeImports": {
     "enabled": true
