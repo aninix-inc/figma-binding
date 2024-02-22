@@ -9,7 +9,7 @@
   "types": "index.d.ts",
   "scripts": {
     "prebuild": "rm -rf ./dist",
-    "build:declaration": "tsc --emitDeclarationOnly",
+    "build:declaration": "tsc --project tsconfig.build.json --emitDeclarationOnly",
     "build:docs": "cp ./package.json ./dist && cp ./README.md ./dist && cp ./LICENSE.md ./dist",
     "build": "bun run build:declaration && bun run build:docs && bun ./esbuild.build.ts",
     "build:dev": "bun run build:declaration && bun run build:docs && bun ./esbuild.build.ts",
