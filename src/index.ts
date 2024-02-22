@@ -220,6 +220,7 @@ const mapEntityEntryProperties = <In extends FrameNode, Out extends Frame>(
 const mapEntityBaseProperties = <
   In extends
     | EllipseNode
+    | BooleanOperationNode
     | FrameNode
     | GroupNode
     | ComponentNode
@@ -262,6 +263,7 @@ const mapEntityBaseProperties = <
 const mapEntitySceneProperties = <
   In extends
     | EllipseNode
+    | BooleanOperationNode
     | FrameNode
     | GroupNode
     | InstanceNode
@@ -302,6 +304,7 @@ const mapEntitySceneProperties = <
 const mapEntityBlendProperties = <
   In extends
     | EllipseNode
+    | BooleanOperationNode
     | FrameNode
     | GroupNode
     | InstanceNode
@@ -447,6 +450,7 @@ const mapEntityChildrenProperties = <
 const mapEntityCornerProperties = <
   In extends
     | EllipseNode
+    | BooleanOperationNode
     | FrameNode
     | InstanceNode
     | PolygonNode
@@ -492,6 +496,7 @@ const mapEntityIndividualCornerProperties = <
 const mapEntityGeometryProperties = <
   In extends
     | EllipseNode
+    | BooleanOperationNode
     | FrameNode
     | InstanceNode
     | LineNode
@@ -628,6 +633,7 @@ const mapEntityIndividualStrokesProperties = <
 const mapEntityLayoutProperties = <
   In extends
     | EllipseNode
+    | BooleanOperationNode
     | FrameNode
     | GroupNode
     | InstanceNode
@@ -781,6 +787,35 @@ const mapEllipse = (
       ...mapEntityLayoutProperties(entities, node),
     },
   } satisfies Ellipse)
+}
+
+/**
+ * @mutates entities
+ */
+const mapBooleanOperation = (
+  entities: Entity[],
+  node: BooleanOperationNode,
+  nodeId: string,
+  nodeParentId?: string
+): void => {
+  entities.push({
+    id: nodeId,
+    tag: 'vector',
+    schemaVersion: 1,
+    components: {
+      vectorPaths: node.fillGeometry.map((v) => ({
+        windingRule: v.windingRule,
+        data: v.data,
+      })) as any,
+      sizeBehaviour: 'FILL',
+      ...mapEntityBaseProperties(entities, node, nodeParentId),
+      ...mapEntitySceneProperties(entities, node),
+      ...mapEntityBlendProperties(entities, node, nodeId),
+      ...mapEntityCornerProperties(entities, node),
+      ...mapEntityGeometryProperties(entities, node, nodeId),
+      ...mapEntityLayoutProperties(entities, node),
+    },
+  } satisfies Vector)
 }
 
 /**
@@ -1040,6 +1075,10 @@ const mapNode = (
   switch (node.type) {
     case 'ELLIPSE': {
       mapEllipse(entities, node, nodeId, nodeParentId)
+      break
+    }
+    case 'BOOLEAN_OPERATION': {
+      mapBooleanOperation(entities, node, nodeId, nodeParentId)
       break
     }
     case 'FRAME': {
