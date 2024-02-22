@@ -13,6 +13,7 @@
     "build:docs": "cp ./package.json ./dist && cp ./README.md ./dist",
     "build": "bun run build:declaration && bun run build:docs && bun ./esbuild.build.ts",
     "build:dev": "bun run build:declaration && bun run build:docs && bun ./esbuild.build.ts",
+    "generate:types": "bun ./scripts/generate-types-from-json-schema.ts",
     "lint": "bunx @biomejs/biome lint ./src --diagnostic-level=error",
     "lint:dev": "bunx @biomejs/biome lint ./src",
     "test": "bun test",
