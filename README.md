@@ -7,13 +7,13 @@ A small utility package that helps you easily convert any Figma nodes to Aninix 
 ## Installation
 
 ```bash
-npm i -D @aninix-inc/figma-binding
+npm i @aninix-inc/figma-binding
 # or
-bun add -D @aninix-inc/figma-binding
+bun add @aninix-inc/figma-binding
 # or
-yarn add -D @aninix-inc/figma-binding
+yarn add @aninix-inc/figma-binding
 # or
-pnpm add -D @aninix-inc/figma-binding
+pnpm add @aninix-inc/figma-binding
 ```
 
 ## Usage Example
