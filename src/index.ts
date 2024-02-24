@@ -72,10 +72,11 @@ type Entity =
 
 const mapColorStops = (
   entities: Entity[],
+  entityId: string,
   colorStops: readonly ColorStop[]
 ): string[] => {
-  return colorStops.map((colorStop) => {
-    const colorStopId = generateId()
+  return colorStops.map((colorStop, idx) => {
+    const colorStopId = `${entityId}cs${idx}`
 
     entities.push({
       id: colorStopId,
@@ -143,7 +144,9 @@ const mapPaint = (
           blendMode: paint.blendMode ?? 'NORMAL',
           visibleInViewport: paint.visible ?? true,
           propertiesExpanded: false,
-          colorStops: mapColorStops(entities, paint.gradientStops) as [string],
+          colorStops: mapColorStops(entities, paintId, paint.gradientStops) as [
+            string,
+          ],
           opacity: paint.opacity ?? 1,
           gradientTransform: paint.gradientTransform,
           paintType: 'GRADIENT_LINEAR',
@@ -163,7 +166,9 @@ const mapPaint = (
           blendMode: paint.blendMode ?? 'NORMAL',
           visibleInViewport: paint.visible ?? true,
           propertiesExpanded: false,
-          colorStops: mapColorStops(entities, paint.gradientStops) as [string],
+          colorStops: mapColorStops(entities, paintId, paint.gradientStops) as [
+            string,
+          ],
           opacity: paint.opacity ?? 1,
           gradientTransform: paint.gradientTransform,
           paintType: 'GRADIENT_RADIAL',
