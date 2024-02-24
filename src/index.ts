@@ -1065,6 +1065,8 @@ const mapText = (
       ...mapEntityBlendProperties(entities, node, nodeId),
       ...mapEntityGeometryProperties(entities, node, nodeId),
       ...mapEntityLayoutProperties(entities, node),
+      smoothCornerRadius: false,
+      cornerRadius: 0,
     },
   } satisfies Text)
 }
