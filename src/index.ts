@@ -1220,6 +1220,9 @@ class Bind {
 
 export const bind = (node: SceneNode) => new Bind(node)
 export {
+  ANINIX_NODE_KEY,
+  ANINIX_PROJECT_KEY,
+  ANINIX_WORKSPACE_KEY,
   generateId,
   getNormalNodeName,
   getPageBackgroundColor,
