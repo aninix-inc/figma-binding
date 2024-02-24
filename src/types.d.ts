@@ -1117,8 +1117,6 @@ export interface Text {
     dash: Dash;
     dashOffset: DashOffset;
     gap: Gap;
-    smoothCornerRadius: SmoothCornerRadius;
-    cornerRadius: CornerRadius;
     anchorPoint: AnchorPoint;
     position: Position;
     rotation: Rotation;
