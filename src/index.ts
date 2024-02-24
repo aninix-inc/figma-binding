@@ -8,6 +8,7 @@ import { decomposedMatrix } from './decomposed-matrix'
 import { generateId } from './generate-id'
 import { getNormalNodeName } from './get-normal-node-name'
 import { getPageBackgroundColor } from './get-page-background-color'
+import { isProjectAttachedToNode } from './is-project-attached-to-node'
 import { round } from './round'
 import type {
   AninixSnapshot,
@@ -1218,4 +1219,13 @@ class Bind {
 }
 
 export const bind = (node: SceneNode) => new Bind(node)
-export { ANINIX_NODE_KEY, ANINIX_PROJECT_KEY, ANINIX_WORKSPACE_KEY, generateId }
+export {
+  ANINIX_NODE_KEY,
+  ANINIX_PROJECT_KEY,
+  ANINIX_WORKSPACE_KEY,
+  generateId,
+  getNormalNodeName,
+  getPageBackgroundColor,
+  getProjectId,
+  isProjectAttachedToNode,
+}
