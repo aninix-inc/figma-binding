@@ -83,7 +83,7 @@ const mapColorStops = (
       tag: 'colorStop',
       schemaVersion: 1,
       components: {
-        entityType: 'propertyGroupSet',
+        entityType: 'COLOR_STOP',
         blendMode: 'NORMAL',
         visibleInViewport: true,
         propertiesExpanded: false,
