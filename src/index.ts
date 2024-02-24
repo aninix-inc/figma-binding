@@ -213,9 +213,11 @@ const mapPaint = (
  */
 const mapEntityEntryProperties = <In extends FrameNode, Out extends Frame>(
   entities: Entity[],
-  entity: In
+  entity: In,
+  nodeParentId?: string
 ): Pick<Out['components'], 'entry'> => {
-  if (entity.parent?.type === 'PAGE') {
+  // @NOTE: nodeParentId would be available for children nodes only
+  if (nodeParentId == null) {
     return {
       entry: true,
     }
@@ -584,9 +586,10 @@ const mapEntityGeometryProperties = <
 
   if (node.type === 'VECTOR') {
     properties.strokeCapStart =
-      node.vectorNetwork.vertices.at(0)?.strokeCap ?? 'NONE'
+      node.vectorNetwork.vertices[0]?.strokeCap ?? 'NONE'
     properties.strokeCapEnd =
-      node.vectorNetwork.vertices.at(-1)?.strokeCap ?? 'NONE'
+      node.vectorNetwork.vertices[node.vectorNetwork.vertices.length - 1]
+        ?.strokeCap ?? 'NONE'
   } else if (node.strokeCap !== figma.mixed) {
     properties.strokeCapStart = 'NONE'
     properties.strokeCapEnd = 'NONE'
@@ -845,7 +848,7 @@ const mapFrame = (
     components: {
       clipContent: node.clipsContent,
       childrenExpanded: false,
-      ...mapEntityEntryProperties(entities, node),
+      ...mapEntityEntryProperties(entities, node, nodeParentId),
       ...mapEntityBaseProperties(entities, node, nodeParentId),
       ...mapEntitySceneProperties(entities, node),
       ...mapEntityBlendProperties(entities, node, nodeId),
