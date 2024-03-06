@@ -44,3 +44,18 @@ jobs:
         run: npm publish ./dist --access public
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      # @NOTE: publishing to private registry required to internal usage of Aninix team.
+      # Otherwise we have conflicts with different registries when using mix of private/public packages.
+      - name: Setup nodejs
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.x'
+          registry-url: 'https://npm.pkg.github.com'
+          scope: '@aninix-inc'
+
+      - name: Publish to GitHub Packages
+        # @NOTE: required to publish only dist folder
+        run: npm publish ./dist
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
