@@ -1238,7 +1238,8 @@ class Bind {
   }
 }
 
-export const bind = (node: SceneNode) => new Bind(node)
+export const bind = (node: SceneNode, options?: Options) =>
+  new Bind(node, options)
 export {
   ANINIX_NODE_KEY,
   ANINIX_PROJECT_KEY,
