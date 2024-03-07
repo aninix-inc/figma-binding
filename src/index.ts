@@ -13,30 +13,44 @@ import { round } from './round'
 import type {
   AninixSnapshot,
   BackgroundBlur,
+  BlendMode,
+  CornerRadius,
   DropShadow,
+  Effects,
   Ellipse,
+  EntityType,
   Frame,
   Group,
   ImagePaint,
+  InitialNodeId,
   InnerShadow,
   Instance,
   LayerBlur,
   Line,
   LinearGradientPaint,
+  Locked,
+  Mask,
   MatrixTransformKey,
   ColorStop as ModelColorStop,
+  Name,
+  NodeColor,
+  NodeType,
   NumberKey,
   Point2DKey,
   Polygon,
+  PropertiesExpanded,
   RadialGradientPaint,
   Rectangle,
   RgbaKey,
   Root,
+  SmoothCornerRadius,
   SolidPaint,
+  Solo,
   SpatialPoint2DKey,
   Star,
   Text,
   Vector,
+  VisibleInViewport,
 } from './types'
 
 type ModelNode =
@@ -68,8 +82,18 @@ type Entity =
   | MatrixTransformKey
   | Root
 
+type Context = {
+  projectId: string
+  nodeId: string
+  initialNodeId?: string
+  parentNodeId?: string
+}
+
 /// mappers
 
+/**
+ * @todo add test
+ */
 const mapColorStops = (
   entities: Entity[],
   entityId: string,
@@ -101,6 +125,9 @@ const mapColorStops = (
   })
 }
 
+/**
+ * @todo add test
+ */
 const mapPaint = (
   entities: Entity[],
   entityId: string,
@@ -211,13 +238,11 @@ const mapPaint = (
 /**
  * @mutates entities
  */
-const mapEntityEntryProperties = <In extends FrameNode, Out extends Frame>(
-  entities: Entity[],
-  entity: In,
-  nodeParentId?: string
+export const mapEntityEntryProperties = <Out extends Frame>(
+  context: Context
 ): Pick<Out['components'], 'entry'> => {
   // @NOTE: nodeParentId would be available for children nodes only
-  if (nodeParentId == null) {
+  if (context.parentNodeId == null) {
     return {
       entry: true,
     }
@@ -226,83 +251,50 @@ const mapEntityEntryProperties = <In extends FrameNode, Out extends Frame>(
   return {}
 }
 
-/**
- * @mutates entities
- */
-const mapEntityBaseProperties = <
-  In extends
-    | EllipseNode
-    | BooleanOperationNode
-    | FrameNode
-    | GroupNode
-    | ComponentNode
-    | InstanceNode
-    | LineNode
-    | PolygonNode
-    | RectangleNode
-    | StarNode
-    | VectorNode
-    | TextNode,
-  Out extends
-    | Ellipse
-    | Frame
-    | Group
-    | Instance
-    | Line
-    | Polygon
-    | Rectangle
-    | Star
-    | Vector
-    | Text,
->(
-  entities: Entity[],
-  node: In,
-  nodeParentId?: string
-): Pick<
-  Out['components'],
-  'name' | 'entityType' | 'nodeType' | 'externalNodeId'
-> => ({
+export const mapEntityBaseProperties = (
+  node: {
+    name: string
+    type:
+      | EllipseNode['type']
+      | BooleanOperationNode['type']
+      | FrameNode['type']
+      | GroupNode['type']
+      | ComponentNode['type']
+      | InstanceNode['type']
+      | LineNode['type']
+      | PolygonNode['type']
+      | RectangleNode['type']
+      | StarNode['type']
+      | VectorNode['type']
+      | TextNode['type']
+  },
+  context: Context
+): {
+  name: Name
+  entityType: EntityType
+  nodeType: NodeType
+  initialNodeId?: InitialNodeId
+  parent?: string
+} => ({
   name: getNormalNodeName(node.name),
   entityType: 'NODE',
   nodeType: node.type,
-  externalNodeId: node.id,
-  ...(nodeParentId != null && { parent: nodeParentId }),
+  ...(context.initialNodeId != null && {
+    initialNodeId: context.initialNodeId,
+  }),
+  ...(context.parentNodeId != null && { parent: context.parentNodeId }),
 })
 
-/**
- * @mutates entities
- */
-const mapEntitySceneProperties = <
-  In extends
-    | EllipseNode
-    | BooleanOperationNode
-    | FrameNode
-    | GroupNode
-    | InstanceNode
-    | LineNode
-    | PolygonNode
-    | RectangleNode
-    | StarNode
-    | VectorNode
-    | TextNode,
-  Out extends
-    | Ellipse
-    | Frame
-    | Group
-    | Instance
-    | Line
-    | Polygon
-    | Rectangle
-    | Star
-    | Vector
-    | Text,
->(
-  entities: Entity[],
-  node: In
-): Pick<
-  Out['components'],
-  'nodeColor' | 'solo' | 'locked' | 'visibleInViewport' | 'propertiesExpanded'
-> => ({
+export const mapEntitySceneProperties = (node: {
+  locked: boolean
+  visible: boolean
+}): {
+  nodeColor: NodeColor
+  solo: Solo
+  locked: Locked
+  propertiesExpanded: PropertiesExpanded
+  visibleInViewport: VisibleInViewport
+} => ({
   nodeColor: 'BLUE',
   solo: 'NONE',
   locked: node.locked,
@@ -313,42 +305,25 @@ const mapEntitySceneProperties = <
 /**
  * @mutates entities
  */
-const mapEntityBlendProperties = <
-  In extends
-    | EllipseNode
-    | BooleanOperationNode
-    | FrameNode
-    | GroupNode
-    | InstanceNode
-    | LineNode
-    | PolygonNode
-    | RectangleNode
-    | StarNode
-    | VectorNode
-    | TextNode,
-  Out extends
-    | Ellipse
-    | Frame
-    | Group
-    | Instance
-    | Line
-    | Polygon
-    | Rectangle
-    | Star
-    | Vector
-    | Text,
->(
+export const mapEntityBlendProperties = (
   entities: Entity[],
-  node: In,
-  nodeId: string
-): Pick<Out['components'], 'blendMode' | 'mask' | 'effects'> => {
+  node: {
+    blendMode: BlendMixin['blendMode']
+    isMask: BlendMixin['isMask']
+    effects: BlendMixin['effects']
+  },
+  context: Context
+): {
+  blendMode: BlendMode
+  mask: Mask
+  effects: Effects
+} => {
   const effectIds = node.effects.map((effect, idx) => {
-    const effectId = `${nodeId}e${idx}`
+    const effectId = `${context.nodeId}e${idx}`
 
     switch (effect.type) {
       case 'DROP_SHADOW': {
         entities.push({
-          // id: effect.id,
           id: effectId,
           tag: 'dropShadow',
           schemaVersion: 1,
@@ -374,7 +349,6 @@ const mapEntityBlendProperties = <
 
       case 'INNER_SHADOW': {
         entities.push({
-          // id: effect.id,
           id: effectId,
           tag: 'innerShadow',
           schemaVersion: 1,
@@ -400,7 +374,6 @@ const mapEntityBlendProperties = <
 
       case 'LAYER_BLUR': {
         entities.push({
-          // id: effect.id,
           id: effectId,
           tag: 'layerBlur',
           schemaVersion: 1,
@@ -417,7 +390,6 @@ const mapEntityBlendProperties = <
 
       case 'BACKGROUND_BLUR': {
         entities.push({
-          // id: effect.id,
           id: effectId,
           tag: 'backgroundBlur',
           schemaVersion: 1,
@@ -439,12 +411,13 @@ const mapEntityBlendProperties = <
   return {
     blendMode: node.blendMode,
     mask: node.isMask,
-    effects: effectIds as [string],
+    effects: effectIds as Effects,
   }
 }
 
 /**
  * @mutates entities
+ * @todo add test
  */
 const mapEntityChildrenProperties = <
   In extends FrameNode | GroupNode | InstanceNode,
@@ -459,27 +432,19 @@ const mapEntityChildrenProperties = <
     .map((child) => mapper(entities, child)) as [string],
 })
 
-const mapEntityCornerProperties = <
-  In extends
-    | EllipseNode
-    | BooleanOperationNode
-    | FrameNode
-    | InstanceNode
-    | PolygonNode
-    | RectangleNode
-    | StarNode
-    | VectorNode,
-  Out extends Ellipse | Frame | Instance | Polygon | Rectangle | Star | Vector,
->(
-  entities: Entity[],
-  node: In
-): Pick<Out['components'], 'cornerRadius' | 'smoothCornerRadius'> => ({
+export const mapEntityCornerProperties = (node: {
+  cornerRadius: CornerMixin['cornerRadius']
+  cornerSmoothing: CornerMixin['cornerSmoothing']
+}): {
+  cornerRadius: CornerRadius
+  smoothCornerRadius: SmoothCornerRadius
+} => ({
   cornerRadius: node.cornerRadius === figma.mixed ? 0 : node.cornerRadius,
   smoothCornerRadius: node.cornerSmoothing !== 0,
 })
 
 /**
- * @mutates entities
+ * @todo add test
  */
 const mapEntityIndividualCornerProperties = <
   In extends FrameNode | InstanceNode | RectangleNode,
@@ -504,6 +469,7 @@ const mapEntityIndividualCornerProperties = <
 
 /**
  * @mutates entities
+ * @todo add test
  */
 const mapEntityGeometryProperties = <
   In extends
@@ -530,7 +496,7 @@ const mapEntityGeometryProperties = <
 >(
   entities: Entity[],
   node: In,
-  nodeId: string
+  context: Context
 ): Pick<
   Out['components'],
   | 'fills'
@@ -567,11 +533,11 @@ const mapEntityGeometryProperties = <
   > = {
     fills: (node.fills !== figma.mixed
       ? node.fills.map((child, idx) =>
-          mapPaint(entities, nodeId, child, 'f', idx)
+          mapPaint(entities, context.nodeId, child, 'f', idx)
         )
       : []) as [string],
     strokes: node.strokes.map((child, idx) =>
-      mapPaint(entities, nodeId, child, 's', idx)
+      mapPaint(entities, context.nodeId, child, 's', idx)
     ) as [string],
     strokeCapStart: 'NONE',
     strokeCapEnd: 'NONE',
@@ -614,6 +580,7 @@ const mapEntityGeometryProperties = <
 
 /**
  * @mutates entities
+ * @todo add test
  */
 const mapEntityIndividualStrokesProperties = <
   In extends FrameNode | InstanceNode | RectangleNode,
@@ -642,6 +609,7 @@ const mapEntityIndividualStrokesProperties = <
 
 /**
  * @mutates entities
+ * @todo add test
  */
 const mapEntityLayoutProperties = <
   In extends
@@ -776,15 +744,15 @@ const mapEntityLayoutProperties = <
 
 /**
  * @mutates entities
+ * @todo add test
  */
 const mapEllipse = (
   entities: Entity[],
   node: EllipseNode,
-  nodeId: string,
-  nodeParentId?: string
+  context: Context
 ) => {
   entities.push({
-    id: nodeId,
+    id: context.nodeId,
     tag: 'ellipse',
     schemaVersion: 1,
     components: {
@@ -792,11 +760,11 @@ const mapEllipse = (
       endAngle:
         (node.arcData.endingAngle - node.arcData.startingAngle) / (2 * Math.PI),
       innerRadius: node.arcData.innerRadius,
-      ...mapEntityBaseProperties(entities, node, nodeParentId),
-      ...mapEntitySceneProperties(entities, node),
-      ...mapEntityBlendProperties(entities, node, nodeId),
-      ...mapEntityCornerProperties(entities, node),
-      ...mapEntityGeometryProperties(entities, node, nodeId),
+      ...mapEntityBaseProperties(node, context),
+      ...mapEntitySceneProperties(node),
+      ...mapEntityBlendProperties(entities, node, context),
+      ...mapEntityCornerProperties(node),
+      ...mapEntityGeometryProperties(entities, node, context),
       ...mapEntityLayoutProperties(entities, node),
     },
   } satisfies Ellipse)
@@ -804,28 +772,29 @@ const mapEllipse = (
 
 /**
  * @mutates entities
+ * @todo add test
  */
 const mapBooleanOperation = (
   entities: Entity[],
   node: BooleanOperationNode,
-  nodeId: string,
-  nodeParentId?: string
+  context: Context
 ): void => {
   entities.push({
-    id: nodeId,
+    id: context.nodeId,
     tag: 'vector',
     schemaVersion: 1,
     components: {
       vectorPaths: node.fillGeometry.map((v) => ({
         windingRule: v.windingRule,
         data: v.data,
+        // @TODO: FIXME check why we have wrong types here
       })) as any,
       sizeBehaviour: 'FILL',
-      ...mapEntityBaseProperties(entities, node, nodeParentId),
-      ...mapEntitySceneProperties(entities, node),
-      ...mapEntityBlendProperties(entities, node, nodeId),
-      ...mapEntityCornerProperties(entities, node),
-      ...mapEntityGeometryProperties(entities, node, nodeId),
+      ...mapEntityBaseProperties(node, context),
+      ...mapEntitySceneProperties(node),
+      ...mapEntityBlendProperties(entities, node, context),
+      ...mapEntityCornerProperties(node),
+      ...mapEntityGeometryProperties(entities, node, context),
       ...mapEntityLayoutProperties(entities, node),
     },
   } satisfies Vector)
@@ -833,31 +802,31 @@ const mapBooleanOperation = (
 
 /**
  * @mutates entities
+ * @todo add test
  */
 const mapFrame = (
   entities: Entity[],
   node: FrameNode,
-  nodeId: string,
   getNodeId: (node: SceneNode) => string,
-  nodeParentId?: string
+  context: Context
 ): void => {
   entities.push({
-    id: nodeId,
+    id: context.nodeId,
     tag: 'frame',
     schemaVersion: 1,
     components: {
       clipContent: node.clipsContent,
       childrenExpanded: false,
-      ...mapEntityEntryProperties(entities, node, nodeParentId),
-      ...mapEntityBaseProperties(entities, node, nodeParentId),
-      ...mapEntitySceneProperties(entities, node),
-      ...mapEntityBlendProperties(entities, node, nodeId),
+      ...mapEntityEntryProperties(context),
+      ...mapEntityBaseProperties(node, context),
+      ...mapEntitySceneProperties(node),
+      ...mapEntityBlendProperties(entities, node, context),
       ...mapEntityChildrenProperties(entities, node, (_entities, _node) =>
-        mapNode(_entities, _node, getNodeId, nodeId)
+        mapNode(_entities, _node, context.projectId, getNodeId, context.nodeId)
       ),
-      ...mapEntityCornerProperties(entities, node),
+      ...mapEntityCornerProperties(node),
       ...mapEntityIndividualCornerProperties(entities, node),
-      ...mapEntityGeometryProperties(entities, node, nodeId),
+      ...mapEntityGeometryProperties(entities, node, context),
       ...mapEntityIndividualStrokesProperties(entities, node),
       ...mapEntityLayoutProperties(entities, node),
     },
@@ -866,25 +835,25 @@ const mapFrame = (
 
 /**
  * @mutates entities
+ * @todo add test
  */
 const mapGroup = (
   entities: Entity[],
   node: GroupNode,
-  nodeId: string,
   getNodeId: (node: SceneNode) => string,
-  nodeParentId?: string
+  context: Context
 ): void => {
   entities.push({
-    id: nodeId,
+    id: context.nodeId,
     tag: 'group',
     schemaVersion: 1,
     components: {
       childrenExpanded: false,
-      ...mapEntityBaseProperties(entities, node, nodeParentId),
-      ...mapEntitySceneProperties(entities, node),
-      ...mapEntityBlendProperties(entities, node, nodeId),
+      ...mapEntityBaseProperties(node, context),
+      ...mapEntitySceneProperties(node),
+      ...mapEntityBlendProperties(entities, node, context),
       ...mapEntityChildrenProperties(entities, node, (_entities, _node) =>
-        mapNode(_entities, _node, getNodeId, nodeId)
+        mapNode(_entities, _node, context.projectId, getNodeId, context.nodeId)
       ),
       ...mapEntityLayoutProperties(entities, node),
     },
@@ -893,30 +862,30 @@ const mapGroup = (
 
 /**
  * @mutates entities
+ * @todo add test
  */
 const mapInstance = (
   entities: Entity[],
   node: InstanceNode,
-  nodeId: string,
   getNodeId: (node: SceneNode) => string,
-  nodeParentId?: string
+  context: Context
 ): void => {
   entities.push({
-    id: nodeId,
+    id: context.nodeId,
     tag: 'instance',
     schemaVersion: 1,
     components: {
       clipContent: node.clipsContent,
       mainNodeComponentId: node.mainComponent?.id ?? '',
-      ...mapEntityBaseProperties(entities, node, nodeParentId),
-      ...mapEntitySceneProperties(entities, node),
-      ...mapEntityBlendProperties(entities, node, nodeId),
+      ...mapEntityBaseProperties(node, context),
+      ...mapEntitySceneProperties(node),
+      ...mapEntityBlendProperties(entities, node, context),
       ...mapEntityChildrenProperties(entities, node, (_entities, _node) =>
-        mapNode(_entities, _node, getNodeId, nodeId)
+        mapNode(_entities, _node, context.projectId, getNodeId, context.nodeId)
       ),
-      ...mapEntityCornerProperties(entities, node),
+      ...mapEntityCornerProperties(node),
       ...mapEntityIndividualCornerProperties(entities, node),
-      ...mapEntityGeometryProperties(entities, node, nodeId),
+      ...mapEntityGeometryProperties(entities, node, context),
       ...mapEntityIndividualStrokesProperties(entities, node),
       ...mapEntityLayoutProperties(entities, node),
     },
@@ -925,22 +894,22 @@ const mapInstance = (
 
 /**
  * @mutates entities
+ * @todo add test
  */
 const mapLine = (
   entities: Entity[],
   node: LineNode,
-  nodeId: string,
-  nodeParentId?: string
+  context: Context
 ): void => {
   entities.push({
-    id: nodeId,
+    id: context.nodeId,
     tag: 'line',
     schemaVersion: 1,
     components: {
-      ...mapEntityBaseProperties(entities, node, nodeParentId),
-      ...mapEntitySceneProperties(entities, node),
-      ...mapEntityBlendProperties(entities, node, nodeId),
-      ...mapEntityGeometryProperties(entities, node, nodeId),
+      ...mapEntityBaseProperties(node, context),
+      ...mapEntitySceneProperties(node),
+      ...mapEntityBlendProperties(entities, node, context),
+      ...mapEntityGeometryProperties(entities, node, context),
       ...mapEntityLayoutProperties(entities, node),
     },
   } satisfies Line)
@@ -948,24 +917,24 @@ const mapLine = (
 
 /**
  * @mutates entities
+ * @todo add test
  */
 const mapPolygon = (
   entities: Entity[],
   node: PolygonNode,
-  nodeId: string,
-  nodeParentId?: string
+  context: Context
 ): void => {
   entities.push({
-    id: nodeId,
+    id: context.nodeId,
     tag: 'polygon',
     schemaVersion: 1,
     components: {
       pointCount: node.pointCount,
-      ...mapEntityBaseProperties(entities, node, nodeParentId),
-      ...mapEntitySceneProperties(entities, node),
-      ...mapEntityBlendProperties(entities, node, nodeId),
-      ...mapEntityCornerProperties(entities, node),
-      ...mapEntityGeometryProperties(entities, node, nodeId),
+      ...mapEntityBaseProperties(node, context),
+      ...mapEntitySceneProperties(node),
+      ...mapEntityBlendProperties(entities, node, context),
+      ...mapEntityCornerProperties(node),
+      ...mapEntityGeometryProperties(entities, node, context),
       ...mapEntityLayoutProperties(entities, node),
     },
   } satisfies Polygon)
@@ -973,24 +942,24 @@ const mapPolygon = (
 
 /**
  * @mutates entities
+ * @todo add test
  */
 const mapRectangle = (
   entities: Entity[],
   node: RectangleNode,
-  nodeId: string,
-  nodeParentId?: string
+  context: Context
 ): void => {
   entities.push({
-    id: nodeId,
+    id: context.nodeId,
     tag: 'rectangle',
     schemaVersion: 1,
     components: {
-      ...mapEntityBaseProperties(entities, node, nodeParentId),
-      ...mapEntitySceneProperties(entities, node),
-      ...mapEntityBlendProperties(entities, node, nodeId),
-      ...mapEntityCornerProperties(entities, node),
+      ...mapEntityBaseProperties(node, context),
+      ...mapEntitySceneProperties(node),
+      ...mapEntityBlendProperties(entities, node, context),
+      ...mapEntityCornerProperties(node),
       ...mapEntityIndividualCornerProperties(entities, node),
-      ...mapEntityGeometryProperties(entities, node, nodeId),
+      ...mapEntityGeometryProperties(entities, node, context),
       ...mapEntityIndividualStrokesProperties(entities, node),
       ...mapEntityLayoutProperties(entities, node),
     },
@@ -999,25 +968,25 @@ const mapRectangle = (
 
 /**
  * @mutates entities
+ * @todo add test
  */
 const mapStar = (
   entities: Entity[],
   node: StarNode,
-  nodeId: string,
-  nodeParentId?: string
+  context: Context
 ): void => {
   entities.push({
-    id: nodeId,
+    id: context.nodeId,
     tag: 'star',
     schemaVersion: 1,
     components: {
       pointCount: node.pointCount,
       innerRadius: node.innerRadius,
-      ...mapEntityBaseProperties(entities, node, nodeParentId),
-      ...mapEntitySceneProperties(entities, node),
-      ...mapEntityBlendProperties(entities, node, nodeId),
-      ...mapEntityCornerProperties(entities, node),
-      ...mapEntityGeometryProperties(entities, node, nodeId),
+      ...mapEntityBaseProperties(node, context),
+      ...mapEntitySceneProperties(node),
+      ...mapEntityBlendProperties(entities, node, context),
+      ...mapEntityCornerProperties(node),
+      ...mapEntityGeometryProperties(entities, node, context),
       ...mapEntityLayoutProperties(entities, node),
     },
   } satisfies Star)
@@ -1025,15 +994,15 @@ const mapStar = (
 
 /**
  * @mutates entities
+ * @todo add test
  */
 const mapVector = (
   entities: Entity[],
   node: VectorNode,
-  nodeId: string,
-  nodeParentId?: string
+  context: Context
 ): void => {
   entities.push({
-    id: nodeId,
+    id: context.nodeId,
     tag: 'vector',
     schemaVersion: 1,
     components: {
@@ -1042,24 +1011,26 @@ const mapVector = (
         data: v.data,
       })) as any,
       sizeBehaviour: 'FILL',
-      ...mapEntityBaseProperties(entities, node, nodeParentId),
-      ...mapEntitySceneProperties(entities, node),
-      ...mapEntityBlendProperties(entities, node, nodeId),
-      ...mapEntityCornerProperties(entities, node),
-      ...mapEntityGeometryProperties(entities, node, nodeId),
+      ...mapEntityBaseProperties(node, context),
+      ...mapEntitySceneProperties(node),
+      ...mapEntityBlendProperties(entities, node, context),
+      ...mapEntityCornerProperties(node),
+      ...mapEntityGeometryProperties(entities, node, context),
       ...mapEntityLayoutProperties(entities, node),
     },
   } satisfies Vector)
 }
 
+/**
+ * @todo add test
+ */
 const mapText = (
   entities: Entity[],
   node: TextNode,
-  nodeId: string,
-  nodeParentId?: string
+  context: Context
 ): void => {
   entities.push({
-    id: nodeId,
+    id: context.nodeId,
     tag: 'text',
     schemaVersion: 1,
     components: {
@@ -1068,66 +1039,85 @@ const mapText = (
         data: v.data,
       })) as any,
       sizeBehaviour: 'IGNORE',
-      ...mapEntityBaseProperties(entities, node, nodeParentId),
-      ...mapEntitySceneProperties(entities, node),
-      ...mapEntityBlendProperties(entities, node, nodeId),
-      ...mapEntityGeometryProperties(entities, node, nodeId),
+      ...mapEntityBaseProperties(node, context),
+      ...mapEntitySceneProperties(node),
+      ...mapEntityBlendProperties(entities, node, context),
+      ...mapEntityGeometryProperties(entities, node, context),
       ...mapEntityLayoutProperties(entities, node),
     },
   } satisfies Text)
 }
 
+/**
+ * @todo add test
+ */
 const mapNode = (
   entities: Entity[],
   node: SceneNode,
+  projectId: string,
   getNodeId: (node: SceneNode) => string,
-  nodeParentId?: string
+  parentNodeId?: string
 ): string => {
-  const nodeId = getNodeId(node)
+  const [storedNodeId, storedProjectId] = getNodeId(node).split('@')
+
+  // @NOTE: in case when node copied between frames/pages
+  const context: Context =
+    storedProjectId != null && storedProjectId !== projectId
+      ? {
+          projectId,
+          nodeId: generateId(),
+          initialNodeId: storedNodeId,
+          parentNodeId,
+        }
+      : {
+          projectId,
+          nodeId: storedNodeId,
+          parentNodeId,
+        }
 
   switch (node.type) {
     case 'ELLIPSE': {
-      mapEllipse(entities, node, nodeId, nodeParentId)
+      mapEllipse(entities, node, context)
       break
     }
     case 'BOOLEAN_OPERATION': {
-      mapBooleanOperation(entities, node, nodeId, nodeParentId)
+      mapBooleanOperation(entities, node, context)
       break
     }
     case 'FRAME': {
-      mapFrame(entities, node, nodeId, getNodeId, nodeParentId)
+      mapFrame(entities, node, getNodeId, context)
       break
     }
     case 'GROUP': {
-      mapGroup(entities, node, nodeId, getNodeId, nodeParentId)
+      mapGroup(entities, node, getNodeId, context)
       break
     }
     case 'INSTANCE': {
-      mapInstance(entities, node, nodeId, getNodeId, nodeParentId)
+      mapInstance(entities, node, getNodeId, context)
       break
     }
     case 'LINE': {
-      mapLine(entities, node, nodeId, nodeParentId)
+      mapLine(entities, node, context)
       break
     }
     case 'POLYGON': {
-      mapPolygon(entities, node, nodeId, nodeParentId)
+      mapPolygon(entities, node, context)
       break
     }
     case 'RECTANGLE': {
-      mapRectangle(entities, node, nodeId, nodeParentId)
+      mapRectangle(entities, node, context)
       break
     }
     case 'STAR': {
-      mapStar(entities, node, nodeId, nodeParentId)
+      mapStar(entities, node, context)
       break
     }
     case 'VECTOR': {
-      mapVector(entities, node, nodeId, nodeParentId)
+      mapVector(entities, node, context)
       break
     }
     case 'TEXT': {
-      mapText(entities, node, nodeId, nodeParentId)
+      mapText(entities, node, context)
       break
     }
     default: {
@@ -1135,9 +1125,12 @@ const mapNode = (
     }
   }
 
-  return nodeId
+  return context.nodeId
 }
 
+/**
+ * @todo add test
+ */
 const mapRoot = (
   entities: Entity[],
   node: SceneNode,
@@ -1168,7 +1161,7 @@ const mapRoot = (
   } satisfies Root)
 }
 
-const getProjectId = (node: SceneNode): string => {
+const defaultGetProjectId = (node: SceneNode): string => {
   const storedProjectId = node.getSharedPluginData(
     ANINIX_WORKSPACE_KEY,
     ANINIX_PROJECT_KEY
@@ -1176,7 +1169,7 @@ const getProjectId = (node: SceneNode): string => {
   return !!storedProjectId ? storedProjectId : generateId()
 }
 
-const getNodeId = (node: SceneNode): string => {
+const defaultGetNodeId = (node: SceneNode): string => {
   const storedNodeId = node.getSharedPluginData(
     ANINIX_WORKSPACE_KEY,
     ANINIX_NODE_KEY
@@ -1186,9 +1179,21 @@ const getNodeId = (node: SceneNode): string => {
 
 type Options = {
   /**
-   * Middleware function to receive node ids.
-   * By default it will try to grab public node id or generate a new one.
-   * You can change behavior by providing custom function.
+   * A middleware function to retrieve node IDs.
+   * By default, it will try to get the public node ID or generate a new one.
+   * You can change the behavior by providing a custom function.
+   *
+   * This is useful for internal use of the Aninix Connect plugin.
+   * To add an extra layer of access protection.
+   * You can ignore it when using it publicly and use `shared` data.
+   *
+   * ---
+   *
+   * By default, a shared nodeId will only include a regular string identifier, such as `lrdfgi9a94579347r`.
+   * But for advanced use, Aninix can include `{nodeId}@{projectId}` in a string like this `lrdfgi9a94579347r@lrdfgi9a9457979347`.
+   * That's why we are retrieving nodeId as `const [nodeId, projectId] = storedNodeId.split('@').
+   *
+   * ---
    *
    * @example
    * (node: SceneNode) => {
@@ -1200,6 +1205,9 @@ type Options = {
 }
 
 // @NOTE: using a class here improves performance in case of high mapper utilization
+/**
+ * @todo add test
+ */
 class Bind {
   constructor(
     private readonly node: SceneNode,
@@ -1207,9 +1215,8 @@ class Bind {
   ) {}
 
   getSnapshot = (): AninixSnapshot => {
-    const projectId = getProjectId(this.node)
     return {
-      id: projectId,
+      id: defaultGetProjectId(this.node),
       schemaVersion: 2,
       entities: Object.fromEntries(
         this.getEntities().map((entity) => [entity.id, entity])
@@ -1218,10 +1225,15 @@ class Bind {
   }
 
   getEntities = (): Entity[] => {
-    const projectId = getProjectId(this.node)
+    const projectId = defaultGetProjectId(this.node)
     const entities: Entity[] = []
     mapRoot(entities, this.node, projectId)
-    mapNode(entities, this.node, this.options?.getNodeId ?? getNodeId)
+    mapNode(
+      entities,
+      this.node,
+      projectId,
+      this.options?.getNodeId ?? defaultGetNodeId
+    )
     return entities
   }
 }
@@ -1235,6 +1247,6 @@ export {
   generateId,
   getNormalNodeName,
   getPageBackgroundColor,
-  getProjectId,
+  defaultGetProjectId as getProjectId,
   isProjectAttachedToNode,
 }

@@ -1,0 +1,293 @@
+// Bun Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`mapEntityEntryProperties with parent 1`] = `{}`;
+
+exports[`mapEntityEntryProperties without parent 1`] = `
+{
+  "entry": true,
+}
+`;
+
+exports[`mapEntityBaseProperties has NOT parent 1`] = `
+{
+  "entityType": "NODE",
+  "name": "Some Node",
+  "nodeType": "ELLIPSE",
+}
+`;
+
+exports[`mapEntityBaseProperties has parent 1`] = `
+{
+  "entityType": "NODE",
+  "name": "Some Node",
+  "nodeType": "ELLIPSE",
+  "parent": "test-parent-node",
+}
+`;
+
+exports[`mapEntityBaseProperties has NOT initial node 1`] = `
+{
+  "entityType": "NODE",
+  "name": "Some Node",
+  "nodeType": "ELLIPSE",
+}
+`;
+
+exports[`mapEntityBaseProperties has initial node 1`] = `
+{
+  "entityType": "NODE",
+  "initialNodeId": "initial-test-node",
+  "name": "Some Node",
+  "nodeType": "ELLIPSE",
+  "parent": "test-parent-node",
+}
+`;
+
+exports[`mapEntityBlendProperties has NOT effects 1`] = `[]`;
+
+exports[`mapEntityBlendProperties has NOT effects 2`] = `
+{
+  "blendMode": "NORMAL",
+  "effects": [],
+  "mask": false,
+}
+`;
+
+exports[`mapEntityBlendProperties has drop shadow 1`] = `
+[
+  {
+    "components": {
+      "blendMode": "NORMAL",
+      "effectType": "DROP_SHADOW",
+      "entityType": "EFFECT",
+      "propertiesExpanded": false,
+      "shadowColor": [
+        65025,
+        0,
+        0,
+        1,
+      ],
+      "shadowOffset": [
+        0,
+        0,
+      ],
+      "shadowRadius": 10,
+      "shadowSpread": 0,
+      "visibleInViewport": true,
+    },
+    "id": "test-nodee0",
+    "schemaVersion": 1,
+    "tag": "dropShadow",
+  },
+]
+`;
+
+exports[`mapEntityBlendProperties has drop shadow 2`] = `
+{
+  "blendMode": "NORMAL",
+  "effects": [
+    "test-nodee0",
+  ],
+  "mask": false,
+}
+`;
+
+exports[`mapEntityBlendProperties has inner shadow 1`] = `
+[
+  {
+    "components": {
+      "blendMode": "NORMAL",
+      "effectType": "INNER_SHADOW",
+      "entityType": "EFFECT",
+      "propertiesExpanded": false,
+      "shadowColor": [
+        65025,
+        0,
+        0,
+        1,
+      ],
+      "shadowOffset": [
+        0,
+        0,
+      ],
+      "shadowRadius": 10,
+      "shadowSpread": 0,
+      "visibleInViewport": true,
+    },
+    "id": "test-nodee0",
+    "schemaVersion": 1,
+    "tag": "innerShadow",
+  },
+]
+`;
+
+exports[`mapEntityBlendProperties has inner shadow 2`] = `
+{
+  "blendMode": "NORMAL",
+  "effects": [
+    "test-nodee0",
+  ],
+  "mask": false,
+}
+`;
+
+exports[`mapEntityBlendProperties has layer blur 1`] = `
+[
+  {
+    "components": {
+      "blurRadius": 10,
+      "effectType": "LAYER_BLUR",
+      "entityType": "EFFECT",
+      "propertiesExpanded": false,
+      "visibleInViewport": true,
+    },
+    "id": "test-nodee0",
+    "schemaVersion": 1,
+    "tag": "layerBlur",
+  },
+]
+`;
+
+exports[`mapEntityBlendProperties has layer blur 2`] = `
+{
+  "blendMode": "NORMAL",
+  "effects": [
+    "test-nodee0",
+  ],
+  "mask": false,
+}
+`;
+
+exports[`mapEntityBlendProperties has background blur 1`] = `
+[
+  {
+    "components": {
+      "blurRadius": 10,
+      "effectType": "BACKGROUND_BLUR",
+      "entityType": "EFFECT",
+      "propertiesExpanded": false,
+      "visibleInViewport": true,
+    },
+    "id": "test-nodee0",
+    "schemaVersion": 1,
+    "tag": "backgroundBlur",
+  },
+]
+`;
+
+exports[`mapEntityBlendProperties has background blur 2`] = `
+{
+  "blendMode": "NORMAL",
+  "effects": [
+    "test-nodee0",
+  ],
+  "mask": false,
+}
+`;
+
+exports[`mapEntityBlendProperties has multiple effects 1`] = `
+[
+  {
+    "components": {
+      "blendMode": "NORMAL",
+      "effectType": "DROP_SHADOW",
+      "entityType": "EFFECT",
+      "propertiesExpanded": false,
+      "shadowColor": [
+        65025,
+        0,
+        0,
+        1,
+      ],
+      "shadowOffset": [
+        0,
+        0,
+      ],
+      "shadowRadius": 10,
+      "shadowSpread": 0,
+      "visibleInViewport": true,
+    },
+    "id": "test-nodee0",
+    "schemaVersion": 1,
+    "tag": "dropShadow",
+  },
+  {
+    "components": {
+      "blendMode": "NORMAL",
+      "effectType": "INNER_SHADOW",
+      "entityType": "EFFECT",
+      "propertiesExpanded": false,
+      "shadowColor": [
+        65025,
+        0,
+        0,
+        1,
+      ],
+      "shadowOffset": [
+        0,
+        0,
+      ],
+      "shadowRadius": 10,
+      "shadowSpread": 0,
+      "visibleInViewport": true,
+    },
+    "id": "test-nodee1",
+    "schemaVersion": 1,
+    "tag": "innerShadow",
+  },
+  {
+    "components": {
+      "blurRadius": 10,
+      "effectType": "LAYER_BLUR",
+      "entityType": "EFFECT",
+      "propertiesExpanded": false,
+      "visibleInViewport": true,
+    },
+    "id": "test-nodee2",
+    "schemaVersion": 1,
+    "tag": "layerBlur",
+  },
+  {
+    "components": {
+      "blurRadius": 10,
+      "effectType": "BACKGROUND_BLUR",
+      "entityType": "EFFECT",
+      "propertiesExpanded": false,
+      "visibleInViewport": true,
+    },
+    "id": "test-nodee3",
+    "schemaVersion": 1,
+    "tag": "backgroundBlur",
+  },
+]
+`;
+
+exports[`mapEntityBlendProperties has multiple effects 2`] = `
+{
+  "blendMode": "NORMAL",
+  "effects": [
+    "test-nodee0",
+    "test-nodee1",
+    "test-nodee2",
+    "test-nodee3",
+  ],
+  "mask": false,
+}
+`;
+
+exports[`mapEntitySceneProperties 1`] = `
+{
+  "locked": true,
+  "nodeColor": "BLUE",
+  "propertiesExpanded": false,
+  "solo": "NONE",
+  "visibleInViewport": true,
+}
+`;
+
+exports[`mapEntityCornerProperties 1`] = `
+{
+  "cornerRadius": 15,
+  "smoothCornerRadius": true,
+}
+`;
