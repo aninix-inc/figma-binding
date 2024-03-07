@@ -88,6 +88,7 @@ type Context = {
   initialNodeId?: string
   parentNodeId?: string
 }
+type GetNodeId = (node: SceneNode, index: number) => string
 
 /// mappers
 
@@ -807,7 +808,7 @@ const mapBooleanOperation = (
 const mapFrame = (
   entities: Entity[],
   node: FrameNode,
-  getNodeId: (node: SceneNode) => string,
+  getNodeId: GetNodeId,
   context: Context
 ): void => {
   entities.push({
@@ -840,7 +841,7 @@ const mapFrame = (
 const mapGroup = (
   entities: Entity[],
   node: GroupNode,
-  getNodeId: (node: SceneNode) => string,
+  getNodeId: GetNodeId,
   context: Context
 ): void => {
   entities.push({
@@ -867,7 +868,7 @@ const mapGroup = (
 const mapInstance = (
   entities: Entity[],
   node: InstanceNode,
-  getNodeId: (node: SceneNode) => string,
+  getNodeId: GetNodeId,
   context: Context
 ): void => {
   entities.push({
@@ -1055,10 +1056,11 @@ const mapNode = (
   entities: Entity[],
   node: SceneNode,
   projectId: string,
-  getNodeId: (node: SceneNode) => string,
+  getNodeId: GetNodeId,
   parentNodeId?: string
 ): string => {
-  const [storedNodeId, storedProjectId] = getNodeId(node).split('@')
+  const nodeIndex = entities.length === 0 ? 0 : entities.length - 1
+  const [storedNodeId, storedProjectId] = getNodeId(node, nodeIndex).split('@')
 
   // @NOTE: in case when node copied between frames/pages
   const context: Context =
@@ -1169,7 +1171,7 @@ const defaultGetProjectId = (node: SceneNode): string => {
   return !!storedProjectId ? storedProjectId : generateId()
 }
 
-const defaultGetNodeId = (node: SceneNode): string => {
+const defaultGetNodeId = (node: SceneNode, index: number): string => {
   const storedNodeId = node.getSharedPluginData(
     ANINIX_WORKSPACE_KEY,
     ANINIX_NODE_KEY
@@ -1201,7 +1203,7 @@ type Options = {
    *   return !!attachedNodeId ? attachedNodeId : generateId()
    * }
    */
-  getNodeId?: (node: SceneNode) => string
+  getNodeId?: GetNodeId
 }
 
 // @NOTE: using a class here improves performance in case of high mapper utilization
