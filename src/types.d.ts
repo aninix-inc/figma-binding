@@ -204,9 +204,9 @@ export type TrimEnd = number;
 export type TrimOffset = number;
 export type PathReversed = boolean;
 /**
- * Holds external node id so data can be synced with external systems
+ * Holds initial node id so data can be copied on project creation
  */
-export type ExternalNodeId = string;
+export type InitialNodeId = string;
 export type Children = [] | [string];
 export type ClipContent = boolean;
 export type ChildrenExpanded = boolean;
@@ -225,8 +225,7 @@ export type TopRightCornerRadius = number;
 export type BottomRightCornerRadius = number;
 export type BottomLeftCornerRadius = number;
 /**
- * ID of the main node, stores the Aninix ID. Works similar to 'mainComponent' property in Figma.
- * To retrieve 'external-node-id' you have to call 'entity.getComponent(MainNodeIdComponent)?.getComponent(ExternalNodeIdComponent)'
+ * ID of the main node, stores the Aninix ID. Works similar to `mainComponent` property in Figma.
  */
 export type MainNodeComponentId = string;
 export type PointCount = number;
@@ -630,7 +629,7 @@ export interface Ellipse {
     trimEnd?: TrimEnd;
     trimOffset?: TrimOffset;
     pathReversed?: PathReversed;
-    externalNodeId?: ExternalNodeId;
+    initialNodeId?: InitialNodeId;
     [k: string]: unknown;
   };
   [k: string]: unknown;
@@ -701,7 +700,7 @@ export interface Frame {
     trimEnd?: TrimEnd;
     trimOffset?: TrimOffset;
     pathReversed?: PathReversed;
-    externalNodeId?: ExternalNodeId;
+    initialNodeId?: InitialNodeId;
     [k: string]: unknown;
   };
   [k: string]: unknown;
@@ -744,7 +743,7 @@ export interface Group {
     skew: Skew;
     startTime?: StartTime;
     duration?: Duration;
-    externalNodeId?: ExternalNodeId;
+    initialNodeId?: InitialNodeId;
     [k: string]: unknown;
   };
   [k: string]: unknown;
@@ -814,7 +813,7 @@ export interface Instance {
     trimEnd?: TrimEnd;
     trimOffset?: TrimOffset;
     pathReversed?: PathReversed;
-    externalNodeId?: ExternalNodeId;
+    initialNodeId?: InitialNodeId;
     [k: string]: unknown;
   };
   [k: string]: unknown;
@@ -869,7 +868,7 @@ export interface Line {
     trimEnd?: TrimEnd;
     trimOffset?: TrimOffset;
     pathReversed?: PathReversed;
-    externalNodeId?: ExternalNodeId;
+    initialNodeId?: InitialNodeId;
     [k: string]: unknown;
   };
   [k: string]: unknown;
@@ -927,7 +926,7 @@ export interface Polygon {
     trimEnd?: TrimEnd;
     trimOffset?: TrimOffset;
     pathReversed?: PathReversed;
-    externalNodeId?: ExternalNodeId;
+    initialNodeId?: InitialNodeId;
     [k: string]: unknown;
   };
   [k: string]: unknown;
@@ -994,7 +993,7 @@ export interface Rectangle {
     trimEnd?: TrimEnd;
     trimOffset?: TrimOffset;
     pathReversed?: PathReversed;
-    externalNodeId?: ExternalNodeId;
+    initialNodeId?: InitialNodeId;
     [k: string]: unknown;
   };
   [k: string]: unknown;
@@ -1020,6 +1019,7 @@ export interface Root {
     fps: Fps;
     visibleInViewport: VisibleInViewport;
     rgba: Rgba;
+    initialNodeId?: InitialNodeId;
     [k: string]: unknown;
   };
   [k: string]: unknown;
@@ -1078,7 +1078,7 @@ export interface Star {
     trimEnd?: TrimEnd;
     trimOffset?: TrimOffset;
     pathReversed?: PathReversed;
-    externalNodeId?: ExternalNodeId;
+    initialNodeId?: InitialNodeId;
     [k: string]: unknown;
   };
   [k: string]: unknown;
@@ -1135,7 +1135,7 @@ export interface Text {
     trimEnd?: TrimEnd;
     trimOffset?: TrimOffset;
     pathReversed?: PathReversed;
-    externalNodeId?: ExternalNodeId;
+    initialNodeId?: InitialNodeId;
     [k: string]: unknown;
   };
   [k: string]: unknown;
@@ -1194,7 +1194,7 @@ export interface Vector {
     trimEnd?: TrimEnd;
     trimOffset?: TrimOffset;
     pathReversed?: PathReversed;
-    externalNodeId?: ExternalNodeId;
+    initialNodeId?: InitialNodeId;
     [k: string]: unknown;
   };
   [k: string]: unknown;
