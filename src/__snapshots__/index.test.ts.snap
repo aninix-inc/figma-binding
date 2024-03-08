@@ -275,6 +275,12 @@ exports[`mapEntityBlendProperties has multiple effects 2`] = `
 }
 `;
 
+exports[`mapEntityInstanceProperties not null 1`] = `
+{
+  "mainNodeComponentId": "some-id-from-aninix",
+}
+`;
+
 exports[`mapEntitySceneProperties 1`] = `
 {
   "locked": true,
@@ -289,5 +295,11 @@ exports[`mapEntityCornerProperties 1`] = `
 {
   "cornerRadius": 15,
   "smoothCornerRadius": true,
+}
+`;
+
+exports[`mapEntityFrameProperties 1`] = `
+{
+  "clipContent": true,
 }
 `;
