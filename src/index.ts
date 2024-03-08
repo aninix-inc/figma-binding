@@ -14,6 +14,8 @@ import type {
   AninixSnapshot,
   BackgroundBlur,
   BlendMode,
+  ChildrenExpanded,
+  ClipContent,
   CornerRadius,
   DropShadow,
   Effects,
@@ -29,6 +31,7 @@ import type {
   Line,
   LinearGradientPaint,
   Locked,
+  MainNodeComponentId,
   Mask,
   MatrixTransformKey,
   ColorStop as ModelColorStop,
@@ -88,7 +91,15 @@ type Context = {
   initialNodeId?: string
   parentNodeId?: string
 }
-type GetNodeId = (node: SceneNode, index: number) => string
+type GetNodeId = (
+  node: {
+    id: string
+    name: string
+    getPluginData: (key: string) => string
+    getSharedPluginData: (workspace: string, key: string) => string
+  },
+  index: number
+) => string
 
 /// mappers
 
@@ -426,7 +437,11 @@ const mapEntityChildrenProperties = <
   entities: Entity[],
   node: In,
   mapper: (entities: Entity[], entity: In) => string
-): { children: [string] } => ({
+): {
+  childrenExpanded: ChildrenExpanded
+  children: [string]
+} => ({
+  childrenExpanded: false,
   children: node.children
     // @TODO: remove ignorance once all nodes are implemented
     // @ts-ignore
@@ -743,6 +758,41 @@ const mapEntityLayoutProperties = <
   return sceneProperties
 }
 
+export const mapEntityFrameProperties = (node: {
+  clipsContent: boolean
+}): {
+  clipContent: ClipContent
+} => ({
+  clipContent: node.clipsContent,
+})
+
+export const mapEntityInstanceProperties = (
+  entities: Entity[],
+  node: Parameters<GetNodeId>[0] & {
+    mainComponent: Parameters<GetNodeId>[0] | null
+  },
+  getNodeId: GetNodeId
+): {
+  mainNodeComponentId: MainNodeComponentId
+} => {
+  if (node.mainComponent == null) {
+    throw new Error(
+      `Main component should NOT be null. Please check the Figma related code.
+Node id "${node.id}", name "${node.name}"`
+    )
+  }
+
+  return {
+    mainNodeComponentId:
+      node.mainComponent != null
+        ? getNodeId(
+            node.mainComponent,
+            entities.length === 0 ? 0 : entities.length - 1
+          )
+        : '',
+  }
+}
+
 /**
  * @mutates entities
  * @todo add test
@@ -816,8 +866,7 @@ const mapFrame = (
     tag: 'frame',
     schemaVersion: 1,
     components: {
-      clipContent: node.clipsContent,
-      childrenExpanded: false,
+      ...mapEntityFrameProperties(node),
       ...mapEntityEntryProperties(context),
       ...mapEntityBaseProperties(node, context),
       ...mapEntitySceneProperties(node),
@@ -849,7 +898,6 @@ const mapGroup = (
     tag: 'group',
     schemaVersion: 1,
     components: {
-      childrenExpanded: false,
       ...mapEntityBaseProperties(node, context),
       ...mapEntitySceneProperties(node),
       ...mapEntityBlendProperties(entities, node, context),
@@ -876,8 +924,8 @@ const mapInstance = (
     tag: 'instance',
     schemaVersion: 1,
     components: {
-      clipContent: node.clipsContent,
-      mainNodeComponentId: node.mainComponent?.id ?? '',
+      ...mapEntityInstanceProperties(entities, node, getNodeId),
+      ...mapEntityFrameProperties(node),
       ...mapEntityBaseProperties(node, context),
       ...mapEntitySceneProperties(node),
       ...mapEntityBlendProperties(entities, node, context),
@@ -1171,7 +1219,7 @@ const defaultGetProjectId = (node: SceneNode): string => {
   return !!storedProjectId ? storedProjectId : generateId()
 }
 
-const defaultGetNodeId = (node: SceneNode, index: number): string => {
+const defaultGetNodeId: GetNodeId = (node): string => {
   const storedNodeId = node.getSharedPluginData(
     ANINIX_WORKSPACE_KEY,
     ANINIX_NODE_KEY
@@ -1247,6 +1295,7 @@ export {
   ANINIX_PROJECT_KEY,
   ANINIX_WORKSPACE_KEY,
   generateId,
+  defaultGetNodeId as getNodeId,
   getNormalNodeName,
   getPageBackgroundColor,
   defaultGetProjectId as getProjectId,

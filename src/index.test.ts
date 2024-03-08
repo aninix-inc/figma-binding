@@ -1,9 +1,12 @@
-import { describe, expect, test } from 'bun:test'
+import { describe, expect, mock, test } from 'bun:test'
 import {
+  getNodeId,
   mapEntityBaseProperties,
   mapEntityBlendProperties,
   mapEntityCornerProperties,
   mapEntityEntryProperties,
+  mapEntityFrameProperties,
+  mapEntityInstanceProperties,
   mapEntitySceneProperties,
 } from '.'
 
@@ -318,4 +321,55 @@ test('mapEntityCornerProperties', () => {
     cornerSmoothing: 0.5,
   })
   expect(result).toMatchSnapshot()
+})
+
+test('mapEntityFrameProperties', () => {
+  const result = mapEntityFrameProperties({
+    clipsContent: true,
+  })
+  expect(result).toMatchSnapshot()
+})
+
+describe('mapEntityInstanceProperties', () => {
+  test('not null', () => {
+    const getPluginData = mock()
+    const getSharedPluginData = mock().mockReturnValue('some-id-from-aninix')
+
+    const result = mapEntityInstanceProperties(
+      [],
+      {
+        id: 'some-id-1-from-figma',
+        name: 'some-name-1',
+        getPluginData,
+        getSharedPluginData,
+        mainComponent: {
+          id: 'some-id-2-from-figma',
+          name: 'some-name-2',
+          getPluginData,
+          getSharedPluginData,
+        },
+      },
+      getNodeId
+    )
+    expect(result).toMatchSnapshot()
+  })
+
+  test('null', () => {
+    const getPluginData = mock()
+    const getSharedPluginData = mock().mockReturnValue('some-id-from-aninix')
+
+    expect(() =>
+      mapEntityInstanceProperties(
+        [],
+        {
+          id: 'some-id-1-from-figma',
+          name: 'some-name-1',
+          getPluginData,
+          getSharedPluginData,
+          mainComponent: null,
+        },
+        getNodeId
+      )
+    ).toThrow()
+  })
 })
