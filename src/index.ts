@@ -9,6 +9,7 @@ import { generateId } from './generate-id'
 import { getNormalNodeName } from './get-normal-node-name'
 import { getPageBackgroundColor } from './get-page-background-color'
 import { isProjectAttachedToNode } from './is-project-attached-to-node'
+import { mapCreateRenderJobResourceToHash } from './map-create-render-job-resource-to-hash'
 import { round } from './round'
 import type {
   AninixSnapshot,
@@ -1300,4 +1301,5 @@ export {
   getPageBackgroundColor,
   defaultGetProjectId as getProjectId,
   isProjectAttachedToNode,
+  mapCreateRenderJobResourceToHash,
 }
