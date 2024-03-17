@@ -92,15 +92,14 @@ type Context = {
   initialNodeId?: string
   parentNodeId?: string
 }
-type GetNodeId = (
-  node: {
-    id: string
-    name: string
-    getPluginData: (key: string) => string
-    getSharedPluginData: (workspace: string, key: string) => string
-  },
-  index: number
-) => string
+type FigmaNode = {
+  id: string
+  name: string
+  parent: FigmaNode | null
+  getPluginData: (key: string) => string
+  getSharedPluginData: (workspace: string, key: string) => string
+}
+type GetNodeId = (node: FigmaNode, index: number) => string
 
 /// mappers
 
