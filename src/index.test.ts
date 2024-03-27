@@ -1,4 +1,4 @@
-import { describe, expect, mock, test } from 'bun:test'
+import { beforeEach, describe, expect, mock, test } from 'bun:test'
 import {
   getNodeId,
   mapEntityBaseProperties,
@@ -9,6 +9,7 @@ import {
   mapEntityInstanceProperties,
   mapEntitySceneProperties,
 } from '.'
+import { Relations } from './relations'
 
 // @NOTE: provide global figma object
 // @ts-ignore
@@ -36,8 +37,15 @@ describe('mapEntityEntryProperties', () => {
 })
 
 describe('mapEntityBaseProperties', () => {
+  let relations: Relations
+
+  beforeEach(() => {
+    relations = new Relations()
+  })
+
   test('has NOT parent', () => {
     const result = mapEntityBaseProperties(
+      relations,
       {
         name: 'Some Node',
         type: 'ELLIPSE',
@@ -48,10 +56,12 @@ describe('mapEntityBaseProperties', () => {
       }
     )
     expect(result).toMatchSnapshot()
+    expect(relations.toJSON()).toMatchSnapshot()
   })
 
   test('has parent', () => {
     const result = mapEntityBaseProperties(
+      relations,
       {
         name: 'Some Node',
         type: 'ELLIPSE',
@@ -63,10 +73,12 @@ describe('mapEntityBaseProperties', () => {
       }
     )
     expect(result).toMatchSnapshot()
+    expect(relations.toJSON()).toMatchSnapshot()
   })
 
   test('has NOT initial node', () => {
     const result = mapEntityBaseProperties(
+      relations,
       {
         name: 'Some Node',
         type: 'ELLIPSE',
@@ -77,10 +89,12 @@ describe('mapEntityBaseProperties', () => {
       }
     )
     expect(result).toMatchSnapshot()
+    expect(relations.toJSON()).toMatchSnapshot()
   })
 
   test('has initial node', () => {
     const result = mapEntityBaseProperties(
+      relations,
       {
         name: 'Some Node',
         type: 'ELLIPSE',
@@ -93,6 +107,7 @@ describe('mapEntityBaseProperties', () => {
       }
     )
     expect(result).toMatchSnapshot()
+    expect(relations.toJSON()).toMatchSnapshot()
   })
 })
 
@@ -105,10 +120,17 @@ test('mapEntitySceneProperties', () => {
 })
 
 describe('mapEntityBlendProperties', () => {
+  let relations: Relations
+
+  beforeEach(() => {
+    relations = new Relations()
+  })
+
   test('has NOT effects', () => {
     const entities: any[] = []
     const result = mapEntityBlendProperties(
       entities,
+      relations,
       {
         blendMode: 'NORMAL',
         isMask: false,
@@ -122,6 +144,7 @@ describe('mapEntityBlendProperties', () => {
       }
     )
     expect(entities).toMatchSnapshot()
+    expect(relations.toJSON()).toMatchSnapshot()
     expect(result).toMatchSnapshot()
   })
 
@@ -129,6 +152,7 @@ describe('mapEntityBlendProperties', () => {
     const entities: any[] = []
     const result = mapEntityBlendProperties(
       entities,
+      relations,
       {
         blendMode: 'NORMAL',
         isMask: false,
@@ -159,6 +183,7 @@ describe('mapEntityBlendProperties', () => {
       }
     )
     expect(entities).toMatchSnapshot()
+    expect(relations.toJSON()).toMatchSnapshot()
     expect(result).toMatchSnapshot()
   })
 
@@ -166,6 +191,7 @@ describe('mapEntityBlendProperties', () => {
     const entities: any[] = []
     const result = mapEntityBlendProperties(
       entities,
+      relations,
       {
         blendMode: 'NORMAL',
         isMask: false,
@@ -196,6 +222,7 @@ describe('mapEntityBlendProperties', () => {
       }
     )
     expect(entities).toMatchSnapshot()
+    expect(relations.toJSON()).toMatchSnapshot()
     expect(result).toMatchSnapshot()
   })
 
@@ -203,6 +230,7 @@ describe('mapEntityBlendProperties', () => {
     const entities: any[] = []
     const result = mapEntityBlendProperties(
       entities,
+      relations,
       {
         blendMode: 'NORMAL',
         isMask: false,
@@ -222,6 +250,7 @@ describe('mapEntityBlendProperties', () => {
       }
     )
     expect(entities).toMatchSnapshot()
+    expect(relations.toJSON()).toMatchSnapshot()
     expect(result).toMatchSnapshot()
   })
 
@@ -229,6 +258,7 @@ describe('mapEntityBlendProperties', () => {
     const entities: any[] = []
     const result = mapEntityBlendProperties(
       entities,
+      relations,
       {
         blendMode: 'NORMAL',
         isMask: false,
@@ -248,6 +278,7 @@ describe('mapEntityBlendProperties', () => {
       }
     )
     expect(entities).toMatchSnapshot()
+    expect(relations.toJSON()).toMatchSnapshot()
     expect(result).toMatchSnapshot()
   })
 
@@ -255,6 +286,7 @@ describe('mapEntityBlendProperties', () => {
     const entities: any[] = []
     const result = mapEntityBlendProperties(
       entities,
+      relations,
       {
         blendMode: 'NORMAL',
         isMask: false,
@@ -311,6 +343,7 @@ describe('mapEntityBlendProperties', () => {
       }
     )
     expect(entities).toMatchSnapshot()
+    expect(relations.toJSON()).toMatchSnapshot()
     expect(result).toMatchSnapshot()
   })
 })

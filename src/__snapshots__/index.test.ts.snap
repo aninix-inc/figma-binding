@@ -16,12 +16,21 @@ exports[`mapEntityBaseProperties has NOT parent 1`] = `
 }
 `;
 
+exports[`mapEntityBaseProperties has NOT parent 2`] = `{}`;
+
 exports[`mapEntityBaseProperties has parent 1`] = `
 {
   "entityType": "NODE",
   "name": "Some Node",
   "nodeType": "ELLIPSE",
-  "parent": "test-parent-node",
+}
+`;
+
+exports[`mapEntityBaseProperties has parent 2`] = `
+{
+  "test-parent-node/children": [
+    "test-node/parent",
+  ],
 }
 `;
 
@@ -33,22 +42,32 @@ exports[`mapEntityBaseProperties has NOT initial node 1`] = `
 }
 `;
 
+exports[`mapEntityBaseProperties has NOT initial node 2`] = `{}`;
+
 exports[`mapEntityBaseProperties has initial node 1`] = `
 {
   "entityType": "NODE",
   "initialNodeId": "initial-test-node",
   "name": "Some Node",
   "nodeType": "ELLIPSE",
-  "parent": "test-parent-node",
+}
+`;
+
+exports[`mapEntityBaseProperties has initial node 2`] = `
+{
+  "test-parent-node/children": [
+    "test-node/parent",
+  ],
 }
 `;
 
 exports[`mapEntityBlendProperties has NOT effects 1`] = `[]`;
 
-exports[`mapEntityBlendProperties has NOT effects 2`] = `
+exports[`mapEntityBlendProperties has NOT effects 2`] = `{}`;
+
+exports[`mapEntityBlendProperties has NOT effects 3`] = `
 {
   "blendMode": "NORMAL",
-  "effects": [],
   "mask": false,
 }
 `;
@@ -84,10 +103,15 @@ exports[`mapEntityBlendProperties has drop shadow 1`] = `
 
 exports[`mapEntityBlendProperties has drop shadow 2`] = `
 {
-  "blendMode": "NORMAL",
-  "effects": [
-    "test-nodee0",
+  "test-node/effects": [
+    "test-nodee0/parent",
   ],
+}
+`;
+
+exports[`mapEntityBlendProperties has drop shadow 3`] = `
+{
+  "blendMode": "NORMAL",
   "mask": false,
 }
 `;
@@ -123,10 +147,15 @@ exports[`mapEntityBlendProperties has inner shadow 1`] = `
 
 exports[`mapEntityBlendProperties has inner shadow 2`] = `
 {
-  "blendMode": "NORMAL",
-  "effects": [
-    "test-nodee0",
+  "test-node/effects": [
+    "test-nodee0/parent",
   ],
+}
+`;
+
+exports[`mapEntityBlendProperties has inner shadow 3`] = `
+{
+  "blendMode": "NORMAL",
   "mask": false,
 }
 `;
@@ -150,10 +179,15 @@ exports[`mapEntityBlendProperties has layer blur 1`] = `
 
 exports[`mapEntityBlendProperties has layer blur 2`] = `
 {
-  "blendMode": "NORMAL",
-  "effects": [
-    "test-nodee0",
+  "test-node/effects": [
+    "test-nodee0/parent",
   ],
+}
+`;
+
+exports[`mapEntityBlendProperties has layer blur 3`] = `
+{
+  "blendMode": "NORMAL",
   "mask": false,
 }
 `;
@@ -177,10 +211,15 @@ exports[`mapEntityBlendProperties has background blur 1`] = `
 
 exports[`mapEntityBlendProperties has background blur 2`] = `
 {
-  "blendMode": "NORMAL",
-  "effects": [
-    "test-nodee0",
+  "test-node/effects": [
+    "test-nodee0/parent",
   ],
+}
+`;
+
+exports[`mapEntityBlendProperties has background blur 3`] = `
+{
+  "blendMode": "NORMAL",
   "mask": false,
 }
 `;
@@ -264,13 +303,18 @@ exports[`mapEntityBlendProperties has multiple effects 1`] = `
 
 exports[`mapEntityBlendProperties has multiple effects 2`] = `
 {
-  "blendMode": "NORMAL",
-  "effects": [
-    "test-nodee0",
-    "test-nodee1",
-    "test-nodee2",
-    "test-nodee3",
+  "test-node/effects": [
+    "test-nodee0/parent",
+    "test-nodee1/parent",
+    "test-nodee2/parent",
+    "test-nodee3/parent",
   ],
+}
+`;
+
+exports[`mapEntityBlendProperties has multiple effects 3`] = `
+{
+  "blendMode": "NORMAL",
   "mask": false,
 }
 `;
