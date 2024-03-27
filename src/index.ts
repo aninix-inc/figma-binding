@@ -167,7 +167,6 @@ const mapPaint = (
             1,
           ],
           paintType: 'SOLID',
-          parent: entityId,
         },
       } satisfies SolidPaint)
       break
@@ -189,7 +188,6 @@ const mapPaint = (
           opacity: paint.opacity ?? 1,
           gradientTransform: paint.gradientTransform,
           paintType: 'GRADIENT_LINEAR',
-          parent: entityId,
         },
       } satisfies LinearGradientPaint)
       break
@@ -211,7 +209,6 @@ const mapPaint = (
           opacity: paint.opacity ?? 1,
           gradientTransform: paint.gradientTransform,
           paintType: 'GRADIENT_RADIAL',
-          parent: entityId,
         },
       } satisfies RadialGradientPaint)
       break
@@ -237,7 +234,6 @@ const mapPaint = (
           rotation: paint.rotation ?? 0,
           opacity: paint.opacity ?? 1,
           paintType: 'IMAGE',
-          parent: entityId,
         },
       } satisfies ImagePaint)
       break
