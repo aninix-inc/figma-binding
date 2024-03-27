@@ -45,10 +45,6 @@ export type BlendMode =
   | "SATURATION"
   | "COLOR"
   | "LUMINOSITY";
-/**
- * System component used on entities link entity to specific component. Used on keyframes to connect them to properties.
- */
-export type Target = string;
 export type Time = number;
 /**
  * @minItems 2
@@ -69,10 +65,6 @@ export type SpringCurve = [number, number, number];
  * Holds ID of the animation preset to further work. Probably in future would be changed to reference instead of plain string.
  */
 export type PresetId = string;
-/**
- * System component used on entities link entity to another entity. Used on keyframes to connect them to curve styles.
- */
-export type Reference = string;
 export type Number = number;
 /**
  * @minItems 2
@@ -136,7 +128,6 @@ export type Locked = boolean;
  * Determine if current entity is mask or not
  */
 export type Mask = boolean;
-export type Effects = [] | [string];
 export type StrokeAlign = "CENTER" | "INSIDE" | "OUTSIDE";
 export type StrokeCapStart =
   | "NONE"
@@ -195,8 +186,6 @@ export type SizeLocked = boolean;
  * @maxItems 2
  */
 export type Skew = [number, number];
-export type Fills = [] | [string];
-export type Strokes = [] | [string];
 export type StartTime = number;
 export type Duration = number;
 export type TrimStart = number;
@@ -207,7 +196,6 @@ export type PathReversed = boolean;
  * Holds initial node id so data can be copied on project creation
  */
 export type InitialNodeId = string;
-export type Children = [] | [string];
 export type ClipContent = boolean;
 export type ChildrenExpanded = boolean;
 export type IndividualStrokeWeight = boolean;
@@ -252,7 +240,6 @@ export type ScaleType = "FILL" | "FIT" | "CROP" | "TILE";
  */
 export type ImageTransform = [[number, number, number], [number, number, number]];
 export type ScalingFactor = number;
-export type ColorStops = [] | [string];
 /**
  * @minItems 2
  * @maxItems 2
@@ -415,13 +402,11 @@ export interface MatrixTransformKey {
   schemaVersion: 1;
   components: {
     entityType: EntityType;
-    target: Target;
     time: Time;
     matrixTransform: MatrixTransform;
     timingCurve?: TimingCurve;
     springCurve?: SpringCurve;
     presetId?: PresetId;
-    reference?: Reference;
     [k: string]: unknown;
   };
   [k: string]: unknown;
@@ -441,13 +426,11 @@ export interface NumberKey {
   schemaVersion: 1;
   components: {
     entityType: EntityType;
-    target: Target;
     time: Time;
     number: Number;
     timingCurve?: TimingCurve;
     springCurve?: SpringCurve;
     presetId?: PresetId;
-    reference?: Reference;
     [k: string]: unknown;
   };
   [k: string]: unknown;
@@ -467,13 +450,11 @@ export interface Point2DKey {
   schemaVersion: 1;
   components: {
     entityType: EntityType;
-    target: Target;
     time: Time;
     point2d: Point2D;
     timingCurve?: TimingCurve;
     springCurve?: SpringCurve;
     presetId?: PresetId;
-    reference?: Reference;
     [k: string]: unknown;
   };
   [k: string]: unknown;
@@ -493,13 +474,11 @@ export interface RgbaKey {
   schemaVersion: 1;
   components: {
     entityType: EntityType;
-    target: Target;
     time: Time;
     rgba: Rgba;
     timingCurve?: TimingCurve;
     springCurve?: SpringCurve;
     presetId?: PresetId;
-    reference?: Reference;
     [k: string]: unknown;
   };
   [k: string]: unknown;
@@ -519,13 +498,11 @@ export interface SpatialPoint2DKey {
   schemaVersion: 1;
   components: {
     entityType: EntityType;
-    target: Target;
     time: Time;
     spatialPoint2d: SpatialPoint2D;
     timingCurve?: TimingCurve;
     springCurve?: SpringCurve;
     presetId?: PresetId;
-    reference?: Reference;
     [k: string]: unknown;
   };
   [k: string]: unknown;
@@ -601,7 +578,6 @@ export interface Ellipse {
     propertiesExpanded: PropertiesExpanded;
     blendMode: BlendMode;
     mask: Mask;
-    effects: Effects;
     strokeAlign: StrokeAlign;
     strokeCapStart: StrokeCapStart;
     strokeCapEnd: StrokeCapEnd;
@@ -621,8 +597,6 @@ export interface Ellipse {
     size: Size;
     sizeLocked: SizeLocked;
     skew: Skew;
-    fills: Fills;
-    strokes: Strokes;
     startTime?: StartTime;
     duration?: Duration;
     trimStart?: TrimStart;
@@ -650,7 +624,6 @@ export interface Frame {
   components: {
     name: Name;
     entityType: EntityType;
-    children: Children;
     clipContent: ClipContent;
     nodeType: NodeType;
     nodeColor: NodeColor;
@@ -661,7 +634,6 @@ export interface Frame {
     childrenExpanded: ChildrenExpanded;
     blendMode: BlendMode;
     mask: Mask;
-    effects: Effects;
     strokeAlign: StrokeAlign;
     strokeCapStart: StrokeCapStart;
     strokeCapEnd: StrokeCapEnd;
@@ -687,8 +659,6 @@ export interface Frame {
     size: Size;
     sizeLocked: SizeLocked;
     skew: Skew;
-    fills: Fills;
-    strokes: Strokes;
     entry?: Entry;
     topLeftCornerRadius?: TopLeftCornerRadius;
     topRightCornerRadius?: TopRightCornerRadius;
@@ -721,7 +691,6 @@ export interface Group {
   components: {
     name: Name;
     entityType: EntityType;
-    children: Children;
     nodeType: NodeType;
     nodeColor: NodeColor;
     solo: Solo;
@@ -731,7 +700,6 @@ export interface Group {
     childrenExpanded: ChildrenExpanded;
     blendMode: BlendMode;
     mask: Mask;
-    effects: Effects;
     anchorPoint: AnchorPoint;
     position: Position;
     rotation: Rotation;
@@ -764,7 +732,7 @@ export interface Instance {
   components: {
     name: Name;
     entityType: EntityType;
-    children: Children;
+    childrenExpanded: ChildrenExpanded;
     clipContent: ClipContent;
     nodeType: NodeType;
     nodeColor: NodeColor;
@@ -774,7 +742,6 @@ export interface Instance {
     propertiesExpanded: PropertiesExpanded;
     blendMode: BlendMode;
     mask: Mask;
-    effects: Effects;
     strokeAlign: StrokeAlign;
     strokeCapStart: StrokeCapStart;
     strokeCapEnd: StrokeCapEnd;
@@ -800,8 +767,6 @@ export interface Instance {
     size: Size;
     sizeLocked: SizeLocked;
     skew: Skew;
-    fills: Fills;
-    strokes: Strokes;
     mainNodeComponentId: MainNodeComponentId;
     topLeftCornerRadius?: TopLeftCornerRadius;
     topRightCornerRadius?: TopRightCornerRadius;
@@ -842,7 +807,6 @@ export interface Line {
     propertiesExpanded: PropertiesExpanded;
     blendMode: BlendMode;
     mask: Mask;
-    effects: Effects;
     strokeAlign: StrokeAlign;
     strokeCapStart: StrokeCapStart;
     strokeCapEnd: StrokeCapEnd;
@@ -860,8 +824,6 @@ export interface Line {
     size: Size;
     sizeLocked: SizeLocked;
     skew: Skew;
-    fills: Fills;
-    strokes: Strokes;
     startTime?: StartTime;
     duration?: Duration;
     trimStart?: TrimStart;
@@ -898,7 +860,6 @@ export interface Polygon {
     propertiesExpanded: PropertiesExpanded;
     blendMode: BlendMode;
     mask: Mask;
-    effects: Effects;
     strokeAlign: StrokeAlign;
     strokeCapStart: StrokeCapStart;
     strokeCapEnd: StrokeCapEnd;
@@ -918,8 +879,6 @@ export interface Polygon {
     size: Size;
     sizeLocked: SizeLocked;
     skew: Skew;
-    fills: Fills;
-    strokes: Strokes;
     startTime?: StartTime;
     duration?: Duration;
     trimStart?: TrimStart;
@@ -955,7 +914,6 @@ export interface Rectangle {
     propertiesExpanded: PropertiesExpanded;
     blendMode: BlendMode;
     mask: Mask;
-    effects: Effects;
     strokeAlign: StrokeAlign;
     strokeCapStart: StrokeCapStart;
     strokeCapEnd: StrokeCapEnd;
@@ -981,8 +939,6 @@ export interface Rectangle {
     size: Size;
     sizeLocked: SizeLocked;
     skew: Skew;
-    fills: Fills;
-    strokes: Strokes;
     topLeftCornerRadius?: TopLeftCornerRadius;
     topRightCornerRadius?: TopRightCornerRadius;
     bottomRightCornerRadius?: BottomRightCornerRadius;
@@ -1050,7 +1006,6 @@ export interface Star {
     propertiesExpanded: PropertiesExpanded;
     blendMode: BlendMode;
     mask: Mask;
-    effects: Effects;
     strokeAlign: StrokeAlign;
     strokeCapStart: StrokeCapStart;
     strokeCapEnd: StrokeCapEnd;
@@ -1070,8 +1025,6 @@ export interface Star {
     size: Size;
     sizeLocked: SizeLocked;
     skew: Skew;
-    fills: Fills;
-    strokes: Strokes;
     startTime?: StartTime;
     duration?: Duration;
     trimStart?: TrimStart;
@@ -1108,7 +1061,6 @@ export interface Text {
     propertiesExpanded: PropertiesExpanded;
     blendMode: BlendMode;
     mask: Mask;
-    effects: Effects;
     strokeAlign: StrokeAlign;
     strokeCapStart: StrokeCapStart;
     strokeCapEnd: StrokeCapEnd;
@@ -1126,8 +1078,6 @@ export interface Text {
     size: Size;
     sizeLocked: SizeLocked;
     skew: Skew;
-    fills: Fills;
-    strokes: Strokes;
     sizeBehaviour: SizeBehaviour;
     startTime?: StartTime;
     duration?: Duration;
@@ -1165,7 +1115,6 @@ export interface Vector {
     propertiesExpanded: PropertiesExpanded;
     blendMode: BlendMode;
     mask: Mask;
-    effects: Effects;
     strokeAlign: StrokeAlign;
     strokeCapStart: StrokeCapStart;
     strokeCapEnd: StrokeCapEnd;
@@ -1185,8 +1134,6 @@ export interface Vector {
     size: Size;
     sizeLocked: SizeLocked;
     skew: Skew;
-    fills: Fills;
-    strokes: Strokes;
     sizeBehaviour: SizeBehaviour;
     startTime?: StartTime;
     duration?: Duration;
@@ -1270,7 +1217,6 @@ export interface LinearGradientPaint {
     blendMode: BlendMode;
     visibleInViewport: VisibleInViewport;
     propertiesExpanded: PropertiesExpanded;
-    colorStops: ColorStops;
     opacity: Opacity;
     gradientTransform: GradientTransform;
     paintType: PaintType;
@@ -1296,7 +1242,6 @@ export interface RadialGradientPaint {
     blendMode: BlendMode;
     visibleInViewport: VisibleInViewport;
     propertiesExpanded: PropertiesExpanded;
-    colorStops: ColorStops;
     opacity: Opacity;
     gradientTransform: GradientTransform;
     paintType: PaintType;
