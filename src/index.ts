@@ -97,9 +97,15 @@ type FigmaNode = {
   name: string
   parent: FigmaNode | null
   getPluginData: (key: string) => string
+  setPluginData: (key: string, value: string) => void
   getSharedPluginData: (workspace: string, key: string) => string
+  setSharedPluginData: (workspace: string, key: string, value: string) => void
 }
-type GetNodeId = (node: FigmaNode, index: number) => string
+type GetNodeId = (node: FigmaNode, projectId: string) => string
+/**
+ * @mutates node
+ */
+type SetNodeId = (node: FigmaNode, projectId: string, nodeId: string) => void
 
 /// mappers
 
@@ -794,7 +800,8 @@ export const mapEntityInstanceProperties = (
   node: Parameters<GetNodeId>[0] & {
     mainComponent: Parameters<GetNodeId>[0] | null
   },
-  getNodeId: GetNodeId
+  getNodeId: GetNodeId,
+  context: Context
 ): {
   mainNodeComponentId: MainNodeComponentId
 } => {
@@ -808,10 +815,7 @@ Node id "${node.id}", name "${node.name}"`
   return {
     mainNodeComponentId:
       node.mainComponent != null
-        ? getNodeId(
-            node.mainComponent,
-            entities.length === 0 ? 0 : entities.length - 1
-          )
+        ? getNodeId(node.mainComponent, context.projectId)
         : '',
   }
 }
@@ -885,6 +889,7 @@ const mapFrame = (
   relations: Relations,
   node: FrameNode,
   getNodeId: GetNodeId,
+  setNodeId: SetNodeId,
   context: Context
 ): void => {
   entities.push({
@@ -909,6 +914,7 @@ const mapFrame = (
             _node,
             context.projectId,
             getNodeId,
+            setNodeId,
             context.nodeId
           )
       ),
@@ -930,6 +936,7 @@ const mapGroup = (
   relations: Relations,
   node: GroupNode,
   getNodeId: GetNodeId,
+  setNodeId: SetNodeId,
   context: Context
 ): void => {
   entities.push({
@@ -952,6 +959,7 @@ const mapGroup = (
             _node,
             context.projectId,
             getNodeId,
+            setNodeId,
             context.nodeId
           )
       ),
@@ -969,6 +977,7 @@ const mapInstance = (
   relations: Relations,
   node: InstanceNode,
   getNodeId: GetNodeId,
+  setNodeId: SetNodeId,
   context: Context
 ): void => {
   entities.push({
@@ -976,7 +985,7 @@ const mapInstance = (
     tag: 'instance',
     schemaVersion: 1,
     components: {
-      ...mapEntityInstanceProperties(entities, node, getNodeId),
+      ...mapEntityInstanceProperties(entities, node, getNodeId, context),
       ...mapEntityFrameProperties(node),
       ...mapEntityBaseProperties(relations, node, context),
       ...mapEntitySceneProperties(node),
@@ -993,6 +1002,7 @@ const mapInstance = (
             _node,
             context.projectId,
             getNodeId,
+            setNodeId,
             context.nodeId
           )
       ),
@@ -1176,25 +1186,28 @@ const mapNode = (
   node: SceneNode,
   projectId: string,
   getNodeId: GetNodeId,
+  setNodeId: SetNodeId,
   parentNodeId?: string
 ): string => {
-  const nodeIndex = entities.length === 0 ? 0 : entities.length - 1
-  const [storedNodeId, storedProjectId] = getNodeId(node, nodeIndex).split('@')
+  const [storedNodeId, storedProjectId] = getNodeId(node, projectId).split('@')
+  const isNodeLinkedToAnotherProject =
+    storedProjectId !== undefined && storedProjectId !== projectId
+  const nodeId = isNodeLinkedToAnotherProject ? generateId() : storedNodeId
+  setNodeId(node, projectId, nodeId)
 
   // @NOTE: in case when node copied between frames/pages
-  const context: Context =
-    storedProjectId != null && storedProjectId !== projectId
-      ? {
-          projectId,
-          nodeId: generateId(),
-          initialNodeId: storedNodeId,
-          parentNodeId,
-        }
-      : {
-          projectId,
-          nodeId: storedNodeId,
-          parentNodeId,
-        }
+  const context: Context = isNodeLinkedToAnotherProject
+    ? {
+        projectId,
+        nodeId,
+        initialNodeId: storedNodeId,
+        parentNodeId,
+      }
+    : {
+        projectId,
+        nodeId,
+        parentNodeId,
+      }
 
   switch (node.type) {
     case 'ELLIPSE': {
@@ -1206,15 +1219,15 @@ const mapNode = (
       break
     }
     case 'FRAME': {
-      mapFrame(entities, relations, node, getNodeId, context)
+      mapFrame(entities, relations, node, getNodeId, setNodeId, context)
       break
     }
     case 'GROUP': {
-      mapGroup(entities, relations, node, getNodeId, context)
+      mapGroup(entities, relations, node, getNodeId, setNodeId, context)
       break
     }
     case 'INSTANCE': {
-      mapInstance(entities, relations, node, getNodeId, context)
+      mapInstance(entities, relations, node, getNodeId, setNodeId, context)
       break
     }
     case 'LINE': {
@@ -1290,12 +1303,20 @@ const defaultGetProjectId = (node: SceneNode): string => {
   return !!storedProjectId ? storedProjectId : generateId()
 }
 
-const defaultGetNodeId: GetNodeId = (node): string => {
+const defaultGetNodeId: GetNodeId = (node, projectId) => {
   const storedNodeId = node.getSharedPluginData(
     ANINIX_WORKSPACE_KEY,
     ANINIX_NODE_KEY
   )
-  return !!storedNodeId ? storedNodeId : generateId()
+  return !!storedNodeId ? storedNodeId : `${generateId()}@${projectId}`
+}
+const defaultSetNodeId: SetNodeId = (node, projectId, nodeId) => {
+  node.setPluginData(ANINIX_NODE_KEY, `${nodeId}@${projectId}`)
+  node.setSharedPluginData(
+    ANINIX_WORKSPACE_KEY,
+    ANINIX_NODE_KEY,
+    `${nodeId}@${projectId}`
+  )
 }
 
 type Options = {
@@ -1323,6 +1344,12 @@ type Options = {
    * }
    */
   getNodeId?: GetNodeId
+
+  /**
+   * A middleware function to persist node ID.
+   * By default, it will try to set the public node ID after generation.
+   */
+  setNodeId?: (node: FigmaNode, nodeId: string) => void
 }
 
 // @NOTE: using a class here improves performance in case of high mapper utilization
@@ -1345,7 +1372,8 @@ class Bind {
       relations,
       this.node,
       projectId,
-      this.options?.getNodeId ?? defaultGetNodeId
+      this.options?.getNodeId ?? defaultGetNodeId,
+      this.options?.setNodeId ?? defaultSetNodeId
     )
     return {
       id: defaultGetProjectId(this.node),
