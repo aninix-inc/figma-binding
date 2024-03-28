@@ -97,9 +97,15 @@ type FigmaNode = {
   name: string
   parent: FigmaNode | null
   getPluginData: (key: string) => string
+  setPluginData: (key: string, value: string) => void
   getSharedPluginData: (workspace: string, key: string) => string
+  setSharedPluginData: (workspace: string, key: string, value: string) => void
 }
-type GetNodeId = (node: FigmaNode, index: number) => string
+type GetNodeId = (node: FigmaNode, projectId: string) => string
+/**
+ * @mutates node
+ */
+type SetNodeId = (node: FigmaNode, projectId: string, nodeId: string) => void
 
 /// mappers
 
@@ -142,6 +148,7 @@ const mapColorStops = (
  */
 const mapPaint = (
   entities: Entity[],
+  relations: Relations,
   entityId: string,
   paint: Paint,
   type: 'f' | 's', // fill | stroke
@@ -164,7 +171,7 @@ const mapPaint = (
             round(paint.color.r * 255, 0),
             round(paint.color.g * 255, 0),
             round(paint.color.b * 255, 0),
-            1,
+            paint.opacity ?? 1,
           ],
           paintType: 'SOLID',
         },
@@ -182,14 +189,18 @@ const mapPaint = (
           blendMode: paint.blendMode ?? 'NORMAL',
           visibleInViewport: paint.visible ?? true,
           propertiesExpanded: false,
-          colorStops: mapColorStops(entities, paintId, paint.gradientStops) as [
-            string,
-          ],
           opacity: paint.opacity ?? 1,
           gradientTransform: paint.gradientTransform,
           paintType: 'GRADIENT_LINEAR',
         },
       } satisfies LinearGradientPaint)
+
+      const colorStopIds = mapColorStops(entities, paintId, paint.gradientStops)
+
+      for (const colorStopId of colorStopIds) {
+        relations.addRelation(`${paintId}/colorStops`, `${colorStopId}/parent`)
+      }
+
       break
     }
 
@@ -203,14 +214,18 @@ const mapPaint = (
           blendMode: paint.blendMode ?? 'NORMAL',
           visibleInViewport: paint.visible ?? true,
           propertiesExpanded: false,
-          colorStops: mapColorStops(entities, paintId, paint.gradientStops) as [
-            string,
-          ],
           opacity: paint.opacity ?? 1,
           gradientTransform: paint.gradientTransform,
           paintType: 'GRADIENT_RADIAL',
         },
       } satisfies RadialGradientPaint)
+
+      const colorStopIds = mapColorStops(entities, paintId, paint.gradientStops)
+
+      for (const colorStopId of colorStopIds) {
+        relations.addRelation(`${paintId}/colorStops`, `${colorStopId}/parent`)
+      }
+
       break
     }
 
@@ -547,7 +562,7 @@ const mapEntityGeometryProperties = <
   const fillIds =
     node.fills !== figma.mixed
       ? node.fills.map((child, idx) =>
-          mapPaint(entities, context.nodeId, child, 'f', idx)
+          mapPaint(entities, relations, context.nodeId, child, 'f', idx)
         )
       : []
 
@@ -556,11 +571,11 @@ const mapEntityGeometryProperties = <
   }
 
   const strokeIds = node.strokes.map((child, idx) =>
-    mapPaint(entities, context.nodeId, child, 's', idx)
+    mapPaint(entities, relations, context.nodeId, child, 's', idx)
   )
 
   for (const strokeId of strokeIds) {
-    relations.addRelation(`${context.nodeId}/fills`, `${strokeId}/parent`)
+    relations.addRelation(`${context.nodeId}/strokes`, `${strokeId}/parent`)
   }
 
   const properties: Pick<
@@ -794,7 +809,8 @@ export const mapEntityInstanceProperties = (
   node: Parameters<GetNodeId>[0] & {
     mainComponent: Parameters<GetNodeId>[0] | null
   },
-  getNodeId: GetNodeId
+  getNodeId: GetNodeId,
+  context: Context
 ): {
   mainNodeComponentId: MainNodeComponentId
 } => {
@@ -808,10 +824,7 @@ Node id "${node.id}", name "${node.name}"`
   return {
     mainNodeComponentId:
       node.mainComponent != null
-        ? getNodeId(
-            node.mainComponent,
-            entities.length === 0 ? 0 : entities.length - 1
-          )
+        ? getNodeId(node.mainComponent, context.projectId)
         : '',
   }
 }
@@ -885,6 +898,7 @@ const mapFrame = (
   relations: Relations,
   node: FrameNode,
   getNodeId: GetNodeId,
+  setNodeId: SetNodeId,
   context: Context
 ): void => {
   entities.push({
@@ -909,6 +923,7 @@ const mapFrame = (
             _node,
             context.projectId,
             getNodeId,
+            setNodeId,
             context.nodeId
           )
       ),
@@ -930,6 +945,7 @@ const mapGroup = (
   relations: Relations,
   node: GroupNode,
   getNodeId: GetNodeId,
+  setNodeId: SetNodeId,
   context: Context
 ): void => {
   entities.push({
@@ -952,6 +968,7 @@ const mapGroup = (
             _node,
             context.projectId,
             getNodeId,
+            setNodeId,
             context.nodeId
           )
       ),
@@ -969,6 +986,7 @@ const mapInstance = (
   relations: Relations,
   node: InstanceNode,
   getNodeId: GetNodeId,
+  setNodeId: SetNodeId,
   context: Context
 ): void => {
   entities.push({
@@ -976,7 +994,7 @@ const mapInstance = (
     tag: 'instance',
     schemaVersion: 1,
     components: {
-      ...mapEntityInstanceProperties(entities, node, getNodeId),
+      ...mapEntityInstanceProperties(entities, node, getNodeId, context),
       ...mapEntityFrameProperties(node),
       ...mapEntityBaseProperties(relations, node, context),
       ...mapEntitySceneProperties(node),
@@ -993,6 +1011,7 @@ const mapInstance = (
             _node,
             context.projectId,
             getNodeId,
+            setNodeId,
             context.nodeId
           )
       ),
@@ -1176,23 +1195,35 @@ const mapNode = (
   node: SceneNode,
   projectId: string,
   getNodeId: GetNodeId,
+  setNodeId: SetNodeId,
   parentNodeId?: string
 ): string => {
-  const nodeIndex = entities.length === 0 ? 0 : entities.length - 1
-  const [storedNodeId, storedProjectId] = getNodeId(node, nodeIndex).split('@')
+  const [storedNodeId, storedProjectId] = getNodeId(node, projectId).split('@')
+  const isNodeLinkedToAnotherProject =
+    storedProjectId !== undefined && storedProjectId !== projectId
+  // @NOTE: can happen when user copied/duplicated layer
+  // @TODO: refactor to use map instead of array search
+  // @TODO: add test for such case.
+  // To reproduce you can run plugin inside of figma, create project and then duplicate layer a few times.
+  const hasEntityWithSuchId = entities.find((e) => e.id === storedNodeId)
+  const nodeId =
+    isNodeLinkedToAnotherProject || hasEntityWithSuchId
+      ? generateId()
+      : storedNodeId
+  setNodeId(node, projectId, nodeId)
 
   // @NOTE: in case when node copied between frames/pages
   const context: Context =
-    storedProjectId != null && storedProjectId !== projectId
+    isNodeLinkedToAnotherProject || hasEntityWithSuchId
       ? {
           projectId,
-          nodeId: generateId(),
+          nodeId,
           initialNodeId: storedNodeId,
           parentNodeId,
         }
       : {
           projectId,
-          nodeId: storedNodeId,
+          nodeId,
           parentNodeId,
         }
 
@@ -1206,15 +1237,15 @@ const mapNode = (
       break
     }
     case 'FRAME': {
-      mapFrame(entities, relations, node, getNodeId, context)
+      mapFrame(entities, relations, node, getNodeId, setNodeId, context)
       break
     }
     case 'GROUP': {
-      mapGroup(entities, relations, node, getNodeId, context)
+      mapGroup(entities, relations, node, getNodeId, setNodeId, context)
       break
     }
     case 'INSTANCE': {
-      mapInstance(entities, relations, node, getNodeId, context)
+      mapInstance(entities, relations, node, getNodeId, setNodeId, context)
       break
     }
     case 'LINE': {
@@ -1290,12 +1321,20 @@ const defaultGetProjectId = (node: SceneNode): string => {
   return !!storedProjectId ? storedProjectId : generateId()
 }
 
-const defaultGetNodeId: GetNodeId = (node): string => {
+const defaultGetNodeId: GetNodeId = (node, projectId) => {
   const storedNodeId = node.getSharedPluginData(
     ANINIX_WORKSPACE_KEY,
     ANINIX_NODE_KEY
   )
-  return !!storedNodeId ? storedNodeId : generateId()
+  return !!storedNodeId ? storedNodeId : `${generateId()}@${projectId}`
+}
+const defaultSetNodeId: SetNodeId = (node, projectId, nodeId) => {
+  node.setPluginData(ANINIX_NODE_KEY, `${nodeId}@${projectId}`)
+  node.setSharedPluginData(
+    ANINIX_WORKSPACE_KEY,
+    ANINIX_NODE_KEY,
+    `${nodeId}@${projectId}`
+  )
 }
 
 type Options = {
@@ -1323,6 +1362,12 @@ type Options = {
    * }
    */
   getNodeId?: GetNodeId
+
+  /**
+   * A middleware function to persist node ID.
+   * By default, it will try to set the public node ID after generation.
+   */
+  setNodeId?: (node: FigmaNode, nodeId: string) => void
 }
 
 // @NOTE: using a class here improves performance in case of high mapper utilization
@@ -1345,7 +1390,8 @@ class Bind {
       relations,
       this.node,
       projectId,
-      this.options?.getNodeId ?? defaultGetNodeId
+      this.options?.getNodeId ?? defaultGetNodeId,
+      this.options?.setNodeId ?? defaultSetNodeId
     )
     return {
       id: defaultGetProjectId(this.node),
