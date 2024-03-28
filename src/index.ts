@@ -171,7 +171,7 @@ const mapPaint = (
             round(paint.color.r * 255, 0),
             round(paint.color.g * 255, 0),
             round(paint.color.b * 255, 0),
-            1,
+            paint.opacity ?? 1,
           ],
           paintType: 'SOLID',
         },
