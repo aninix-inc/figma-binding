@@ -390,7 +390,11 @@ describe('mapEntityInstanceProperties', () => {
           setSharedPluginData,
         },
       },
-      getNodeId
+      getNodeId,
+      {
+        projectId: 'some-project-id',
+        nodeId: 'some-node-id',
+      }
     )
     expect(result).toMatchSnapshot()
   })
