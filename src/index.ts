@@ -148,6 +148,7 @@ const mapColorStops = (
  */
 const mapPaint = (
   entities: Entity[],
+  relations: Relations,
   entityId: string,
   paint: Paint,
   type: 'f' | 's', // fill | stroke
@@ -188,14 +189,18 @@ const mapPaint = (
           blendMode: paint.blendMode ?? 'NORMAL',
           visibleInViewport: paint.visible ?? true,
           propertiesExpanded: false,
-          colorStops: mapColorStops(entities, paintId, paint.gradientStops) as [
-            string,
-          ],
           opacity: paint.opacity ?? 1,
           gradientTransform: paint.gradientTransform,
           paintType: 'GRADIENT_LINEAR',
         },
       } satisfies LinearGradientPaint)
+
+      const colorStopIds = mapColorStops(entities, paintId, paint.gradientStops)
+
+      for (const colorStopId of colorStopIds) {
+        relations.addRelation(`${paintId}/colorStops`, `${colorStopId}/parent`)
+      }
+
       break
     }
 
@@ -209,14 +214,18 @@ const mapPaint = (
           blendMode: paint.blendMode ?? 'NORMAL',
           visibleInViewport: paint.visible ?? true,
           propertiesExpanded: false,
-          colorStops: mapColorStops(entities, paintId, paint.gradientStops) as [
-            string,
-          ],
           opacity: paint.opacity ?? 1,
           gradientTransform: paint.gradientTransform,
           paintType: 'GRADIENT_RADIAL',
         },
       } satisfies RadialGradientPaint)
+
+      const colorStopIds = mapColorStops(entities, paintId, paint.gradientStops)
+
+      for (const colorStopId of colorStopIds) {
+        relations.addRelation(`${paintId}/colorStops`, `${colorStopId}/parent`)
+      }
+
       break
     }
 
@@ -553,7 +562,7 @@ const mapEntityGeometryProperties = <
   const fillIds =
     node.fills !== figma.mixed
       ? node.fills.map((child, idx) =>
-          mapPaint(entities, context.nodeId, child, 'f', idx)
+          mapPaint(entities, relations, context.nodeId, child, 'f', idx)
         )
       : []
 
@@ -562,11 +571,11 @@ const mapEntityGeometryProperties = <
   }
 
   const strokeIds = node.strokes.map((child, idx) =>
-    mapPaint(entities, context.nodeId, child, 's', idx)
+    mapPaint(entities, relations, context.nodeId, child, 's', idx)
   )
 
   for (const strokeId of strokeIds) {
-    relations.addRelation(`${context.nodeId}/fills`, `${strokeId}/parent`)
+    relations.addRelation(`${context.nodeId}/strokes`, `${strokeId}/parent`)
   }
 
   const properties: Pick<
