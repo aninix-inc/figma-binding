@@ -1192,22 +1192,31 @@ const mapNode = (
   const [storedNodeId, storedProjectId] = getNodeId(node, projectId).split('@')
   const isNodeLinkedToAnotherProject =
     storedProjectId !== undefined && storedProjectId !== projectId
-  const nodeId = isNodeLinkedToAnotherProject ? generateId() : storedNodeId
+  // @NOTE: can happen when user copied/duplicated layer
+  // @TODO: refactor to use map instead of array search
+  // @TODO: add test for such case.
+  // To reproduce you can run plugin inside of figma, create project and then duplicate layer a few times.
+  const hasEntityWithSuchId = entities.find((e) => e.id === storedNodeId)
+  const nodeId =
+    isNodeLinkedToAnotherProject || hasEntityWithSuchId
+      ? generateId()
+      : storedNodeId
   setNodeId(node, projectId, nodeId)
 
   // @NOTE: in case when node copied between frames/pages
-  const context: Context = isNodeLinkedToAnotherProject
-    ? {
-        projectId,
-        nodeId,
-        initialNodeId: storedNodeId,
-        parentNodeId,
-      }
-    : {
-        projectId,
-        nodeId,
-        parentNodeId,
-      }
+  const context: Context =
+    isNodeLinkedToAnotherProject || hasEntityWithSuchId
+      ? {
+          projectId,
+          nodeId,
+          initialNodeId: storedNodeId,
+          parentNodeId,
+        }
+      : {
+          projectId,
+          nodeId,
+          parentNodeId,
+        }
 
   switch (node.type) {
     case 'ELLIPSE': {
