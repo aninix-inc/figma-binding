@@ -1205,7 +1205,8 @@ const mapNode = (
   // @TODO: refactor to use map instead of array search
   // @TODO: add test for such case.
   // To reproduce you can run plugin inside of figma, create project and then duplicate layer a few times.
-  const hasEntityWithSuchId = entities.find((e) => e.id === storedNodeId)
+  const hasEntityWithSuchId =
+    entities.find((e) => e.id === storedNodeId) !== undefined
   const nodeId =
     isNodeLinkedToAnotherProject || hasEntityWithSuchId
       ? generateId()
@@ -1394,7 +1395,7 @@ class Bind {
       this.options?.setNodeId ?? defaultSetNodeId
     )
     return {
-      id: defaultGetProjectId(this.node),
+      id: projectId,
       schemaVersion: 2,
       entities: Object.fromEntries(
         entities.map((entity) => [entity.id, entity])
