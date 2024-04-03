@@ -144,6 +144,8 @@ const mapColorStops = (
 }
 
 /**
+ * Undefined returned in cases when paint is not supported.
+ * This case should be handled outside of this function.
  * @todo add test
  */
 const mapPaint = (
@@ -153,10 +155,11 @@ const mapPaint = (
   paint: Paint,
   type: 'f' | 's', // fill | stroke
   index: number
-) => {
+): string | undefined => {
   const paintId = `${entityId}p${type}${index}`
+  const paintType = paint.type
 
-  switch (paint.type) {
+  switch (paintType) {
     case 'SOLID': {
       entities.push({
         id: paintId,
@@ -253,6 +256,10 @@ const mapPaint = (
       } satisfies ImagePaint)
       break
     }
+
+    // @TODO: add support of the rest of paints.
+    default:
+      return undefined
   }
 
   return paintId
@@ -561,18 +568,22 @@ const mapEntityGeometryProperties = <
 > => {
   const fillIds =
     node.fills !== figma.mixed
-      ? node.fills.map((child, idx) =>
-          mapPaint(entities, relations, context.nodeId, child, 'f', idx)
-        )
+      ? node.fills
+          .map((child, idx) =>
+            mapPaint(entities, relations, context.nodeId, child, 'f', idx)
+          )
+          .filter((id) => id !== undefined)
       : []
 
   for (const fillId of fillIds) {
     relations.addRelation(`${context.nodeId}/fills`, `${fillId}/parent`)
   }
 
-  const strokeIds = node.strokes.map((child, idx) =>
-    mapPaint(entities, relations, context.nodeId, child, 's', idx)
-  )
+  const strokeIds = node.strokes
+    .map((child, idx) =>
+      mapPaint(entities, relations, context.nodeId, child, 's', idx)
+    )
+    .filter((id) => id !== undefined)
 
   for (const strokeId of strokeIds) {
     relations.addRelation(`${context.nodeId}/strokes`, `${strokeId}/parent`)
