@@ -371,7 +371,6 @@ describe('mapEntityInstanceProperties', () => {
     const setSharedPluginData = mock().mockReturnValue('some-id-from-aninix')
 
     const result = mapEntityInstanceProperties(
-      [],
       {
         id: 'some-id-1-from-figma',
         name: 'some-name-1',
@@ -407,7 +406,6 @@ describe('mapEntityInstanceProperties', () => {
 
     expect(() =>
       mapEntityInstanceProperties(
-        [],
         {
           id: 'some-id-1-from-figma',
           name: 'some-name-1',
@@ -418,7 +416,11 @@ describe('mapEntityInstanceProperties', () => {
           setSharedPluginData,
           mainComponent: null,
         },
-        getNodeId
+        getNodeId,
+        {
+          projectId: 'some-project-id',
+          nodeId: 'some-node-id',
+        }
       )
     ).toThrow()
   })
