@@ -483,13 +483,17 @@ const mapEntityChildrenProperties = <
   relations: Relations,
   node: In,
   context: Context,
-  mapper: (entities: Entity[], relations: Relations, entity: In) => string
+  mapper: (
+    entities: Entity[],
+    relations: Relations,
+    entity: In
+  ) => string | undefined
 ): {
   childrenExpanded: ChildrenExpanded
 } => {
-  const childrenIds = node.children.map((child) =>
-    mapper(entities, relations, child as any)
-  )
+  const childrenIds = node.children
+    .map((child) => mapper(entities, relations, child as any))
+    .filter((id) => id !== undefined)
 
   for (const childId of childrenIds) {
     relations.addRelation(`${context.nodeId}/children`, `${childId}/parent`)
@@ -1329,6 +1333,8 @@ const mapText = (
 }
 
 /**
+ * Undefined returned in cases when node is not supported.
+ * This case should be handled outside of this function.
  * @todo add test
  */
 const mapNode = (
@@ -1339,7 +1345,7 @@ const mapNode = (
   getNodeId: GetNodeId,
   setNodeId: SetNodeId,
   parentNodeId?: string
-): string => {
+): string | undefined => {
   const [storedNodeId, storedProjectId] = getNodeId(node, projectId).split('@')
   const isNodeLinkedToAnotherProject =
     storedProjectId !== undefined && storedProjectId !== projectId
@@ -1423,9 +1429,8 @@ const mapNode = (
       mapText(entities, relations, node, context)
       break
     }
-    default: {
-      throw new Error(`Node with type "${node.type}" is not supported yet`)
-    }
+    default:
+      return undefined
   }
 
   return context.nodeId
