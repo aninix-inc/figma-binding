@@ -648,8 +648,8 @@ const mapEntityGeometryProperties = <
       node.vectorNetwork.vertices[node.vectorNetwork.vertices.length - 1]
         ?.strokeCap ?? 'NONE'
   } else if (node.strokeCap !== figma.mixed) {
-    properties.strokeCapStart = 'NONE'
-    properties.strokeCapEnd = 'NONE'
+    properties.strokeCapStart = node.strokeCap
+    properties.strokeCapEnd = node.strokeCap
   }
 
   if (node.strokeJoin !== figma.mixed) {
