@@ -364,13 +364,13 @@ test('mapEntityFrameProperties', () => {
 })
 
 describe('mapEntityInstanceProperties', () => {
-  test('not null', () => {
+  test('not null', async () => {
     const getPluginData = mock()
     const setPluginData = mock()
     const getSharedPluginData = mock().mockReturnValue('some-id-from-aninix')
     const setSharedPluginData = mock().mockReturnValue('some-id-from-aninix')
 
-    const result = mapEntityInstanceProperties(
+    const result = await mapEntityInstanceProperties(
       {
         id: 'some-id-1-from-figma',
         name: 'some-name-1',
@@ -379,7 +379,7 @@ describe('mapEntityInstanceProperties', () => {
         setPluginData,
         getSharedPluginData,
         setSharedPluginData,
-        mainComponent: {
+        getMainComponentAsync: async () => ({
           id: 'some-id-2-from-figma',
           name: 'some-name-2',
           parent: null,
@@ -387,7 +387,7 @@ describe('mapEntityInstanceProperties', () => {
           setPluginData,
           getSharedPluginData,
           setSharedPluginData,
-        },
+        }),
       },
       getNodeId,
       {
@@ -404,7 +404,7 @@ describe('mapEntityInstanceProperties', () => {
     const getSharedPluginData = mock().mockReturnValue('some-id-from-aninix')
     const setSharedPluginData = mock().mockReturnValue('some-id-from-aninix')
 
-    expect(() =>
+    expect(
       mapEntityInstanceProperties(
         {
           id: 'some-id-1-from-figma',
@@ -414,7 +414,7 @@ describe('mapEntityInstanceProperties', () => {
           setPluginData,
           getSharedPluginData,
           setSharedPluginData,
-          mainComponent: null,
+          getMainComponentAsync: async () => null,
         },
         getNodeId,
         {
@@ -422,6 +422,6 @@ describe('mapEntityInstanceProperties', () => {
           nodeId: 'some-node-id',
         }
       )
-    ).toThrow()
+    ).rejects.toThrow()
   })
 })
