@@ -7,7 +7,8 @@
     "./src/**/*.test.ts",
     "./src/types.ts",
     "./scripts/generate-types-from-json-schema.ts",
-    "./src/decomposed-matrix.ts"
+    "./src/decomposed-matrix.ts",
+    "./src/plugin/code.ts"
   ],
   "ignoreDependencies": [
     "@biomejs/biome",

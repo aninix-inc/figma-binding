@@ -30,6 +30,6 @@
     "stripInternal": true,
     "noUnusedLocals": true
   },
-  "include": ["./src/**/*.ts"],
+  "include": ["./src/**/*.ts", "src/plugin/**/*.ts"],
   "exclude": ["./node_modules", "./dist"]
 }
