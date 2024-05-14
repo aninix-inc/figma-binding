@@ -487,13 +487,56 @@ const mapEntityChildrenProperties = <
     entities: Entity[],
     relations: Relations,
     entity: In
-  ) => string | undefined
-): {
-  childrenExpanded: ChildrenExpanded
-} => {
-  const childrenIds = node.children
-    .map((child) => mapper(entities, relations, child as any))
-    .filter((id) => id !== undefined)
+  ) => string | undefined | Promise<string | undefined>
+):
+  | {
+      childrenExpanded: ChildrenExpanded
+    }
+  | Promise<{
+      childrenExpanded: ChildrenExpanded
+    }> => {
+  const promises: Promise<string | undefined>[] = new Array()
+  const childrenIds: string[] = new Array()
+
+  for (const child of node.children) {
+    const result = mapper(entities, relations, child as any)
+
+    if (result == null) {
+      continue
+    }
+
+    if (result instanceof Promise) {
+      promises.push(result)
+      continue
+    }
+
+    childrenIds.push(result)
+  }
+
+  if (promises.length > 0) {
+    return Promise.all(promises)
+      .then((childrenIdsFromPromises) => {
+        for (const childIdFromPromises of childrenIdsFromPromises) {
+          if (childIdFromPromises == null) {
+            continue
+          }
+
+          childrenIds.push(childIdFromPromises)
+        }
+      })
+      .then(() => {
+        for (const childId of childrenIds) {
+          relations.addRelation(
+            `${context.nodeId}/children`,
+            `${childId}/parent`
+          )
+        }
+
+        return {
+          childrenExpanded: false,
+        }
+      })
+  }
 
   for (const childId of childrenIds) {
     relations.addRelation(`${context.nodeId}/children`, `${childId}/parent`)
@@ -844,16 +887,18 @@ export const mapEntityFrameProperties = (node: {
   clipContent: node.clipsContent,
 })
 
-export const mapEntityInstanceProperties = (
+export const mapEntityInstanceProperties = async (
   node: Parameters<GetNodeId>[0] & {
-    mainComponent: Parameters<GetNodeId>[0] | null
+    getMainComponentAsync: () => Promise<Parameters<GetNodeId>[0] | null>
   },
   getNodeId: GetNodeId,
   context: Context
-): {
+): Promise<{
   mainNodeComponentId: MainNodeComponentId
-} => {
-  if (node.mainComponent == null) {
+}> => {
+  const mainComponent = await node.getMainComponentAsync()
+
+  if (mainComponent == null) {
     throw new Error(
       `Main component should NOT be null. Please check the Figma related code.
 Node id "${node.id}", name "${node.name}"`
@@ -862,9 +907,7 @@ Node id "${node.id}", name "${node.name}"`
 
   return {
     mainNodeComponentId:
-      node.mainComponent != null
-        ? getNodeId(node.mainComponent, context.projectId)
-        : '',
+      mainComponent != null ? getNodeId(mainComponent, context.projectId) : '',
   }
 }
 
@@ -942,7 +985,47 @@ const mapFrame = (
   getNodeId: GetNodeId,
   setNodeId: SetNodeId,
   context: Context
-): void => {
+): void | Promise<void> => {
+  const childrenOrPromise = mapEntityChildrenProperties(
+    entities,
+    relations,
+    node,
+    context,
+    (_entities, _relations, _node) =>
+      mapNode(
+        _entities,
+        _relations,
+        _node,
+        context.projectId,
+        getNodeId,
+        setNodeId,
+        context.nodeId
+      )
+  )
+
+  if (childrenOrPromise instanceof Promise) {
+    return childrenOrPromise.then((children) => {
+      entities.push({
+        id: context.nodeId,
+        tag: 'frame',
+        schemaVersion: 1,
+        components: {
+          ...mapEntityFrameProperties(node),
+          ...mapEntityEntryProperties(context),
+          ...mapEntityBaseProperties(relations, node, context),
+          ...mapEntitySceneProperties(node),
+          ...mapEntityBlendProperties(entities, relations, node, context),
+          ...children,
+          ...mapEntityCornerProperties(node),
+          ...mapEntityIndividualCornerProperties(node),
+          ...mapEntityGeometryProperties(entities, relations, node, context),
+          ...mapEntityIndividualStrokesProperties(node),
+          ...mapEntityLayoutProperties(node),
+        },
+      } satisfies Frame)
+    })
+  }
+
   entities.push({
     id: context.nodeId,
     tag: 'frame',
@@ -953,22 +1036,7 @@ const mapFrame = (
       ...mapEntityBaseProperties(relations, node, context),
       ...mapEntitySceneProperties(node),
       ...mapEntityBlendProperties(entities, relations, node, context),
-      ...mapEntityChildrenProperties(
-        entities,
-        relations,
-        node,
-        context,
-        (_entities, _relations, _node) =>
-          mapNode(
-            _entities,
-            _relations,
-            _node,
-            context.projectId,
-            getNodeId,
-            setNodeId,
-            context.nodeId
-          )
-      ),
+      ...childrenOrPromise,
       ...mapEntityCornerProperties(node),
       ...mapEntityIndividualCornerProperties(node),
       ...mapEntityGeometryProperties(entities, relations, node, context),
@@ -990,7 +1058,41 @@ const mapGroup = (
   getNodeId: GetNodeId,
   setNodeId: SetNodeId,
   context: Context
-): void => {
+): void | Promise<void> => {
+  const childrenOrPromise = mapEntityChildrenProperties(
+    entities,
+    relations,
+    node,
+    context,
+    (_entities, _relations, _node) =>
+      mapNode(
+        _entities,
+        _relations,
+        _node,
+        context.projectId,
+        getNodeId,
+        setNodeId,
+        context.nodeId
+      )
+  )
+
+  if (childrenOrPromise instanceof Promise) {
+    return childrenOrPromise.then((children) => {
+      entities.push({
+        id: context.nodeId,
+        tag: 'group',
+        schemaVersion: 1,
+        components: {
+          ...mapEntityBaseProperties(relations, node, context),
+          ...mapEntitySceneProperties(node),
+          ...mapEntityBlendProperties(entities, relations, node, context),
+          ...children,
+          ...mapEntityLayoutProperties(node),
+        },
+      } satisfies Group)
+    })
+  }
+
   entities.push({
     id: context.nodeId,
     tag: 'group',
@@ -999,22 +1101,7 @@ const mapGroup = (
       ...mapEntityBaseProperties(relations, node, context),
       ...mapEntitySceneProperties(node),
       ...mapEntityBlendProperties(entities, relations, node, context),
-      ...mapEntityChildrenProperties(
-        entities,
-        relations,
-        node,
-        context,
-        (_entities, _relations, _node) =>
-          mapNode(
-            _entities,
-            _relations,
-            _node,
-            context.projectId,
-            getNodeId,
-            setNodeId,
-            context.nodeId
-          )
-      ),
+      ...childrenOrPromise,
       ...mapEntityLayoutProperties(node),
     },
   } satisfies Group)
@@ -1025,41 +1112,47 @@ const mapGroup = (
  * @mutates relations
  * @todo add test
  */
-const mapInstance = (
+const mapInstance = async (
   entities: Entity[],
   relations: Relations,
   node: InstanceNode,
   getNodeId: GetNodeId,
   setNodeId: SetNodeId,
   context: Context
-): void => {
+): Promise<void> => {
+  const instanceProperties = await mapEntityInstanceProperties(
+    node,
+    getNodeId,
+    context
+  )
+  const children = await mapEntityChildrenProperties(
+    entities,
+    relations,
+    node,
+    context,
+    (_entities, _relations, _node) =>
+      mapNode(
+        _entities,
+        _relations,
+        _node,
+        context.projectId,
+        getNodeId,
+        setNodeId,
+        context.nodeId
+      )
+  )
   entities.push({
     id: context.nodeId,
     tag: 'instance',
     schemaVersion: 1,
     components: {
-      ...mapEntityInstanceProperties(node, getNodeId, context),
+      ...instanceProperties,
       ...mapEntityEntryProperties(context),
       ...mapEntityFrameProperties(node),
       ...mapEntityBaseProperties(relations, node, context),
       ...mapEntitySceneProperties(node),
       ...mapEntityBlendProperties(entities, relations, node, context),
-      ...mapEntityChildrenProperties(
-        entities,
-        relations,
-        node,
-        context,
-        (_entities, _relations, _node) =>
-          mapNode(
-            _entities,
-            _relations,
-            _node,
-            context.projectId,
-            getNodeId,
-            setNodeId,
-            context.nodeId
-          )
-      ),
+      ...children,
       ...mapEntityCornerProperties(node),
       ...mapEntityIndividualCornerProperties(node),
       ...mapEntityGeometryProperties(entities, relations, node, context),
@@ -1081,7 +1174,47 @@ const mapComponentSet = (
   getNodeId: GetNodeId,
   setNodeId: SetNodeId,
   context: Context
-): void => {
+): void | Promise<void> => {
+  const childrenOrPromise = mapEntityChildrenProperties(
+    entities,
+    relations,
+    node,
+    context,
+    (_entities, _relations, _node) =>
+      mapNode(
+        _entities,
+        _relations,
+        _node,
+        context.projectId,
+        getNodeId,
+        setNodeId,
+        context.nodeId
+      )
+  )
+
+  if (childrenOrPromise instanceof Promise) {
+    return childrenOrPromise.then((children) => {
+      entities.push({
+        id: context.nodeId,
+        tag: 'frame',
+        schemaVersion: 1,
+        components: {
+          ...mapEntityEntryProperties(context),
+          ...mapEntityFrameProperties(node),
+          ...mapEntityBaseProperties(relations, node, context),
+          ...mapEntitySceneProperties(node),
+          ...mapEntityBlendProperties(entities, relations, node, context),
+          ...children,
+          ...mapEntityCornerProperties(node),
+          ...mapEntityIndividualCornerProperties(node),
+          ...mapEntityGeometryProperties(entities, relations, node, context),
+          ...mapEntityIndividualStrokesProperties(node),
+          ...mapEntityLayoutProperties(node),
+        },
+      } satisfies Frame)
+    })
+  }
+
   entities.push({
     id: context.nodeId,
     tag: 'frame',
@@ -1092,22 +1225,7 @@ const mapComponentSet = (
       ...mapEntityBaseProperties(relations, node, context),
       ...mapEntitySceneProperties(node),
       ...mapEntityBlendProperties(entities, relations, node, context),
-      ...mapEntityChildrenProperties(
-        entities,
-        relations,
-        node,
-        context,
-        (_entities, _relations, _node) =>
-          mapNode(
-            _entities,
-            _relations,
-            _node,
-            context.projectId,
-            getNodeId,
-            setNodeId,
-            context.nodeId
-          )
-      ),
+      ...childrenOrPromise,
       ...mapEntityCornerProperties(node),
       ...mapEntityIndividualCornerProperties(node),
       ...mapEntityGeometryProperties(entities, relations, node, context),
@@ -1129,7 +1247,47 @@ const mapComponent = (
   getNodeId: GetNodeId,
   setNodeId: SetNodeId,
   context: Context
-): void => {
+): void | Promise<void> => {
+  const childrenOrPromise = mapEntityChildrenProperties(
+    entities,
+    relations,
+    node,
+    context,
+    (_entities, _relations, _node) =>
+      mapNode(
+        _entities,
+        _relations,
+        _node,
+        context.projectId,
+        getNodeId,
+        setNodeId,
+        context.nodeId
+      )
+  )
+
+  if (childrenOrPromise instanceof Promise) {
+    return childrenOrPromise.then((children) => {
+      entities.push({
+        id: context.nodeId,
+        tag: 'frame',
+        schemaVersion: 1,
+        components: {
+          ...mapEntityEntryProperties(context),
+          ...mapEntityFrameProperties(node),
+          ...mapEntityBaseProperties(relations, node, context),
+          ...mapEntitySceneProperties(node),
+          ...mapEntityBlendProperties(entities, relations, node, context),
+          ...children,
+          ...mapEntityCornerProperties(node),
+          ...mapEntityIndividualCornerProperties(node),
+          ...mapEntityGeometryProperties(entities, relations, node, context),
+          ...mapEntityIndividualStrokesProperties(node),
+          ...mapEntityLayoutProperties(node),
+        },
+      } satisfies Frame)
+    })
+  }
+
   entities.push({
     id: context.nodeId,
     tag: 'frame',
@@ -1140,22 +1298,7 @@ const mapComponent = (
       ...mapEntityBaseProperties(relations, node, context),
       ...mapEntitySceneProperties(node),
       ...mapEntityBlendProperties(entities, relations, node, context),
-      ...mapEntityChildrenProperties(
-        entities,
-        relations,
-        node,
-        context,
-        (_entities, _relations, _node) =>
-          mapNode(
-            _entities,
-            _relations,
-            _node,
-            context.projectId,
-            getNodeId,
-            setNodeId,
-            context.nodeId
-          )
-      ),
+      ...childrenOrPromise,
       ...mapEntityCornerProperties(node),
       ...mapEntityIndividualCornerProperties(node),
       ...mapEntityGeometryProperties(entities, relations, node, context),
@@ -1345,7 +1488,7 @@ const mapNode = (
   getNodeId: GetNodeId,
   setNodeId: SetNodeId,
   parentNodeId?: string
-): string | undefined => {
+): string | undefined | Promise<string | undefined> => {
   const [storedNodeId, storedProjectId] = getNodeId(node, projectId).split('@')
   const isNodeLinkedToAnotherProject =
     storedProjectId !== undefined && storedProjectId !== projectId
@@ -1379,61 +1522,105 @@ const mapNode = (
   switch (node.type) {
     case 'ELLIPSE': {
       mapEllipse(entities, relations, node, context)
-      break
+      return context.nodeId
     }
     case 'BOOLEAN_OPERATION': {
       mapBooleanOperation(entities, relations, node, context)
-      break
+      return context.nodeId
     }
     case 'FRAME': {
-      mapFrame(entities, relations, node, getNodeId, setNodeId, context)
-      break
+      const result = mapFrame(
+        entities,
+        relations,
+        node,
+        getNodeId,
+        setNodeId,
+        context
+      )
+      if (result instanceof Promise) {
+        return result.then(() => context.nodeId)
+      }
+      return context.nodeId
     }
     case 'GROUP': {
-      mapGroup(entities, relations, node, getNodeId, setNodeId, context)
-      break
+      const result = mapGroup(
+        entities,
+        relations,
+        node,
+        getNodeId,
+        setNodeId,
+        context
+      )
+      if (result instanceof Promise) {
+        return result.then(() => context.nodeId)
+      }
+      return context.nodeId
     }
     case 'INSTANCE': {
-      mapInstance(entities, relations, node, getNodeId, setNodeId, context)
-      break
+      return mapInstance(
+        entities,
+        relations,
+        node,
+        getNodeId,
+        setNodeId,
+        context
+      ).then(() => context.nodeId)
     }
     case 'COMPONENT_SET': {
-      mapComponentSet(entities, relations, node, getNodeId, setNodeId, context)
-      break
+      const result = mapComponentSet(
+        entities,
+        relations,
+        node,
+        getNodeId,
+        setNodeId,
+        context
+      )
+      if (result instanceof Promise) {
+        return result.then(() => context.nodeId)
+      }
+      return context.nodeId
     }
     case 'COMPONENT': {
-      mapComponent(entities, relations, node, getNodeId, setNodeId, context)
-      break
+      const result = mapComponent(
+        entities,
+        relations,
+        node,
+        getNodeId,
+        setNodeId,
+        context
+      )
+      if (result instanceof Promise) {
+        return result.then(() => context.nodeId)
+      }
+      return context.nodeId
     }
     case 'LINE': {
       mapLine(entities, relations, node, context)
-      break
+      return context.nodeId
     }
     case 'POLYGON': {
       mapPolygon(entities, relations, node, context)
-      break
+      return context.nodeId
     }
     case 'RECTANGLE': {
       mapRectangle(entities, relations, node, context)
-      break
+      return context.nodeId
     }
     case 'STAR': {
       mapStar(entities, relations, node, context)
-      break
+      return context.nodeId
     }
     case 'VECTOR': {
       mapVector(entities, relations, node, context)
-      break
+      return context.nodeId
     }
     case 'TEXT': {
       mapText(entities, relations, node, context)
-      break
+      return context.nodeId
     }
     default:
       return undefined
   }
-
-  return context.nodeId
 }
 
 /**
@@ -1536,12 +1723,17 @@ class Bind {
     private readonly options?: Options
   ) {}
 
-  getSnapshot = (): AninixSnapshot => {
+  /**
+   * @deprecated Use `.snapshot()` instead. It provides more clear API.
+   */
+  getSnapshot = async (): Promise<AninixSnapshot> => this.snapshot()
+
+  snapshot = async (): Promise<AninixSnapshot> => {
     const projectId = defaultGetProjectId(this.node)
     const entities: Entity[] = []
     const relations = new Relations()
     mapRoot(entities, this.node, projectId)
-    mapNode(
+    await mapNode(
       entities,
       relations,
       this.node,
