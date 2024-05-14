@@ -25,7 +25,7 @@
   },
   "devDependencies": {
     "@biomejs/biome": "^1.5.3",
-    "@figma/plugin-typings": "^1.92.0",
+    "@figma/plugin-typings": "^1.93.0",
     "@types/bun": "^1.0.5",
     "esbuild": "^0.20.1",
     "json-schema-to-typescript": "^13.1.2",
