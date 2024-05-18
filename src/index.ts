@@ -986,6 +986,8 @@ const mapFrame = (
   setNodeId: SetNodeId,
   context: Context
 ): void | Promise<void> => {
+  const baseProperties = mapEntityBaseProperties(relations, node, context)
+
   const childrenOrPromise = mapEntityChildrenProperties(
     entities,
     relations,
@@ -1012,7 +1014,7 @@ const mapFrame = (
         components: {
           ...mapEntityFrameProperties(node),
           ...mapEntityEntryProperties(context),
-          ...mapEntityBaseProperties(relations, node, context),
+          ...baseProperties,
           ...mapEntitySceneProperties(node),
           ...mapEntityBlendProperties(entities, relations, node, context),
           ...children,
@@ -1033,7 +1035,7 @@ const mapFrame = (
     components: {
       ...mapEntityFrameProperties(node),
       ...mapEntityEntryProperties(context),
-      ...mapEntityBaseProperties(relations, node, context),
+      ...baseProperties,
       ...mapEntitySceneProperties(node),
       ...mapEntityBlendProperties(entities, relations, node, context),
       ...childrenOrPromise,
@@ -1059,6 +1061,8 @@ const mapGroup = (
   setNodeId: SetNodeId,
   context: Context
 ): void | Promise<void> => {
+  const baseProperties = mapEntityBaseProperties(relations, node, context)
+
   const childrenOrPromise = mapEntityChildrenProperties(
     entities,
     relations,
@@ -1083,7 +1087,7 @@ const mapGroup = (
         tag: 'group',
         schemaVersion: 1,
         components: {
-          ...mapEntityBaseProperties(relations, node, context),
+          ...baseProperties,
           ...mapEntitySceneProperties(node),
           ...mapEntityBlendProperties(entities, relations, node, context),
           ...children,
@@ -1098,7 +1102,7 @@ const mapGroup = (
     tag: 'group',
     schemaVersion: 1,
     components: {
-      ...mapEntityBaseProperties(relations, node, context),
+      ...baseProperties,
       ...mapEntitySceneProperties(node),
       ...mapEntityBlendProperties(entities, relations, node, context),
       ...childrenOrPromise,
@@ -1120,6 +1124,8 @@ const mapInstance = async (
   setNodeId: SetNodeId,
   context: Context
 ): Promise<void> => {
+  const baseProperties = mapEntityBaseProperties(relations, node, context)
+
   const instanceProperties = await mapEntityInstanceProperties(
     node,
     getNodeId,
@@ -1149,7 +1155,7 @@ const mapInstance = async (
       ...instanceProperties,
       ...mapEntityEntryProperties(context),
       ...mapEntityFrameProperties(node),
-      ...mapEntityBaseProperties(relations, node, context),
+      ...baseProperties,
       ...mapEntitySceneProperties(node),
       ...mapEntityBlendProperties(entities, relations, node, context),
       ...children,
@@ -1175,6 +1181,8 @@ const mapComponentSet = (
   setNodeId: SetNodeId,
   context: Context
 ): void | Promise<void> => {
+  const baseProperties = mapEntityBaseProperties(relations, node, context)
+
   const childrenOrPromise = mapEntityChildrenProperties(
     entities,
     relations,
@@ -1201,7 +1209,7 @@ const mapComponentSet = (
         components: {
           ...mapEntityEntryProperties(context),
           ...mapEntityFrameProperties(node),
-          ...mapEntityBaseProperties(relations, node, context),
+          ...baseProperties,
           ...mapEntitySceneProperties(node),
           ...mapEntityBlendProperties(entities, relations, node, context),
           ...children,
@@ -1222,7 +1230,7 @@ const mapComponentSet = (
     components: {
       ...mapEntityEntryProperties(context),
       ...mapEntityFrameProperties(node),
-      ...mapEntityBaseProperties(relations, node, context),
+      ...baseProperties,
       ...mapEntitySceneProperties(node),
       ...mapEntityBlendProperties(entities, relations, node, context),
       ...childrenOrPromise,
@@ -1248,6 +1256,8 @@ const mapComponent = (
   setNodeId: SetNodeId,
   context: Context
 ): void | Promise<void> => {
+  const baseProperties = mapEntityBaseProperties(relations, node, context)
+
   const childrenOrPromise = mapEntityChildrenProperties(
     entities,
     relations,
@@ -1274,7 +1284,7 @@ const mapComponent = (
         components: {
           ...mapEntityEntryProperties(context),
           ...mapEntityFrameProperties(node),
-          ...mapEntityBaseProperties(relations, node, context),
+          ...baseProperties,
           ...mapEntitySceneProperties(node),
           ...mapEntityBlendProperties(entities, relations, node, context),
           ...children,
@@ -1295,7 +1305,7 @@ const mapComponent = (
     components: {
       ...mapEntityEntryProperties(context),
       ...mapEntityFrameProperties(node),
-      ...mapEntityBaseProperties(relations, node, context),
+      ...baseProperties,
       ...mapEntitySceneProperties(node),
       ...mapEntityBlendProperties(entities, relations, node, context),
       ...childrenOrPromise,
