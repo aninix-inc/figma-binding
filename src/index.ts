@@ -102,6 +102,7 @@ type FigmaNode = {
   setSharedPluginData: (workspace: string, key: string, value: string) => void
 }
 type GetNodeId = (node: FigmaNode, projectId: string) => string
+type GetProjectId = (node: FigmaNode) => string
 /**
  * @mutates node
  */
@@ -1666,7 +1667,7 @@ const mapRoot = (
   } satisfies Root)
 }
 
-const defaultGetProjectId = (node: SceneNode): string => {
+const defaultGetProjectId: GetProjectId = (node) => {
   const storedProjectId = node.getSharedPluginData(
     ANINIX_WORKSPACE_KEY,
     ANINIX_PROJECT_KEY
@@ -1721,6 +1722,11 @@ type Options = {
    * By default, it will try to set the public node ID after generation.
    */
   setNodeId?: (node: FigmaNode, nodeId: string) => void
+
+  /**
+   * A middleware function to retrieve project ID. It works similar to `getNodeId`.
+   */
+  getProjectId?: GetProjectId
 }
 
 // @NOTE: using a class here improves performance in case of high mapper utilization
@@ -1739,7 +1745,9 @@ class Bind {
   getSnapshot = async (): Promise<AninixSnapshot> => this.snapshot()
 
   snapshot = async (): Promise<AninixSnapshot> => {
-    const projectId = defaultGetProjectId(this.node)
+    const getProjectId: GetProjectId =
+      this.options?.getProjectId ?? defaultGetProjectId
+    const projectId = getProjectId(this.node)
     const entities: Entity[] = []
     const relations = new Relations()
     mapRoot(entities, this.node, projectId)
