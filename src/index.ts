@@ -900,10 +900,13 @@ export const mapEntityInstanceProperties = async (
   const mainComponent = await node.getMainComponentAsync()
 
   if (mainComponent == null) {
-    throw new Error(
+    console.warn(
       `Main component should NOT be null. Please check the Figma related code.
 Node id "${node.id}", name "${node.name}"`
     )
+    return {
+      mainNodeComponentId: '',
+    }
   }
 
   return {

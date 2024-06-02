@@ -422,6 +422,8 @@ describe('mapEntityInstanceProperties', () => {
           nodeId: 'some-node-id',
         }
       )
-    ).rejects.toThrow()
+    ).resolves.toEqual({
+      mainNodeComponentId: '',
+    })
   })
 })
