@@ -28,7 +28,7 @@
     "@biomejs/biome": "^1.5.3",
     "@figma/plugin-typings": "^1.93.0",
     "@types/bun": "^1.0.5",
-    "esbuild": "^0.22.0",
+    "esbuild": "^0.23.0",
     "json-schema-to-typescript": "^14.0.4",
     "knip": "^5.0.1",
     "prettier": "^3.2.5",
