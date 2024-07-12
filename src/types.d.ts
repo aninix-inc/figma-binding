@@ -219,6 +219,10 @@ export type PathReversed = boolean
  * Holds initial node id so data can be copied on project creation
  */
 export type InitialNodeId = string
+/**
+ * Stores as stringified json. Used to set additional data to entities.
+ */
+export type Metadata = string
 export type ClipContent = boolean
 export type ChildrenExpanded = boolean
 export type IndividualStrokeWeight = boolean
@@ -241,6 +245,7 @@ export type BottomLeftCornerRadius = number
 export type MainNodeComponentId = string
 export type PointCount = number
 export type Fps = number
+export type CoverTime = number
 /**
  * @minItems 1
  * @maxItems 1
@@ -637,6 +642,7 @@ export interface Ellipse {
     trimOffset?: TrimOffset
     pathReversed?: PathReversed
     initialNodeId?: InitialNodeId
+    metadata?: Metadata
     [k: string]: unknown
   }
   [k: string]: unknown
@@ -704,6 +710,7 @@ export interface Frame {
     trimOffset?: TrimOffset
     pathReversed?: PathReversed
     initialNodeId?: InitialNodeId
+    metadata?: Metadata
     [k: string]: unknown
   }
   [k: string]: unknown
@@ -745,6 +752,7 @@ export interface Group {
     startTime?: StartTime
     duration?: Duration
     initialNodeId?: InitialNodeId
+    metadata?: Metadata
     [k: string]: unknown
   }
   [k: string]: unknown
@@ -812,6 +820,7 @@ export interface Instance {
     trimOffset?: TrimOffset
     pathReversed?: PathReversed
     initialNodeId?: InitialNodeId
+    metadata?: Metadata
     [k: string]: unknown
   }
   [k: string]: unknown
@@ -864,6 +873,7 @@ export interface Line {
     trimOffset?: TrimOffset
     pathReversed?: PathReversed
     initialNodeId?: InitialNodeId
+    metadata?: Metadata
     [k: string]: unknown
   }
   [k: string]: unknown
@@ -919,6 +929,7 @@ export interface Polygon {
     trimOffset?: TrimOffset
     pathReversed?: PathReversed
     initialNodeId?: InitialNodeId
+    metadata?: Metadata
     [k: string]: unknown
   }
   [k: string]: unknown
@@ -983,6 +994,7 @@ export interface Rectangle {
     trimOffset?: TrimOffset
     pathReversed?: PathReversed
     initialNodeId?: InitialNodeId
+    metadata?: Metadata
     [k: string]: unknown
   }
   [k: string]: unknown
@@ -1009,6 +1021,8 @@ export interface Root {
     visibleInViewport: VisibleInViewport
     rgba: Rgba
     initialNodeId?: InitialNodeId
+    coverTime?: CoverTime
+    metadata?: Metadata
     [k: string]: unknown
   }
   [k: string]: unknown
@@ -1065,6 +1079,7 @@ export interface Star {
     trimOffset?: TrimOffset
     pathReversed?: PathReversed
     initialNodeId?: InitialNodeId
+    metadata?: Metadata
     [k: string]: unknown
   }
   [k: string]: unknown
@@ -1119,6 +1134,7 @@ export interface Text {
     trimOffset?: TrimOffset
     pathReversed?: PathReversed
     initialNodeId?: InitialNodeId
+    metadata?: Metadata
     [k: string]: unknown
   }
   [k: string]: unknown
@@ -1175,6 +1191,7 @@ export interface Vector {
     trimOffset?: TrimOffset
     pathReversed?: PathReversed
     initialNodeId?: InitialNodeId
+    metadata?: Metadata
     [k: string]: unknown
   }
   [k: string]: unknown
