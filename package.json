@@ -37,6 +37,6 @@
   },
   "peerDependencies": {},
   "dependencies": {
-    "mathjs": "^13.0.0"
+    "mathjs": "^12.4.3"
   }
 }
