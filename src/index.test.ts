@@ -47,6 +47,7 @@ describe('mapEntityBaseProperties', () => {
     const result = mapEntityBaseProperties(
       relations,
       {
+        id: 'some-id',
         name: 'Some Node',
         type: 'ELLIPSE',
       },
@@ -63,6 +64,7 @@ describe('mapEntityBaseProperties', () => {
     const result = mapEntityBaseProperties(
       relations,
       {
+        id: 'some-id',
         name: 'Some Node',
         type: 'ELLIPSE',
       },
@@ -80,6 +82,7 @@ describe('mapEntityBaseProperties', () => {
     const result = mapEntityBaseProperties(
       relations,
       {
+        id: 'some-id',
         name: 'Some Node',
         type: 'ELLIPSE',
       },
@@ -96,6 +99,7 @@ describe('mapEntityBaseProperties', () => {
     const result = mapEntityBaseProperties(
       relations,
       {
+        id: 'some-id',
         name: 'Some Node',
         type: 'ELLIPSE',
       },
