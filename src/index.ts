@@ -35,6 +35,7 @@ import type {
   MainNodeComponentId,
   Mask,
   MatrixTransformKey,
+  Metadata,
   ColorStop as ModelColorStop,
   Name,
   NodeColor,
@@ -282,6 +283,7 @@ export const mapEntityEntryProperties = <Out extends Frame>(
 export const mapEntityBaseProperties = (
   relations: Relations,
   node: {
+    id: string
     name: string
     type:
       | EllipseNode['type']
@@ -303,6 +305,7 @@ export const mapEntityBaseProperties = (
   name: Name
   entityType: EntityType
   nodeType: NodeType
+  metadata: Metadata
   initialNodeId?: InitialNodeId
   parent?: string
 } => {
@@ -326,6 +329,7 @@ export const mapEntityBaseProperties = (
   return {
     name: getNormalNodeName(node.name),
     entityType: 'NODE',
+    metadata: JSON.stringify({ figmaNodeId: node.id }),
     nodeType,
     ...(context.initialNodeId != null && {
       initialNodeId: context.initialNodeId,
