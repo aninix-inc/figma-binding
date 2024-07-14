@@ -11,6 +11,7 @@ exports[`mapEntityEntryProperties without parent 1`] = `
 exports[`mapEntityBaseProperties has NOT parent 1`] = `
 {
   "entityType": "NODE",
+  "metadata": "{"figmaNodeId":"some-id"}",
   "name": "Some Node",
   "nodeType": "ELLIPSE",
 }
@@ -21,6 +22,7 @@ exports[`mapEntityBaseProperties has NOT parent 2`] = `{}`;
 exports[`mapEntityBaseProperties has parent 1`] = `
 {
   "entityType": "NODE",
+  "metadata": "{"figmaNodeId":"some-id"}",
   "name": "Some Node",
   "nodeType": "ELLIPSE",
 }
@@ -37,6 +39,7 @@ exports[`mapEntityBaseProperties has parent 2`] = `
 exports[`mapEntityBaseProperties has NOT initial node 1`] = `
 {
   "entityType": "NODE",
+  "metadata": "{"figmaNodeId":"some-id"}",
   "name": "Some Node",
   "nodeType": "ELLIPSE",
 }
@@ -48,6 +51,7 @@ exports[`mapEntityBaseProperties has initial node 1`] = `
 {
   "entityType": "NODE",
   "initialNodeId": "initial-test-node",
+  "metadata": "{"figmaNodeId":"some-id"}",
   "name": "Some Node",
   "nodeType": "ELLIPSE",
 }
