@@ -1,6 +1,7 @@
 import { beforeEach, describe, expect, mock, test } from 'bun:test'
+import { Relations } from './relations'
 import {
-  getNodeId,
+  defaultGetNodeId as getNodeId,
   mapEntityBaseProperties,
   mapEntityBlendProperties,
   mapEntityCornerProperties,
@@ -8,8 +9,7 @@ import {
   mapEntityFrameProperties,
   mapEntityInstanceProperties,
   mapEntitySceneProperties,
-} from '.'
-import { Relations } from './relations'
+} from './snapshot'
 
 // @NOTE: provide global figma object
 // @ts-ignore
