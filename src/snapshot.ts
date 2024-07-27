@@ -1688,12 +1688,23 @@ export const defaultGetNodeId: GetNodeId = (node, projectId) => {
   return !!storedNodeId ? storedNodeId : `${generateId()}@${projectId}`
 }
 const defaultSetNodeId: SetNodeId = (node, projectId, nodeId) => {
-  node.setPluginData(ANINIX_NODE_KEY, `${nodeId}@${projectId}`)
-  node.setSharedPluginData(
-    ANINIX_WORKSPACE_KEY,
-    ANINIX_NODE_KEY,
-    `${nodeId}@${projectId}`
-  )
+  // @NOTE: in the case of trying to access a remote node, a try/catch is required here.
+  // For example, the user has an instance and needs to read the remote master component.
+  // In this case, a direct attempt to install plugin data will fail because
+  // the remote components are read-only.
+  try {
+    node.setPluginData(ANINIX_NODE_KEY, `${nodeId}@${projectId}`)
+    node.setSharedPluginData(
+      ANINIX_WORKSPACE_KEY,
+      ANINIX_NODE_KEY,
+      `${nodeId}@${projectId}`
+    )
+  } catch (err) {
+    console.warn(
+      `Attempt to set plugin data on the node with ID "${node.id}" failed, details:`,
+      err
+    )
+  }
 }
 
 export type Options = {
