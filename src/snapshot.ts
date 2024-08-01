@@ -1,5 +1,6 @@
 import * as math from 'mathjs'
 import {
+  ANINIX_MAIN_NODE_KEY,
   ANINIX_NODE_KEY,
   ANINIX_PROJECT_KEY,
   ANINIX_WORKSPACE_KEY,
@@ -364,13 +365,13 @@ export const mapEntityBlendProperties = (
     isMask: BlendMixin['isMask']
     effects: BlendMixin['effects']
   },
-  context: Context
+  nodeId: string
 ): {
   blendMode: BlendMode
   mask: Mask
 } => {
   const effectIds = node.effects.map((effect, idx) => {
-    const effectId = `${context.nodeId}e${idx}`
+    const effectId = `${nodeId}e${idx}`
 
     switch (effect.type) {
       case 'DROP_SHADOW': {
@@ -460,7 +461,7 @@ export const mapEntityBlendProperties = (
   })
 
   for (const effectId of effectIds) {
-    relations.addRelation(`${context.nodeId}/effects`, `${effectId}/parent`)
+    relations.addRelation(`${nodeId}/effects`, `${effectId}/parent`)
   }
 
   return {
@@ -622,7 +623,7 @@ const mapEntityGeometryProperties = <
   entities: Entity[],
   relations: Relations,
   node: In,
-  context: Context
+  nodeId: string
 ): Pick<
   Out['components'],
   | 'strokeAlign'
@@ -642,23 +643,21 @@ const mapEntityGeometryProperties = <
     node.fills !== figma.mixed
       ? node.fills
           .map((child, idx) =>
-            mapPaint(entities, relations, context.nodeId, child, 'f', idx)
+            mapPaint(entities, relations, nodeId, child, 'f', idx)
           )
           .filter((id) => id !== undefined)
       : []
 
   for (const fillId of fillIds) {
-    relations.addRelation(`${context.nodeId}/fills`, `${fillId}/parent`)
+    relations.addRelation(`${nodeId}/fills`, `${fillId}/parent`)
   }
 
   const strokeIds = node.strokes
-    .map((child, idx) =>
-      mapPaint(entities, relations, context.nodeId, child, 's', idx)
-    )
+    .map((child, idx) => mapPaint(entities, relations, nodeId, child, 's', idx))
     .filter((id) => id !== undefined)
 
   for (const strokeId of strokeIds) {
-    relations.addRelation(`${context.nodeId}/strokes`, `${strokeId}/parent`)
+    relations.addRelation(`${nodeId}/strokes`, `${strokeId}/parent`)
   }
 
   const properties: Pick<
@@ -939,9 +938,9 @@ const mapEllipse = (
       innerRadius: node.arcData.innerRadius,
       ...mapEntityBaseProperties(relations, node, context),
       ...mapEntitySceneProperties(node),
-      ...mapEntityBlendProperties(entities, relations, node, context),
+      ...mapEntityBlendProperties(entities, relations, node, context.nodeId),
       ...mapEntityCornerProperties(node),
-      ...mapEntityGeometryProperties(entities, relations, node, context),
+      ...mapEntityGeometryProperties(entities, relations, node, context.nodeId),
       ...mapEntityLayoutProperties(node),
     },
   } satisfies Ellipse)
@@ -971,9 +970,9 @@ const mapBooleanOperation = (
       sizeBehaviour: 'FILL',
       ...mapEntityBaseProperties(relations, node, context),
       ...mapEntitySceneProperties(node),
-      ...mapEntityBlendProperties(entities, relations, node, context),
+      ...mapEntityBlendProperties(entities, relations, node, context.nodeId),
       ...mapEntityCornerProperties(node),
-      ...mapEntityGeometryProperties(entities, relations, node, context),
+      ...mapEntityGeometryProperties(entities, relations, node, context.nodeId),
       ...mapEntityLayoutProperties(node),
     },
   } satisfies Vector)
@@ -1022,11 +1021,21 @@ const mapFrame = (
           ...mapEntityEntryProperties(context),
           ...baseProperties,
           ...mapEntitySceneProperties(node),
-          ...mapEntityBlendProperties(entities, relations, node, context),
+          ...mapEntityBlendProperties(
+            entities,
+            relations,
+            node,
+            context.nodeId
+          ),
           ...children,
           ...mapEntityCornerProperties(node),
           ...mapEntityIndividualCornerProperties(node),
-          ...mapEntityGeometryProperties(entities, relations, node, context),
+          ...mapEntityGeometryProperties(
+            entities,
+            relations,
+            node,
+            context.nodeId
+          ),
           ...mapEntityIndividualStrokesProperties(node),
           ...mapEntityLayoutProperties(node),
         },
@@ -1043,11 +1052,11 @@ const mapFrame = (
       ...mapEntityEntryProperties(context),
       ...baseProperties,
       ...mapEntitySceneProperties(node),
-      ...mapEntityBlendProperties(entities, relations, node, context),
+      ...mapEntityBlendProperties(entities, relations, node, context.nodeId),
       ...childrenOrPromise,
       ...mapEntityCornerProperties(node),
       ...mapEntityIndividualCornerProperties(node),
-      ...mapEntityGeometryProperties(entities, relations, node, context),
+      ...mapEntityGeometryProperties(entities, relations, node, context.nodeId),
       ...mapEntityIndividualStrokesProperties(node),
       ...mapEntityLayoutProperties(node),
     },
@@ -1095,7 +1104,12 @@ const mapGroup = (
         components: {
           ...baseProperties,
           ...mapEntitySceneProperties(node),
-          ...mapEntityBlendProperties(entities, relations, node, context),
+          ...mapEntityBlendProperties(
+            entities,
+            relations,
+            node,
+            context.nodeId
+          ),
           ...children,
           ...mapEntityLayoutProperties(node),
         },
@@ -1110,7 +1124,7 @@ const mapGroup = (
     components: {
       ...baseProperties,
       ...mapEntitySceneProperties(node),
-      ...mapEntityBlendProperties(entities, relations, node, context),
+      ...mapEntityBlendProperties(entities, relations, node, context.nodeId),
       ...childrenOrPromise,
       ...mapEntityLayoutProperties(node),
     },
@@ -1163,11 +1177,11 @@ const mapInstance = async (
       ...mapEntityFrameProperties(node),
       ...baseProperties,
       ...mapEntitySceneProperties(node),
-      ...mapEntityBlendProperties(entities, relations, node, context),
+      ...mapEntityBlendProperties(entities, relations, node, context.nodeId),
       ...children,
       ...mapEntityCornerProperties(node),
       ...mapEntityIndividualCornerProperties(node),
-      ...mapEntityGeometryProperties(entities, relations, node, context),
+      ...mapEntityGeometryProperties(entities, relations, node, context.nodeId),
       ...mapEntityIndividualStrokesProperties(node),
       ...mapEntityLayoutProperties(node),
     },
@@ -1217,11 +1231,21 @@ const mapComponentSet = (
           ...mapEntityFrameProperties(node),
           ...baseProperties,
           ...mapEntitySceneProperties(node),
-          ...mapEntityBlendProperties(entities, relations, node, context),
+          ...mapEntityBlendProperties(
+            entities,
+            relations,
+            node,
+            context.nodeId
+          ),
           ...children,
           ...mapEntityCornerProperties(node),
           ...mapEntityIndividualCornerProperties(node),
-          ...mapEntityGeometryProperties(entities, relations, node, context),
+          ...mapEntityGeometryProperties(
+            entities,
+            relations,
+            node,
+            context.nodeId
+          ),
           ...mapEntityIndividualStrokesProperties(node),
           ...mapEntityLayoutProperties(node),
         },
@@ -1238,11 +1262,11 @@ const mapComponentSet = (
       ...mapEntityFrameProperties(node),
       ...baseProperties,
       ...mapEntitySceneProperties(node),
-      ...mapEntityBlendProperties(entities, relations, node, context),
+      ...mapEntityBlendProperties(entities, relations, node, context.nodeId),
       ...childrenOrPromise,
       ...mapEntityCornerProperties(node),
       ...mapEntityIndividualCornerProperties(node),
-      ...mapEntityGeometryProperties(entities, relations, node, context),
+      ...mapEntityGeometryProperties(entities, relations, node, context.nodeId),
       ...mapEntityIndividualStrokesProperties(node),
       ...mapEntityLayoutProperties(node),
     },
@@ -1292,11 +1316,21 @@ const mapComponent = (
           ...mapEntityFrameProperties(node),
           ...baseProperties,
           ...mapEntitySceneProperties(node),
-          ...mapEntityBlendProperties(entities, relations, node, context),
+          ...mapEntityBlendProperties(
+            entities,
+            relations,
+            node,
+            context.nodeId
+          ),
           ...children,
           ...mapEntityCornerProperties(node),
           ...mapEntityIndividualCornerProperties(node),
-          ...mapEntityGeometryProperties(entities, relations, node, context),
+          ...mapEntityGeometryProperties(
+            entities,
+            relations,
+            node,
+            context.nodeId
+          ),
           ...mapEntityIndividualStrokesProperties(node),
           ...mapEntityLayoutProperties(node),
         },
@@ -1313,11 +1347,11 @@ const mapComponent = (
       ...mapEntityFrameProperties(node),
       ...baseProperties,
       ...mapEntitySceneProperties(node),
-      ...mapEntityBlendProperties(entities, relations, node, context),
+      ...mapEntityBlendProperties(entities, relations, node, context.nodeId),
       ...childrenOrPromise,
       ...mapEntityCornerProperties(node),
       ...mapEntityIndividualCornerProperties(node),
-      ...mapEntityGeometryProperties(entities, relations, node, context),
+      ...mapEntityGeometryProperties(entities, relations, node, context.nodeId),
       ...mapEntityIndividualStrokesProperties(node),
       ...mapEntityLayoutProperties(node),
     },
@@ -1342,8 +1376,8 @@ const mapLine = (
     components: {
       ...mapEntityBaseProperties(relations, node, context),
       ...mapEntitySceneProperties(node),
-      ...mapEntityBlendProperties(entities, relations, node, context),
-      ...mapEntityGeometryProperties(entities, relations, node, context),
+      ...mapEntityBlendProperties(entities, relations, node, context.nodeId),
+      ...mapEntityGeometryProperties(entities, relations, node, context.nodeId),
       ...mapEntityLayoutProperties(node),
     },
   } satisfies Line)
@@ -1368,9 +1402,9 @@ const mapPolygon = (
       pointCount: node.pointCount,
       ...mapEntityBaseProperties(relations, node, context),
       ...mapEntitySceneProperties(node),
-      ...mapEntityBlendProperties(entities, relations, node, context),
+      ...mapEntityBlendProperties(entities, relations, node, context.nodeId),
       ...mapEntityCornerProperties(node),
-      ...mapEntityGeometryProperties(entities, relations, node, context),
+      ...mapEntityGeometryProperties(entities, relations, node, context.nodeId),
       ...mapEntityLayoutProperties(node),
     },
   } satisfies Polygon)
@@ -1394,10 +1428,10 @@ const mapRectangle = (
     components: {
       ...mapEntityBaseProperties(relations, node, context),
       ...mapEntitySceneProperties(node),
-      ...mapEntityBlendProperties(entities, relations, node, context),
+      ...mapEntityBlendProperties(entities, relations, node, context.nodeId),
       ...mapEntityCornerProperties(node),
       ...mapEntityIndividualCornerProperties(node),
-      ...mapEntityGeometryProperties(entities, relations, node, context),
+      ...mapEntityGeometryProperties(entities, relations, node, context.nodeId),
       ...mapEntityIndividualStrokesProperties(node),
       ...mapEntityLayoutProperties(node),
     },
@@ -1424,9 +1458,9 @@ const mapStar = (
       innerRadius: node.innerRadius,
       ...mapEntityBaseProperties(relations, node, context),
       ...mapEntitySceneProperties(node),
-      ...mapEntityBlendProperties(entities, relations, node, context),
+      ...mapEntityBlendProperties(entities, relations, node, context.nodeId),
       ...mapEntityCornerProperties(node),
-      ...mapEntityGeometryProperties(entities, relations, node, context),
+      ...mapEntityGeometryProperties(entities, relations, node, context.nodeId),
       ...mapEntityLayoutProperties(node),
     },
   } satisfies Star)
@@ -1455,9 +1489,9 @@ const mapVector = (
       sizeBehaviour: 'FILL',
       ...mapEntityBaseProperties(relations, node, context),
       ...mapEntitySceneProperties(node),
-      ...mapEntityBlendProperties(entities, relations, node, context),
+      ...mapEntityBlendProperties(entities, relations, node, context.nodeId),
       ...mapEntityCornerProperties(node),
-      ...mapEntityGeometryProperties(entities, relations, node, context),
+      ...mapEntityGeometryProperties(entities, relations, node, context.nodeId),
       ...mapEntityLayoutProperties(node),
     },
   } satisfies Vector)
@@ -1484,8 +1518,8 @@ const mapText = (
       sizeBehaviour: 'IGNORE',
       ...mapEntityBaseProperties(relations, node, context),
       ...mapEntitySceneProperties(node),
-      ...mapEntityBlendProperties(entities, relations, node, context),
-      ...mapEntityGeometryProperties(entities, relations, node, context),
+      ...mapEntityBlendProperties(entities, relations, node, context.nodeId),
+      ...mapEntityGeometryProperties(entities, relations, node, context.nodeId),
       ...mapEntityLayoutProperties(node),
     },
   } satisfies Text)
@@ -1573,14 +1607,49 @@ const mapNode = (
       return context.nodeId
     }
     case 'INSTANCE': {
-      return mapInstance(
-        entities,
-        relations,
-        node,
-        getNodeId,
-        setNodeId,
-        context
-      ).then(() => context.nodeId)
+      return new Promise<string | undefined>(async (resolve) => {
+        const currentMainNodeId =
+          node.type === 'INSTANCE'
+            ? await (async () => {
+                const mainComponent = await node.getMainComponentAsync()
+
+                if (mainComponent == null) {
+                  return undefined
+                }
+
+                return getNodeId(mainComponent, projectId)
+              })()
+            : undefined
+
+        if (currentMainNodeId != null) {
+          const storedMainNodeId = node.getSharedPluginData(
+            ANINIX_WORKSPACE_KEY,
+            ANINIX_MAIN_NODE_KEY
+          )
+
+          if (!!storedMainNodeId && storedMainNodeId !== currentMainNodeId) {
+            context.nodeId = generateId()
+            setNodeId(node, projectId, context.nodeId)
+          }
+
+          node.setSharedPluginData(
+            ANINIX_WORKSPACE_KEY,
+            ANINIX_MAIN_NODE_KEY,
+            currentMainNodeId
+          )
+        }
+
+        resolve(
+          mapInstance(
+            entities,
+            relations,
+            node,
+            getNodeId,
+            setNodeId,
+            context
+          ).then(() => context.nodeId)
+        )
+      })
     }
     case 'COMPONENT_SET': {
       const result = mapComponentSet(
