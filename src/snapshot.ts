@@ -1526,7 +1526,7 @@ const mapNode = (
       ? {
           projectId,
           nodeId,
-          initialNodeId: storedNodeId,
+          initialNodeId: `${storedNodeId}@${storedProjectId}`,
           parentNodeId,
         }
       : {
