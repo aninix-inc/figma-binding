@@ -6,8 +6,7 @@
     "enabled": true,
     "rules": {
       "suspicious": {
-        "noExplicitAny": "warn",
-        "noAsyncPromiseExecutor": "warn"
+        "noExplicitAny": "warn"
       },
       "complexity": {
         "noExtraBooleanCast": "warn"

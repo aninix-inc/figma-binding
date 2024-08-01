@@ -140,7 +140,12 @@ describe('mapEntityBlendProperties', () => {
         isMask: false,
         effects: [],
       },
-      'test-node'
+      {
+        projectId: 'test-project',
+        nodeId: 'test-node',
+        initialNodeId: 'initial-test-node',
+        parentNodeId: 'test-parent-node',
+      }
     )
     expect(entities).toMatchSnapshot()
     expect(relations.toJSON()).toMatchSnapshot()
@@ -174,7 +179,12 @@ describe('mapEntityBlendProperties', () => {
           },
         ],
       },
-      'test-node'
+      {
+        projectId: 'test-project',
+        nodeId: 'test-node',
+        initialNodeId: 'initial-test-node',
+        parentNodeId: 'test-parent-node',
+      }
     )
     expect(entities).toMatchSnapshot()
     expect(relations.toJSON()).toMatchSnapshot()
@@ -208,7 +218,12 @@ describe('mapEntityBlendProperties', () => {
           },
         ],
       },
-      'test-node'
+      {
+        projectId: 'test-project',
+        nodeId: 'test-node',
+        initialNodeId: 'initial-test-node',
+        parentNodeId: 'test-parent-node',
+      }
     )
     expect(entities).toMatchSnapshot()
     expect(relations.toJSON()).toMatchSnapshot()
@@ -231,7 +246,12 @@ describe('mapEntityBlendProperties', () => {
           },
         ],
       },
-      'test-node'
+      {
+        projectId: 'test-project',
+        nodeId: 'test-node',
+        initialNodeId: 'initial-test-node',
+        parentNodeId: 'test-parent-node',
+      }
     )
     expect(entities).toMatchSnapshot()
     expect(relations.toJSON()).toMatchSnapshot()
@@ -254,7 +274,12 @@ describe('mapEntityBlendProperties', () => {
           },
         ],
       },
-      'test-node'
+      {
+        projectId: 'test-project',
+        nodeId: 'test-node',
+        initialNodeId: 'initial-test-node',
+        parentNodeId: 'test-parent-node',
+      }
     )
     expect(entities).toMatchSnapshot()
     expect(relations.toJSON()).toMatchSnapshot()
@@ -314,7 +339,12 @@ describe('mapEntityBlendProperties', () => {
           },
         ],
       },
-      'test-node'
+      {
+        projectId: 'test-project',
+        nodeId: 'test-node',
+        initialNodeId: 'initial-test-node',
+        parentNodeId: 'test-parent-node',
+      }
     )
     expect(entities).toMatchSnapshot()
     expect(relations.toJSON()).toMatchSnapshot()

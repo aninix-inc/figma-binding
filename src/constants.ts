@@ -17,8 +17,3 @@ export const ANINIX_PROJECT_KEY = 'aninix_project_id'
  * Used to get Aninix node id on nodes
  */
 export const ANINIX_NODE_KEY = 'aninix_node_id'
-
-/**
- * Used to get Aninix main node id on nodes
- */
-export const ANINIX_MAIN_NODE_KEY = 'aninix_main_node_id'
