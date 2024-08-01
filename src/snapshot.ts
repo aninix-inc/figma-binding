@@ -1,5 +1,6 @@
 import * as math from 'mathjs'
 import {
+  ANINIX_MAIN_NODE_KEY,
   ANINIX_NODE_KEY,
   ANINIX_PROJECT_KEY,
   ANINIX_WORKSPACE_KEY,
@@ -1606,14 +1607,49 @@ const mapNode = (
       return context.nodeId
     }
     case 'INSTANCE': {
-      return mapInstance(
-        entities,
-        relations,
-        node,
-        getNodeId,
-        setNodeId,
-        context
-      ).then(() => context.nodeId)
+      return new Promise<string | undefined>(async (resolve) => {
+        const currentMainNodeId =
+          node.type === 'INSTANCE'
+            ? await (async () => {
+                const mainComponent = await node.getMainComponentAsync()
+
+                if (mainComponent == null) {
+                  return undefined
+                }
+
+                return getNodeId(mainComponent, projectId)
+              })()
+            : undefined
+
+        if (currentMainNodeId != null) {
+          const storedMainNodeId = node.getSharedPluginData(
+            ANINIX_WORKSPACE_KEY,
+            ANINIX_MAIN_NODE_KEY
+          )
+
+          if (!!storedMainNodeId && storedMainNodeId !== currentMainNodeId) {
+            context.nodeId = generateId()
+            setNodeId(node, projectId, context.nodeId)
+          }
+
+          node.setSharedPluginData(
+            ANINIX_WORKSPACE_KEY,
+            ANINIX_MAIN_NODE_KEY,
+            currentMainNodeId
+          )
+        }
+
+        resolve(
+          mapInstance(
+            entities,
+            relations,
+            node,
+            getNodeId,
+            setNodeId,
+            context
+          ).then(() => context.nodeId)
+        )
+      })
     }
     case 'COMPONENT_SET': {
       const result = mapComponentSet(
