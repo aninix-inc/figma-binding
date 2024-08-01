@@ -1628,7 +1628,8 @@ const mapNode = (
           )
 
           if (!!storedMainNodeId && storedMainNodeId !== currentMainNodeId) {
-            context.initialNodeId = currentMainNodeId
+            context.nodeId = generateId()
+            setNodeId(node, projectId, context.nodeId)
           }
 
           node.setSharedPluginData(
