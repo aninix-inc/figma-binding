@@ -51,7 +51,9 @@ import type {
   Solo,
   SpatialPoint2DKey,
   Star,
+  StyledTextSegment,
   Text,
+  TextV2,
   Vector,
   VisibleInViewport,
 } from './types'
@@ -84,6 +86,7 @@ type Entity =
   | RgbaKey
   | MatrixTransformKey
   | Root
+  | StyledTextSegment
 
 type Context = {
   projectId: string
@@ -710,6 +713,124 @@ const mapEntityGeometryProperties = <
         properties.strokeJoin = 'ROUND'
         break
     }
+  }
+
+  return properties
+}
+
+/**
+ * @mutates entities
+ * @mutates relations
+ * @todo add test
+ */
+const mapEntityTextProperties = <In extends TextNode, Out extends TextV2>(
+  entities: Entity[],
+  relations: Relations,
+  node: In
+): Pick<
+  Out['components'],
+  | 'textAlignHorizontal'
+  | 'textAlignVertical'
+  | 'textAutoResize'
+  | 'textTruncation'
+  | 'paragraphIndent'
+  | 'paragraphSpacing'
+  | 'listSpacing'
+  | 'hangingPunctuation'
+  | 'hangingList'
+  | 'autoRename'
+> => {
+  const styledTextSegmentIds = node
+    .getStyledTextSegments([
+      'fontSize',
+      'fontName',
+      'fontWeight',
+      'textDecoration',
+      'textCase',
+      'lineHeight',
+      'letterSpacing',
+      'fills',
+      'textStyleId',
+      'fillStyleId',
+      'listOptions',
+      'indentation',
+      'hyperlink',
+      'boundVariables',
+    ])
+    .map((child, idx) => {
+      const styledTextSegmentId = `${node.id}sts${idx}`
+
+      entities.push({
+        id: styledTextSegmentId,
+        tag: 'styledTextSegment',
+        schemaVersion: 1,
+        components: {
+          entityType: 'STYLED_SEGMENT_TEXT',
+          characters: child.characters,
+          startIndex: child.start,
+          endIndex: child.end,
+          fontSize: child.fontSize,
+          fontName: child.fontName.family,
+          fontStyle: child.fontName.style,
+          // fontWeight
+          textDecoration: child.textDecoration,
+          textCase: child.textCase,
+          lineHeightUnit: child.lineHeight.unit,
+          lineHeightValue:
+            child.lineHeight.unit !== 'AUTO' ? child.lineHeight.value : 0,
+          letterSpacingUnit: child.letterSpacing.unit,
+          letterSpacingValue: child.letterSpacing.value,
+          // fills
+          textListOptions: child.listOptions.type,
+          indetation: child.indentation,
+        },
+      })
+
+      const fillIds = child.fills.map((fill, idx) =>
+        mapPaint(entities, relations, styledTextSegmentId, fill, 'f', idx)
+      )
+
+      for (const fillId of fillIds) {
+        relations.addRelation(
+          `${styledTextSegmentId}/fills`,
+          `${fillId}/parent`
+        )
+      }
+
+      return styledTextSegmentId
+    })
+    .filter((id) => id !== undefined)
+
+  for (const styledTextSegmentId of styledTextSegmentIds) {
+    relations.addRelation(
+      `${node.id}/styledTextSegments`,
+      `${styledTextSegmentId}/parent`
+    )
+  }
+
+  const properties: Pick<
+    Out['components'],
+    | 'textAlignHorizontal'
+    | 'textAlignVertical'
+    | 'textAutoResize'
+    | 'textTruncation'
+    | 'paragraphIndent'
+    | 'paragraphSpacing'
+    | 'listSpacing'
+    | 'hangingPunctuation'
+    | 'hangingList'
+    | 'autoRename'
+  > = {
+    textAlignHorizontal: node.textAlignHorizontal,
+    textAlignVertical: node.textAlignVertical,
+    textAutoResize: node.textAutoResize,
+    textTruncation: node.textTruncation,
+    paragraphIndent: node.paragraphIndent,
+    paragraphSpacing: node.paragraphSpacing,
+    listSpacing: node.listSpacing,
+    hangingPunctuation: node.hangingPunctuation,
+    hangingList: node.hangingList,
+    autoRename: node.autoRename,
   }
 
   return properties
@@ -1475,20 +1596,22 @@ const mapText = (
   entities.push({
     id: context.nodeId,
     tag: 'text',
-    schemaVersion: 1,
+    schemaVersion: 2,
     components: {
       vectorPaths: node.fillGeometry.map((v) => ({
         windingRule: v.windingRule,
         data: v.data,
       })) as any,
       sizeBehaviour: 'IGNORE',
+      version: 2,
       ...mapEntityBaseProperties(relations, node, context),
       ...mapEntitySceneProperties(node),
       ...mapEntityBlendProperties(entities, relations, node, context),
       ...mapEntityGeometryProperties(entities, relations, node, context),
       ...mapEntityLayoutProperties(node),
+      ...mapEntityTextProperties(entities, relations, node),
     },
-  } satisfies Text)
+  } satisfies TextV2)
 }
 
 /**
