@@ -5,6 +5,7 @@
  * and run json-schema-to-typescript to regenerate this file.
  */
 
+export type BackgroundBlur = BackgroundBlurV1
 /**
  * [DEPRECATED] Was used in model v0. Check if we can remove it.
  */
@@ -17,6 +18,7 @@ export type EffectType =
   | 'LAYER_BLUR'
   | 'BACKGROUND_BLUR'
   | 'INNER_SHADOW'
+export type DropShadow = DropShadowV1
 export type ShadowRadius = number
 /**
  * @minItems 4
@@ -49,6 +51,9 @@ export type BlendMode =
   | 'SATURATION'
   | 'COLOR'
   | 'LUMINOSITY'
+export type InnerShadow = InnerShadowV1
+export type LayerBlur = LayerBlurV1
+export type MatrixTransformKey = MatrixTransformKeyV1
 export type Time = number
 /**
  * @minItems 2
@@ -72,23 +77,29 @@ export type SpringCurve = [number, number, number]
  * Holds ID of the animation preset to further work. Probably in future would be changed to reference instead of plain string.
  */
 export type PresetId = string
+export type NumberKey = NumberKeyV1
 export type Number = number
+export type Point2DKey = Point2DKeyV1
 /**
  * @minItems 2
  * @maxItems 2
  */
 export type Point2D = [number, number]
+export type RgbaKey = RgbaKeyV1
 /**
  * @minItems 4
  * @maxItems 4
  */
 export type Rgba = [number, number, number, number]
+export type SpatialPoint2DKey = SpatialPoint2DKeyV1
 /**
  * @minItems 6
  * @maxItems 6
  */
 export type SpatialPoint2D = [number, number, number, number, number, number]
+export type CurveStyle = CurveStyleV1
 export type Name = string
+export type ExportPreset = ExportPresetV1
 /**
  * Used to determine exporting file scaling factor
  */
@@ -117,6 +128,7 @@ export type RenderType =
  * Define custom suffix for rendered file
  */
 export type RenderSuffix = string
+export type Ellipse = EllipseV1
 export type StartAngle = number
 export type EndAngle = number
 export type InnerRadius = number
@@ -223,6 +235,7 @@ export type InitialNodeId = string
  * Stores as stringified json. Used to set additional data to entities.
  */
 export type Metadata = string
+export type Frame = FrameV1
 export type ClipContent = boolean
 export type ChildrenExpanded = boolean
 export type IndividualStrokeWeight = boolean
@@ -239,13 +252,21 @@ export type TopLeftCornerRadius = number
 export type TopRightCornerRadius = number
 export type BottomRightCornerRadius = number
 export type BottomLeftCornerRadius = number
+export type Group = GroupV1
+export type Instance = InstanceV1
 /**
  * ID of the main node, stores the Aninix ID. Works similar to `mainComponent` property in Figma.
  */
 export type MainNodeComponentId = string
+export type Line = LineV1
+export type Polygon = PolygonV1
 export type PointCount = number
+export type Rectangle = RectangleV1
+export type Root = RootV1
 export type Fps = number
 export type CoverTime = number
+export type Star = StarV1
+export type Text = TextV1 | TextV2
 /**
  * @minItems 1
  * @maxItems 1
@@ -258,7 +279,51 @@ export type VectorPaths = [
   },
 ]
 export type SizeBehaviour = 'FILL' | 'IGNORE'
+/**
+ * The horizontal alignment of the text with respect to the textbox.
+ */
+export type TextAlignHorizontal = 'LEFT' | 'CENTER' | 'RIGHT' | 'JUSTIFIED'
+/**
+ * The vertical alignment of the text with respect to the textbox.
+ */
+export type TextAlignVertical = 'TOP' | 'CENTER' | 'BOTTOM'
+/**
+ * The behavior of how the size of the text box adjusts to fit the characters.
+ */
+export type TextAutoResize = 'NONE' | 'WIDTH_AND_HEIGHT' | 'HEIGHT' | 'TRUNCATE'
+/**
+ * Whether this text node will truncate with an ellipsis when the text node size is smaller than the text inside.
+ */
+export type TextTruncation = 'DISABLED' | 'ENDING'
+/**
+ * The indentation of paragraphs (offset of the first line from the left).
+ */
+export type ParagraphIndent = number
+/**
+ * The vertical distance between paragraphs.
+ */
+export type ParagraphSpacing = number
+/**
+ * The vertical distance between lines of a list.
+ */
+export type ListSpacing = number
+/**
+ * Whether punctuation, like quotation marks, hangs outside the text box.
+ */
+export type HangingPunctuation = boolean
+/**
+ * Whether numbered list counters or unordered list bullets hang outside the text box.
+ */
+export type HangingList = boolean
+/**
+ * Whether updating the characters in the text node should update the name of the node. If this is set to true, name will be auto-derived from characters.
+ */
+export type AutoRename = boolean
+export type Version = number
+export type Vector = VectorV1
+export type ColorStop = ColorStopV1
 export type Progress = number
+export type ImagePaint = ImagePaintV1
 export type PaintType =
   | 'SOLID'
   | 'GRADIENT_LINEAR'
@@ -275,6 +340,7 @@ export type ImageTransform = [
   [number, number, number],
 ]
 export type ScalingFactor = number
+export type LinearGradientPaint = LinearGradientPaintV1
 /**
  * @minItems 2
  * @maxItems 2
@@ -283,6 +349,68 @@ export type GradientTransform = [
   [number, number, number],
   [number, number, number],
 ]
+export type RadialGradientPaint = RadialGradientPaintV1
+export type SolidPaint = SolidPaintV1
+export type StyledTextSegment = StyledTextSegmentV1
+/**
+ * The characters in the range of text with the same styles.
+ */
+export type Characters = string
+/**
+ * Start index (inclusive) of the range of characters.
+ */
+export type StartIndex = number
+/**
+ * End index (exclusive) of the range of characters.
+ */
+export type EndIndex = number
+/**
+ * The size of the font. Has minimum value of 1.
+ */
+export type FontSize = number
+/**
+ * The font family (e.g. "Inter").
+ */
+export type FontName = string
+/**
+ * Font style (e.g. "Regular").
+ */
+export type FontStyle = string
+/**
+ * Whether the text is underlined or has a strikethrough.
+ */
+export type TextDecoration = 'NONE' | 'UNDERLINE' | 'STRIKETHROUGH'
+/**
+ * Overrides the case of the raw characters in the text node.
+ */
+export type TextCase =
+  | 'ORIGINAL'
+  | 'UPPER'
+  | 'LOWER'
+  | 'TITLE'
+  | 'SMALL_CAPS'
+  | 'SMALL_CAPS_FORCED'
+export type LetterSpacingUnit = 'PIXELS' | 'PERCENT'
+/**
+ * The spacing between the individual characters.
+ */
+export type LetterSpacingValue = number
+/**
+ * The list settings.
+ */
+export type TextListOptions = 'NONE' | 'ORDERED' | 'UNORDERED'
+/**
+ * The indentation.
+ */
+export type Indetation = number
+/**
+ * When line height unit is not applied to entity then line height treat as `AUTO` which similar to how CSS works
+ */
+export type LineHeightUnit = 'AUTO' | 'PIXELS' | 'PERCENT'
+/**
+ * The spacing between the lines in a paragraph of text.
+ */
+export type LineHeightValue = number
 
 /**
  * Aninix's snapshot types schema definition
@@ -322,10 +450,11 @@ export interface AninixSnapshot {
       | LinearGradientPaint
       | RadialGradientPaint
       | SolidPaint
+      | StyledTextSegment
   }
   [k: string]: unknown
 }
-export interface BackgroundBlur {
+export interface BackgroundBlurV1 {
   /**
    * Unique entity identifier
    */
@@ -348,7 +477,7 @@ export interface BackgroundBlur {
   }
   [k: string]: unknown
 }
-export interface DropShadow {
+export interface DropShadowV1 {
   /**
    * Unique entity identifier
    */
@@ -375,7 +504,7 @@ export interface DropShadow {
   }
   [k: string]: unknown
 }
-export interface InnerShadow {
+export interface InnerShadowV1 {
   /**
    * Unique entity identifier
    */
@@ -402,7 +531,7 @@ export interface InnerShadow {
   }
   [k: string]: unknown
 }
-export interface LayerBlur {
+export interface LayerBlurV1 {
   /**
    * Unique entity identifier
    */
@@ -425,7 +554,7 @@ export interface LayerBlur {
   }
   [k: string]: unknown
 }
-export interface MatrixTransformKey {
+export interface MatrixTransformKeyV1 {
   /**
    * Unique entity identifier
    */
@@ -449,7 +578,7 @@ export interface MatrixTransformKey {
   }
   [k: string]: unknown
 }
-export interface NumberKey {
+export interface NumberKeyV1 {
   /**
    * Unique entity identifier
    */
@@ -473,7 +602,7 @@ export interface NumberKey {
   }
   [k: string]: unknown
 }
-export interface Point2DKey {
+export interface Point2DKeyV1 {
   /**
    * Unique entity identifier
    */
@@ -497,7 +626,7 @@ export interface Point2DKey {
   }
   [k: string]: unknown
 }
-export interface RgbaKey {
+export interface RgbaKeyV1 {
   /**
    * Unique entity identifier
    */
@@ -521,7 +650,7 @@ export interface RgbaKey {
   }
   [k: string]: unknown
 }
-export interface SpatialPoint2DKey {
+export interface SpatialPoint2DKeyV1 {
   /**
    * Unique entity identifier
    */
@@ -545,7 +674,7 @@ export interface SpatialPoint2DKey {
   }
   [k: string]: unknown
 }
-export interface CurveStyle {
+export interface CurveStyleV1 {
   /**
    * Unique entity identifier
    */
@@ -567,7 +696,7 @@ export interface CurveStyle {
   }
   [k: string]: unknown
 }
-export interface ExportPreset {
+export interface ExportPresetV1 {
   /**
    * Unique entity identifier
    */
@@ -589,7 +718,7 @@ export interface ExportPreset {
   }
   [k: string]: unknown
 }
-export interface Ellipse {
+export interface EllipseV1 {
   /**
    * Unique entity identifier
    */
@@ -647,7 +776,7 @@ export interface Ellipse {
   }
   [k: string]: unknown
 }
-export interface Frame {
+export interface FrameV1 {
   /**
    * Unique entity identifier
    */
@@ -715,7 +844,7 @@ export interface Frame {
   }
   [k: string]: unknown
 }
-export interface Group {
+export interface GroupV1 {
   /**
    * Unique entity identifier
    */
@@ -757,7 +886,7 @@ export interface Group {
   }
   [k: string]: unknown
 }
-export interface Instance {
+export interface InstanceV1 {
   /**
    * Unique entity identifier
    */
@@ -825,7 +954,7 @@ export interface Instance {
   }
   [k: string]: unknown
 }
-export interface Line {
+export interface LineV1 {
   /**
    * Unique entity identifier
    */
@@ -878,7 +1007,7 @@ export interface Line {
   }
   [k: string]: unknown
 }
-export interface Polygon {
+export interface PolygonV1 {
   /**
    * Unique entity identifier
    */
@@ -934,7 +1063,7 @@ export interface Polygon {
   }
   [k: string]: unknown
 }
-export interface Rectangle {
+export interface RectangleV1 {
   /**
    * Unique entity identifier
    */
@@ -999,7 +1128,7 @@ export interface Rectangle {
   }
   [k: string]: unknown
 }
-export interface Root {
+export interface RootV1 {
   /**
    * Unique entity identifier
    */
@@ -1027,7 +1156,7 @@ export interface Root {
   }
   [k: string]: unknown
 }
-export interface Star {
+export interface StarV1 {
   /**
    * Unique entity identifier
    */
@@ -1084,7 +1213,7 @@ export interface Star {
   }
   [k: string]: unknown
 }
-export interface Text {
+export interface TextV1 {
   /**
    * Unique entity identifier
    */
@@ -1139,7 +1268,73 @@ export interface Text {
   }
   [k: string]: unknown
 }
-export interface Vector {
+export interface TextV2 {
+  /**
+   * Unique entity identifier
+   */
+  id: string
+  /**
+   * Type of the entity
+   */
+  tag: 'text'
+  /**
+   * Current schema version of the entity
+   */
+  schemaVersion: 2
+  components: {
+    name: Name
+    entityType: EntityType
+    nodeType: NodeType
+    vectorPaths: VectorPaths
+    nodeColor: NodeColor
+    solo: Solo
+    locked: Locked
+    visibleInViewport: VisibleInViewport
+    propertiesExpanded: PropertiesExpanded
+    blendMode: BlendMode
+    mask: Mask
+    strokeAlign: StrokeAlign
+    strokeCapStart: StrokeCapStart
+    strokeCapEnd: StrokeCapEnd
+    strokeJoin: StrokeJoin
+    strokeWeight: StrokeWeight
+    dash: Dash
+    dashOffset: DashOffset
+    gap: Gap
+    anchorPoint: AnchorPoint
+    position: Position
+    rotation: Rotation
+    opacity: Opacity
+    scale: Scale
+    scaleLocked: ScaleLocked
+    size: Size
+    sizeLocked: SizeLocked
+    skew: Skew
+    sizeBehaviour: SizeBehaviour
+    textAlignHorizontal: TextAlignHorizontal
+    textAlignVertical: TextAlignVertical
+    textAutoResize: TextAutoResize
+    textTruncation: TextTruncation
+    paragraphIndent: ParagraphIndent
+    paragraphSpacing: ParagraphSpacing
+    listSpacing: ListSpacing
+    hangingPunctuation: HangingPunctuation
+    hangingList: HangingList
+    autoRename: AutoRename
+    version: Version
+    startTime?: StartTime
+    duration?: Duration
+    trimStart?: TrimStart
+    trimEnd?: TrimEnd
+    trimOffset?: TrimOffset
+    pathReversed?: PathReversed
+    initialNodeId?: InitialNodeId
+    metadata?: Metadata
+    [k: string]: unknown
+  }
+  [k: string]: unknown
+}
+export interface VectorV1 {
   /**
    * Unique entity identifier
    */
@@ -1196,7 +1391,7 @@ export interface Vector {
   }
   [k: string]: unknown
 }
-export interface ColorStop {
+export interface ColorStopV1 {
   /**
    * Unique entity identifier
    */
@@ -1220,7 +1415,7 @@ export interface ColorStop {
   }
   [k: string]: unknown
 }
-export interface ImagePaint {
+export interface ImagePaintV1 {
   /**
    * Unique entity identifier
    */
@@ -1249,7 +1444,7 @@ export interface ImagePaint {
   }
   [k: string]: unknown
 }
-export interface LinearGradientPaint {
+export interface LinearGradientPaintV1 {
   /**
    * Unique entity identifier
    */
@@ -1274,7 +1469,7 @@ export interface LinearGradientPaint {
   }
   [k: string]: unknown
 }
-export interface RadialGradientPaint {
+export interface RadialGradientPaintV1 {
   /**
    * Unique entity identifier
    */
@@ -1299,7 +1494,7 @@ export interface RadialGradientPaint {
   }
   [k: string]: unknown
 }
-export interface SolidPaint {
+export interface SolidPaintV1 {
   /**
    * Unique entity identifier
    */
@@ -1319,6 +1514,40 @@ export interface SolidPaint {
     propertiesExpanded: PropertiesExpanded
     rgba: Rgba
     paintType: PaintType
+    [k: string]: unknown
+  }
+  [k: string]: unknown
+}
+export interface StyledTextSegmentV1 {
+  /**
+   * Unique entity identifier
+   */
+  id: string
+  /**
+   * Type of the entity
+   */
+  tag: 'styledTextSegment'
+  /**
+   * Current schema version of the entity
+   */
+  schemaVersion: 1
+  components: {
+    entityType: EntityType
+    characters: Characters
+    startIndex: StartIndex
+    endIndex: EndIndex
+    fontSize: FontSize
+    fontName: FontName
+    fontStyle: FontStyle
+    textDecoration: TextDecoration
+    textCase: TextCase
+    letterSpacingUnit: LetterSpacingUnit
+    letterSpacingValue: LetterSpacingValue
+    textListOptions: TextListOptions
+    indetation: Indetation
+    metadata?: Metadata
+    lineHeightUnit?: LineHeightUnit
+    lineHeightValue?: LineHeightValue
     [k: string]: unknown
   }
   [k: string]: unknown
