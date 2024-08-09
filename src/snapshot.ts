@@ -772,7 +772,7 @@ const mapEntityTextProperties = <In extends TextNode, Out extends TextV2>(
           fontSize: child.fontSize,
           fontName: child.fontName.family,
           fontStyle: child.fontName.style,
-          // fontWeight
+          fontWeight: child.fontWeight,
           textDecoration: child.textDecoration,
           textCase: child.textCase,
           lineHeightUnit: child.lineHeight.unit,
