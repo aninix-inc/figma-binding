@@ -290,11 +290,11 @@ export type TextAlignVertical = 'TOP' | 'CENTER' | 'BOTTOM'
 /**
  * The behavior of how the size of the text box adjusts to fit the characters.
  */
-export type TextAutoResize = 'NONE' | 'WIDTH_AND_HEIGHT' | 'HEIGHT'
+export type TextAutoResize = 'NONE' | 'WIDTH_AND_HEIGHT' | 'HEIGHT' | 'TRUNCATE'
 /**
  * Whether this text node will truncate with an ellipsis when the text node size is smaller than the text inside.
  */
-export type TextTruncation = 'ENABLED' | 'DISABLED'
+export type TextTruncation = 'DISABLED' | 'ENDING'
 /**
  * The indentation of paragraphs (offset of the first line from the left).
  */
@@ -406,7 +406,7 @@ export type Indetation = number
 /**
  * When line height unit is not applied to entity then line height treat as `AUTO` which similar to how CSS works
  */
-export type LineHeightUnit = 'PIXELS' | 'PERCENT'
+export type LineHeightUnit = 'AUTO' | 'PIXELS' | 'PERCENT'
 /**
  * The spacing between the lines in a paragraph of text.
  */
@@ -1545,16 +1545,6 @@ export interface StyledTextSegmentV1 {
     letterSpacingValue: LetterSpacingValue
     textListOptions: TextListOptions
     indetation: Indetation
-    textAlignHorizontal: TextAlignHorizontal
-    textAlignVertical: TextAlignVertical
-    textAutoResize: TextAutoResize
-    textTruncation: TextTruncation
-    paragraphIndent: ParagraphIndent
-    paragraphSpacing: ParagraphSpacing
-    listSpacing: ListSpacing
-    hangingPunctuation: HangingPunctuation
-    hangingList: HangingList
-    autoRename: AutoRename
     metadata?: Metadata
     lineHeightUnit?: LineHeightUnit
     lineHeightValue?: LineHeightValue
