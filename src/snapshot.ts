@@ -726,7 +726,8 @@ const mapEntityGeometryProperties = <
 const mapEntityTextProperties = <In extends TextNode, Out extends TextV2>(
   entities: Entity[],
   relations: Relations,
-  node: In
+  node: In,
+  context: Context
 ): Pick<
   Out['components'],
   | 'textAlignHorizontal'
@@ -803,7 +804,7 @@ const mapEntityTextProperties = <In extends TextNode, Out extends TextV2>(
 
   for (const styledTextSegmentId of styledTextSegmentIds) {
     relations.addRelation(
-      `${node.id}/styledTextSegments`,
+      `${context.nodeId}/styledTextSegments`,
       `${styledTextSegmentId}/parent`
     )
   }
@@ -1609,7 +1610,7 @@ const mapText = (
       ...mapEntityBlendProperties(entities, relations, node, context),
       ...mapEntityGeometryProperties(entities, relations, node, context),
       ...mapEntityLayoutProperties(node),
-      ...mapEntityTextProperties(entities, relations, node),
+      ...mapEntityTextProperties(entities, relations, node, context),
     },
   } satisfies TextV2)
 }
