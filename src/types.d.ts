@@ -99,8 +99,9 @@ export type SpatialPoint2DKey = SpatialPoint2DKeyV1
 export type SpatialPoint2D = [number, number, number, number, number, number]
 export type CurveStyle = CurveStyleV1
 export type Name = string
-export type ExportPreset = ExportPresetV1
+export type ExportPreset = ExportPresetV1 | ExportPresetV2
 /**
+ * [DEPRECATED] Use RenderScaleComponent instead. In the next version we are supporting any render scales (eg using numbers).
  * Used to determine exporting file scaling factor
  */
 export type RenderScaleType =
@@ -128,6 +129,11 @@ export type RenderType =
  * Define custom suffix for rendered file
  */
 export type RenderSuffix = string
+/**
+ * Used to determine exporting file scaling factor
+ */
+export type RenderScale = number
+export type Version = number
 export type Ellipse = EllipseV1
 export type StartAngle = number
 export type EndAngle = number
@@ -319,7 +325,6 @@ export type HangingList = boolean
  * Whether updating the characters in the text node should update the name of the node. If this is set to true, name will be auto-derived from characters.
  */
 export type AutoRename = boolean
-export type Version = number
 export type Vector = VectorV1
 export type ColorStop = ColorStopV1
 export type Progress = number
@@ -714,6 +719,29 @@ export interface ExportPresetV1 {
     renderScaleType: RenderScaleType
     renderType: RenderType
     renderSuffix: RenderSuffix
+    [k: string]: unknown
+  }
+  [k: string]: unknown
+}
+export interface ExportPresetV2 {
+  /**
+   * Unique entity identifier
+   */
+  id: string
+  /**
+   * Type of the entity
+   */
+  tag: 'exportPreset'
+  /**
+   * Current schema version of the entity
+   */
+  schemaVersion: 2
+  components: {
+    entityType: EntityType
+    renderScale: RenderScale
+    renderType: RenderType
+    renderSuffix: RenderSuffix
+    version: Version
     [k: string]: unknown
   }
   [k: string]: unknown
