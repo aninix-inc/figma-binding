@@ -691,11 +691,21 @@ const mapEntityGeometryProperties = <
   }
 
   if (node.type === 'VECTOR') {
-    properties.strokeCapStart =
-      node.vectorNetwork.vertices[0]?.strokeCap ?? 'NONE'
-    properties.strokeCapEnd =
-      node.vectorNetwork.vertices[node.vectorNetwork.vertices.length - 1]
-        ?.strokeCap ?? 'NONE'
+    // @NOTE: can throws in cases when type of node changed in figma or by plugin.
+    // Related to ANI-2344.
+    try {
+      properties.strokeCapStart =
+        node.vectorNetwork.vertices[0]?.strokeCap ?? 'NONE'
+      properties.strokeCapEnd =
+        node.vectorNetwork.vertices[node.vectorNetwork.vertices.length - 1]
+          ?.strokeCap ?? 'NONE'
+    } catch (err) {
+      console.error('Stroke cap setting failed', err)
+      if (node.strokeCap !== figma.mixed) {
+        properties.strokeCapStart = node.strokeCap
+        properties.strokeCapEnd = node.strokeCap
+      }
+    }
   } else if (node.strokeCap !== figma.mixed) {
     properties.strokeCapStart = node.strokeCap
     properties.strokeCapEnd = node.strokeCap
