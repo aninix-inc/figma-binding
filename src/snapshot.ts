@@ -769,7 +769,7 @@ const mapEntityTextProperties = <In extends TextNode, Out extends TextV2>(
       'boundVariables',
     ])
     .map((child, idx) => {
-      const styledTextSegmentId = `${node.id}sts${idx}`
+      const styledTextSegmentId = `${context.nodeId}sts${idx}`
 
       entities.push({
         id: styledTextSegmentId,
