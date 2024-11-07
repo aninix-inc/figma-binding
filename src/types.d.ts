@@ -134,7 +134,7 @@ export type RenderSuffix = string
  */
 export type RenderScale = number
 export type Version = number
-export type Ellipse = EllipseV1
+export type Ellipse = EllipseV1 | EllipseV2
 export type StartAngle = number
 export type EndAngle = number
 export type InnerRadius = number
@@ -241,7 +241,7 @@ export type InitialNodeId = string
  * Stores as stringified json. Used to set additional data to entities.
  */
 export type Metadata = string
-export type Frame = FrameV1
+export type Frame = FrameV1 | FrameV2
 export type ClipContent = boolean
 export type ChildrenExpanded = boolean
 export type IndividualStrokeWeight = boolean
@@ -258,20 +258,20 @@ export type TopLeftCornerRadius = number
 export type TopRightCornerRadius = number
 export type BottomRightCornerRadius = number
 export type BottomLeftCornerRadius = number
-export type Group = GroupV1
-export type Instance = InstanceV1
+export type Group = GroupV1 | GroupV2
+export type Instance = InstanceV1 | InstanceV2
 /**
  * ID of the main node, stores the Aninix ID. Works similar to `mainComponent` property in Figma.
  */
 export type MainNodeComponentId = string
-export type Line = LineV1
-export type Polygon = PolygonV1
+export type Line = LineV1 | LineV2
+export type Polygon = PolygonV1 | PolygonV2
 export type PointCount = number
-export type Rectangle = RectangleV1
+export type Rectangle = RectangleV1 | RectangleV2
 export type Root = RootV1
 export type Fps = number
 export type CoverTime = number
-export type Star = StarV1
+export type Star = StarV1 | StarV2
 export type Text = TextV1 | TextV2
 /**
  * @minItems 1
@@ -325,7 +325,7 @@ export type HangingList = boolean
  * Whether updating the characters in the text node should update the name of the node. If this is set to true, name will be auto-derived from characters.
  */
 export type AutoRename = boolean
-export type Vector = VectorV1
+export type Vector = VectorV1 | VectorV2
 export type ColorStop = ColorStopV1
 export type Progress = number
 export type ImagePaint = ImagePaintV1
@@ -804,6 +804,65 @@ export interface EllipseV1 {
   }
   [k: string]: unknown
 }
+export interface EllipseV2 {
+  /**
+   * Unique entity identifier
+   */
+  id: string
+  /**
+   * Type of the entity
+   */
+  tag: 'ellipse'
+  /**
+   * Current schema version of the entity
+   */
+  schemaVersion: 2
+  components: {
+    name: Name
+    entityType: EntityType
+    startAngle: StartAngle
+    endAngle: EndAngle
+    innerRadius: InnerRadius
+    nodeType: NodeType
+    nodeColor: NodeColor
+    solo: Solo
+    locked: Locked
+    visibleInViewport: VisibleInViewport
+    propertiesExpanded: PropertiesExpanded
+    blendMode: BlendMode
+    mask: Mask
+    strokeAlign: StrokeAlign
+    strokeCapStart: StrokeCapStart
+    strokeCapEnd: StrokeCapEnd
+    strokeJoin: StrokeJoin
+    strokeWeight: StrokeWeight
+    dash: Dash
+    dashOffset: DashOffset
+    gap: Gap
+    smoothCornerRadius: SmoothCornerRadius
+    cornerRadius: CornerRadius
+    anchorPoint: AnchorPoint
+    position: Position
+    rotation: Rotation
+    opacity: Opacity
+    scale: Scale
+    scaleLocked: ScaleLocked
+    size: Size
+    sizeLocked: SizeLocked
+    skew: Skew
+    version: Version
+    startTime?: StartTime
+    duration?: Duration
+    trimStart?: TrimStart
+    trimEnd?: TrimEnd
+    trimOffset?: TrimOffset
+    pathReversed?: PathReversed
+    initialNodeId?: InitialNodeId
+    metadata?: Metadata
+    [k: string]: unknown
+  }
+  [k: string]: unknown
+}
 export interface FrameV1 {
   /**
    * Unique entity identifier
@@ -872,6 +931,75 @@ export interface FrameV1 {
   }
   [k: string]: unknown
 }
+export interface FrameV2 {
+  /**
+   * Unique entity identifier
+   */
+  id: string
+  /**
+   * Type of the entity
+   */
+  tag: 'frame'
+  /**
+   * Current schema version of the entity
+   */
+  schemaVersion: 2
+  components: {
+    name: Name
+    entityType: EntityType
+    clipContent: ClipContent
+    nodeType: NodeType
+    nodeColor: NodeColor
+    solo: Solo
+    locked: Locked
+    visibleInViewport: VisibleInViewport
+    propertiesExpanded: PropertiesExpanded
+    childrenExpanded: ChildrenExpanded
+    blendMode: BlendMode
+    mask: Mask
+    strokeAlign: StrokeAlign
+    strokeCapStart: StrokeCapStart
+    strokeCapEnd: StrokeCapEnd
+    strokeJoin: StrokeJoin
+    strokeWeight: StrokeWeight
+    individualStrokeWeight: IndividualStrokeWeight
+    strokeTopWeight: StrokeTopWeight
+    strokeRightWeight: StrokeRightWeight
+    strokeBottomWeight: StrokeBottomWeight
+    strokeLeftWeight: StrokeLeftWeight
+    dash: Dash
+    dashOffset: DashOffset
+    gap: Gap
+    smoothCornerRadius: SmoothCornerRadius
+    cornerRadius: CornerRadius
+    individualCornerRadius: IndividualCornerRadius
+    anchorPoint: AnchorPoint
+    position: Position
+    rotation: Rotation
+    opacity: Opacity
+    scale: Scale
+    scaleLocked: ScaleLocked
+    size: Size
+    sizeLocked: SizeLocked
+    skew: Skew
+    version: Version
+    entry?: Entry
+    topLeftCornerRadius?: TopLeftCornerRadius
+    topRightCornerRadius?: TopRightCornerRadius
+    bottomRightCornerRadius?: BottomRightCornerRadius
+    bottomLeftCornerRadius?: BottomLeftCornerRadius
+    startTime?: StartTime
+    duration?: Duration
+    trimStart?: TrimStart
+    trimEnd?: TrimEnd
+    trimOffset?: TrimOffset
+    pathReversed?: PathReversed
+    initialNodeId?: InitialNodeId
+    metadata?: Metadata
+    [k: string]: unknown
+  }
+  [k: string]: unknown
+}
 export interface GroupV1 {
   /**
    * Unique entity identifier
@@ -906,6 +1034,49 @@ export interface GroupV1 {
     size: Size
     sizeLocked: SizeLocked
     skew: Skew
+    startTime?: StartTime
+    duration?: Duration
+    initialNodeId?: InitialNodeId
+    metadata?: Metadata
+    [k: string]: unknown
+  }
+  [k: string]: unknown
+}
+export interface GroupV2 {
+  /**
+   * Unique entity identifier
+   */
+  id: string
+  /**
+   * Type of the entity
+   */
+  tag: 'group'
+  /**
+   * Current schema version of the entity
+   */
+  schemaVersion: 2
+  components: {
+    name: Name
+    entityType: EntityType
+    nodeType: NodeType
+    nodeColor: NodeColor
+    solo: Solo
+    locked: Locked
+    visibleInViewport: VisibleInViewport
+    propertiesExpanded: PropertiesExpanded
+    childrenExpanded: ChildrenExpanded
+    blendMode: BlendMode
+    mask: Mask
+    anchorPoint: AnchorPoint
+    position: Position
+    rotation: Rotation
+    opacity: Opacity
+    scale: Scale
+    scaleLocked: ScaleLocked
+    size: Size
+    sizeLocked: SizeLocked
+    skew: Skew
+    version: Version
     startTime?: StartTime
     duration?: Duration
     initialNodeId?: InitialNodeId
@@ -982,6 +1153,75 @@ export interface InstanceV1 {
   }
   [k: string]: unknown
 }
+export interface InstanceV2 {
+  /**
+   * Unique entity identifier
+   */
+  id: string
+  /**
+   * Type of the entity
+   */
+  tag: 'instance'
+  /**
+   * Current schema version of the entity
+   */
+  schemaVersion: 2
+  components: {
+    name: Name
+    entityType: EntityType
+    childrenExpanded: ChildrenExpanded
+    clipContent: ClipContent
+    nodeType: NodeType
+    nodeColor: NodeColor
+    solo: Solo
+    locked: Locked
+    visibleInViewport: VisibleInViewport
+    propertiesExpanded: PropertiesExpanded
+    blendMode: BlendMode
+    mask: Mask
+    strokeAlign: StrokeAlign
+    strokeCapStart: StrokeCapStart
+    strokeCapEnd: StrokeCapEnd
+    strokeJoin: StrokeJoin
+    strokeWeight: StrokeWeight
+    individualStrokeWeight: IndividualStrokeWeight
+    strokeTopWeight: StrokeTopWeight
+    strokeRightWeight: StrokeRightWeight
+    strokeBottomWeight: StrokeBottomWeight
+    strokeLeftWeight: StrokeLeftWeight
+    dash: Dash
+    dashOffset: DashOffset
+    gap: Gap
+    smoothCornerRadius: SmoothCornerRadius
+    cornerRadius: CornerRadius
+    individualCornerRadius: IndividualCornerRadius
+    anchorPoint: AnchorPoint
+    position: Position
+    rotation: Rotation
+    opacity: Opacity
+    scale: Scale
+    scaleLocked: ScaleLocked
+    size: Size
+    sizeLocked: SizeLocked
+    skew: Skew
+    mainNodeComponentId: MainNodeComponentId
+    version: Version
+    topLeftCornerRadius?: TopLeftCornerRadius
+    topRightCornerRadius?: TopRightCornerRadius
+    bottomRightCornerRadius?: BottomRightCornerRadius
+    bottomLeftCornerRadius?: BottomLeftCornerRadius
+    startTime?: StartTime
+    duration?: Duration
+    trimStart?: TrimStart
+    trimEnd?: TrimEnd
+    trimOffset?: TrimOffset
+    pathReversed?: PathReversed
+    initialNodeId?: InitialNodeId
+    metadata?: Metadata
+    [k: string]: unknown
+  }
+  [k: string]: unknown
+}
 export interface LineV1 {
   /**
    * Unique entity identifier
@@ -1023,6 +1263,60 @@ export interface LineV1 {
     size: Size
     sizeLocked: SizeLocked
     skew: Skew
+    startTime?: StartTime
+    duration?: Duration
+    trimStart?: TrimStart
+    trimEnd?: TrimEnd
+    trimOffset?: TrimOffset
+    pathReversed?: PathReversed
+    initialNodeId?: InitialNodeId
+    metadata?: Metadata
+    [k: string]: unknown
+  }
+  [k: string]: unknown
+}
+export interface LineV2 {
+  /**
+   * Unique entity identifier
+   */
+  id: string
+  /**
+   * Type of the entity
+   */
+  tag: 'line'
+  /**
+   * Current schema version of the entity
+   */
+  schemaVersion: 2
+  components: {
+    name: Name
+    entityType: EntityType
+    nodeType: NodeType
+    nodeColor: NodeColor
+    solo: Solo
+    locked: Locked
+    visibleInViewport: VisibleInViewport
+    propertiesExpanded: PropertiesExpanded
+    blendMode: BlendMode
+    mask: Mask
+    strokeAlign: StrokeAlign
+    strokeCapStart: StrokeCapStart
+    strokeCapEnd: StrokeCapEnd
+    strokeJoin: StrokeJoin
+    strokeWeight: StrokeWeight
+    dash: Dash
+    dashOffset: DashOffset
+    gap: Gap
+    anchorPoint: AnchorPoint
+    position: Position
+    rotation: Rotation
+    opacity: Opacity
+    scale: Scale
+    scaleLocked: ScaleLocked
+    size: Size
+    sizeLocked: SizeLocked
+    skew: Skew
+    version: Version
     startTime?: StartTime
     duration?: Duration
     trimStart?: TrimStart
@@ -1091,6 +1385,63 @@ export interface PolygonV1 {
   }
   [k: string]: unknown
 }
+export interface PolygonV2 {
+  /**
+   * Unique entity identifier
+   */
+  id: string
+  /**
+   * Type of the entity
+   */
+  tag: 'polygon'
+  /**
+   * Current schema version of the entity
+   */
+  schemaVersion: 2
+  components: {
+    name: Name
+    entityType: EntityType
+    pointCount: PointCount
+    nodeType: NodeType
+    nodeColor: NodeColor
+    solo: Solo
+    locked: Locked
+    visibleInViewport: VisibleInViewport
+    propertiesExpanded: PropertiesExpanded
+    blendMode: BlendMode
+    mask: Mask
+    strokeAlign: StrokeAlign
+    strokeCapStart: StrokeCapStart
+    strokeCapEnd: StrokeCapEnd
+    strokeJoin: StrokeJoin
+    strokeWeight: StrokeWeight
+    dash: Dash
+    dashOffset: DashOffset
+    gap: Gap
+    smoothCornerRadius: SmoothCornerRadius
+    cornerRadius: CornerRadius
+    anchorPoint: AnchorPoint
+    position: Position
+    rotation: Rotation
+    opacity: Opacity
+    scale: Scale
+    scaleLocked: ScaleLocked
+    size: Size
+    sizeLocked: SizeLocked
+    skew: Skew
+    version: Version
+    startTime?: StartTime
+    duration?: Duration
+    trimStart?: TrimStart
+    trimEnd?: TrimEnd
+    trimOffset?: TrimOffset
+    pathReversed?: PathReversed
+    initialNodeId?: InitialNodeId
+    metadata?: Metadata
+    [k: string]: unknown
+  }
+  [k: string]: unknown
+}
 export interface RectangleV1 {
   /**
    * Unique entity identifier
@@ -1140,6 +1491,72 @@ export interface RectangleV1 {
     size: Size
     sizeLocked: SizeLocked
     skew: Skew
+    topLeftCornerRadius?: TopLeftCornerRadius
+    topRightCornerRadius?: TopRightCornerRadius
+    bottomRightCornerRadius?: BottomRightCornerRadius
+    bottomLeftCornerRadius?: BottomLeftCornerRadius
+    startTime?: StartTime
+    duration?: Duration
+    trimStart?: TrimStart
+    trimEnd?: TrimEnd
+    trimOffset?: TrimOffset
+    pathReversed?: PathReversed
+    initialNodeId?: InitialNodeId
+    metadata?: Metadata
+    [k: string]: unknown
+  }
+  [k: string]: unknown
+}
+export interface RectangleV2 {
+  /**
+   * Unique entity identifier
+   */
+  id: string
+  /**
+   * Type of the entity
+   */
+  tag: 'rectangle'
+  /**
+   * Current schema version of the entity
+   */
+  schemaVersion: 2
+  components: {
+    name: Name
+    entityType: EntityType
+    nodeType: NodeType
+    nodeColor: NodeColor
+    solo: Solo
+    locked: Locked
+    visibleInViewport: VisibleInViewport
+    propertiesExpanded: PropertiesExpanded
+    blendMode: BlendMode
+    mask: Mask
+    strokeAlign: StrokeAlign
+    strokeCapStart: StrokeCapStart
+    strokeCapEnd: StrokeCapEnd
+    strokeJoin: StrokeJoin
+    strokeWeight: StrokeWeight
+    individualStrokeWeight: IndividualStrokeWeight
+    strokeTopWeight: StrokeTopWeight
+    strokeRightWeight: StrokeRightWeight
+    strokeBottomWeight: StrokeBottomWeight
+    strokeLeftWeight: StrokeLeftWeight
+    dash: Dash
+    dashOffset: DashOffset
+    gap: Gap
+    smoothCornerRadius: SmoothCornerRadius
+    cornerRadius: CornerRadius
+    individualCornerRadius: IndividualCornerRadius
+    anchorPoint: AnchorPoint
+    position: Position
+    rotation: Rotation
+    opacity: Opacity
+    scale: Scale
+    scaleLocked: ScaleLocked
+    size: Size
+    sizeLocked: SizeLocked
+    skew: Skew
+    version: Version
     topLeftCornerRadius?: TopLeftCornerRadius
     topRightCornerRadius?: TopRightCornerRadius
     bottomRightCornerRadius?: BottomRightCornerRadius
@@ -1229,6 +1646,64 @@ export interface StarV1 {
     size: Size
     sizeLocked: SizeLocked
     skew: Skew
+    startTime?: StartTime
+    duration?: Duration
+    trimStart?: TrimStart
+    trimEnd?: TrimEnd
+    trimOffset?: TrimOffset
+    pathReversed?: PathReversed
+    initialNodeId?: InitialNodeId
+    metadata?: Metadata
+    [k: string]: unknown
+  }
+  [k: string]: unknown
+}
+export interface StarV2 {
+  /**
+   * Unique entity identifier
+   */
+  id: string
+  /**
+   * Type of the entity
+   */
+  tag: 'star'
+  /**
+   * Current schema version of the entity
+   */
+  schemaVersion: 2
+  components: {
+    name: Name
+    entityType: EntityType
+    pointCount: PointCount
+    innerRadius: InnerRadius
+    nodeType: NodeType
+    nodeColor: NodeColor
+    solo: Solo
+    locked: Locked
+    visibleInViewport: VisibleInViewport
+    propertiesExpanded: PropertiesExpanded
+    blendMode: BlendMode
+    mask: Mask
+    strokeAlign: StrokeAlign
+    strokeCapStart: StrokeCapStart
+    strokeCapEnd: StrokeCapEnd
+    strokeJoin: StrokeJoin
+    strokeWeight: StrokeWeight
+    dash: Dash
+    dashOffset: DashOffset
+    gap: Gap
+    smoothCornerRadius: SmoothCornerRadius
+    cornerRadius: CornerRadius
+    anchorPoint: AnchorPoint
+    position: Position
+    rotation: Rotation
+    opacity: Opacity
+    scale: Scale
+    scaleLocked: ScaleLocked
+    size: Size
+    sizeLocked: SizeLocked
+    skew: Skew
+    version: Version
     startTime?: StartTime
     duration?: Duration
     trimStart?: TrimStart
@@ -1407,6 +1882,64 @@ export interface VectorV1 {
     sizeLocked: SizeLocked
     skew: Skew
     sizeBehaviour: SizeBehaviour
+    startTime?: StartTime
+    duration?: Duration
+    trimStart?: TrimStart
+    trimEnd?: TrimEnd
+    trimOffset?: TrimOffset
+    pathReversed?: PathReversed
+    initialNodeId?: InitialNodeId
+    metadata?: Metadata
+    [k: string]: unknown
+  }
+  [k: string]: unknown
+}
+export interface VectorV2 {
+  /**
+   * Unique entity identifier
+   */
+  id: string
+  /**
+   * Type of the entity
+   */
+  tag: 'vector'
+  /**
+   * Current schema version of the entity
+   */
+  schemaVersion: 2
+  components: {
+    name: Name
+    entityType: EntityType
+    vectorPaths: VectorPaths
+    nodeType: NodeType
+    nodeColor: NodeColor
+    solo: Solo
+    locked: Locked
+    visibleInViewport: VisibleInViewport
+    propertiesExpanded: PropertiesExpanded
+    blendMode: BlendMode
+    mask: Mask
+    strokeAlign: StrokeAlign
+    strokeCapStart: StrokeCapStart
+    strokeCapEnd: StrokeCapEnd
+    strokeJoin: StrokeJoin
+    strokeWeight: StrokeWeight
+    dash: Dash
+    dashOffset: DashOffset
+    gap: Gap
+    smoothCornerRadius: SmoothCornerRadius
+    cornerRadius: CornerRadius
+    anchorPoint: AnchorPoint
+    position: Position
+    rotation: Rotation
+    opacity: Opacity
+    scale: Scale
+    scaleLocked: ScaleLocked
+    size: Size
+    sizeLocked: SizeLocked
+    skew: Skew
+    sizeBehaviour: SizeBehaviour
+    version: Version
     startTime?: StartTime
     duration?: Duration
     trimStart?: TrimStart
