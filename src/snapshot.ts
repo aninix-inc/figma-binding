@@ -1063,12 +1063,13 @@ const mapEllipse = (
   entities.push({
     id: context.nodeId,
     tag: 'ellipse',
-    schemaVersion: 1,
+    schemaVersion: 2,
     components: {
       startAngle: (node.arcData.startingAngle / Math.PI) * 180,
       endAngle:
         (node.arcData.endingAngle - node.arcData.startingAngle) / (2 * Math.PI),
       innerRadius: node.arcData.innerRadius,
+      version: 3,
       ...mapEntityBaseProperties(relations, node, context),
       ...mapEntitySceneProperties(node),
       ...mapEntityBlendProperties(entities, relations, node, context),
@@ -1148,8 +1149,9 @@ const mapFrame = (
       entities.push({
         id: context.nodeId,
         tag: 'frame',
-        schemaVersion: 1,
+        schemaVersion: 2,
         components: {
+          version: 3,
           ...mapEntityFrameProperties(node),
           ...mapEntityEntryProperties(context),
           ...baseProperties,
@@ -1169,8 +1171,9 @@ const mapFrame = (
   entities.push({
     id: context.nodeId,
     tag: 'frame',
-    schemaVersion: 1,
+    schemaVersion: 2,
     components: {
+      version: 3,
       ...mapEntityFrameProperties(node),
       ...mapEntityEntryProperties(context),
       ...baseProperties,
@@ -1223,8 +1226,9 @@ const mapGroup = (
       entities.push({
         id: context.nodeId,
         tag: 'group',
-        schemaVersion: 1,
+        schemaVersion: 2,
         components: {
+          version: 3,
           ...baseProperties,
           ...mapEntitySceneProperties(node),
           ...mapEntityBlendProperties(entities, relations, node, context),
@@ -1238,8 +1242,9 @@ const mapGroup = (
   entities.push({
     id: context.nodeId,
     tag: 'group',
-    schemaVersion: 1,
+    schemaVersion: 2,
     components: {
+      version: 3,
       ...baseProperties,
       ...mapEntitySceneProperties(node),
       ...mapEntityBlendProperties(entities, relations, node, context),
@@ -1288,8 +1293,9 @@ const mapInstance = async (
   entities.push({
     id: context.nodeId,
     tag: 'instance',
-    schemaVersion: 1,
+    schemaVersion: 2,
     components: {
+      version: 3,
       ...instanceProperties,
       ...mapEntityEntryProperties(context),
       ...mapEntityFrameProperties(node),
@@ -1343,8 +1349,9 @@ const mapComponentSet = (
       entities.push({
         id: context.nodeId,
         tag: 'frame',
-        schemaVersion: 1,
+        schemaVersion: 2,
         components: {
+          version: 3,
           ...mapEntityEntryProperties(context),
           ...mapEntityFrameProperties(node),
           ...baseProperties,
@@ -1364,8 +1371,9 @@ const mapComponentSet = (
   entities.push({
     id: context.nodeId,
     tag: 'frame',
-    schemaVersion: 1,
+    schemaVersion: 2,
     components: {
+      version: 3,
       ...mapEntityEntryProperties(context),
       ...mapEntityFrameProperties(node),
       ...baseProperties,
@@ -1418,8 +1426,9 @@ const mapComponent = (
       entities.push({
         id: context.nodeId,
         tag: 'frame',
-        schemaVersion: 1,
+        schemaVersion: 2,
         components: {
+          version: 3,
           ...mapEntityEntryProperties(context),
           ...mapEntityFrameProperties(node),
           ...baseProperties,
@@ -1439,8 +1448,9 @@ const mapComponent = (
   entities.push({
     id: context.nodeId,
     tag: 'frame',
-    schemaVersion: 1,
+    schemaVersion: 2,
     components: {
+      version: 3,
       ...mapEntityEntryProperties(context),
       ...mapEntityFrameProperties(node),
       ...baseProperties,
@@ -1470,8 +1480,9 @@ const mapLine = (
   entities.push({
     id: context.nodeId,
     tag: 'line',
-    schemaVersion: 1,
+    schemaVersion: 2,
     components: {
+      version: 3,
       ...mapEntityBaseProperties(relations, node, context),
       ...mapEntitySceneProperties(node),
       ...mapEntityBlendProperties(entities, relations, node, context),
@@ -1495,9 +1506,10 @@ const mapPolygon = (
   entities.push({
     id: context.nodeId,
     tag: 'polygon',
-    schemaVersion: 1,
+    schemaVersion: 2,
     components: {
       pointCount: node.pointCount,
+      version: 3,
       ...mapEntityBaseProperties(relations, node, context),
       ...mapEntitySceneProperties(node),
       ...mapEntityBlendProperties(entities, relations, node, context),
@@ -1522,8 +1534,9 @@ const mapRectangle = (
   entities.push({
     id: context.nodeId,
     tag: 'rectangle',
-    schemaVersion: 1,
+    schemaVersion: 2,
     components: {
+      version: 3,
       ...mapEntityBaseProperties(relations, node, context),
       ...mapEntitySceneProperties(node),
       ...mapEntityBlendProperties(entities, relations, node, context),
@@ -1550,10 +1563,11 @@ const mapStar = (
   entities.push({
     id: context.nodeId,
     tag: 'star',
-    schemaVersion: 1,
+    schemaVersion: 2,
     components: {
       pointCount: node.pointCount,
       innerRadius: node.innerRadius,
+      version: 3,
       ...mapEntityBaseProperties(relations, node, context),
       ...mapEntitySceneProperties(node),
       ...mapEntityBlendProperties(entities, relations, node, context),
@@ -1578,13 +1592,14 @@ const mapVector = (
   entities.push({
     id: context.nodeId,
     tag: 'vector',
-    schemaVersion: 1,
+    schemaVersion: 2,
     components: {
       vectorPaths: node.vectorPaths.map((v) => ({
         windingRule: v.windingRule,
         data: v.data,
       })) as any,
       sizeBehaviour: 'FILL',
+      version: 3,
       ...mapEntityBaseProperties(relations, node, context),
       ...mapEntitySceneProperties(node),
       ...mapEntityBlendProperties(entities, relations, node, context),
@@ -1614,7 +1629,7 @@ const mapText = (
         data: v.data,
       })) as any,
       sizeBehaviour: 'IGNORE',
-      version: 2,
+      version: 3,
       ...mapEntityBaseProperties(relations, node, context),
       ...mapEntitySceneProperties(node),
       ...mapEntityBlendProperties(entities, relations, node, context),
