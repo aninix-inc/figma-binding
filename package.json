@@ -14,6 +14,7 @@
     "build": "bun run build:declaration && bun run build:docs && bun ./source.build.ts",
     "build:dev": "bun run build:declaration && bun run build:docs && bun ./source.build.ts",
     "build:plugin": "bun ./plugin.build.ts",
+    "dev:plugin": "bun --watch ./plugin.build.ts",
     "generate:types": "bun ./scripts/generate-types-from-json-schema.ts && prettier ./src/types.d.ts --write",
     "test": "bun test",
     "test:coverage": "bun test --coverage",

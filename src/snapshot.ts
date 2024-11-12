@@ -929,6 +929,9 @@ const mapEntityLayoutProperties = <
     [0, 0, 1],
   ])
   const matrix = decomposedMatrix(node.relativeTransform)
+  // @NOTE: required to fix issue with rotation of the matrices from Figma
+  // when layer is flipped
+  const scaleSign = matrix.scaling.y === 0 ? 1 : Math.sign(matrix.scaling.y)
   const sceneProperties: Pick<
     Out['components'],
     | 'anchorPoint'
@@ -950,7 +953,7 @@ const mapEntityLayoutProperties = <
       matrix.translation.x,
       matrix.translation.y,
     ],
-    rotation: matrix.rotation.x,
+    rotation: matrix.rotation.x * scaleSign,
     opacity: node.opacity,
     scale: [matrix.scaling.x, matrix.scaling.y],
     scaleLocked: true,
