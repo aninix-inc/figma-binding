@@ -110,6 +110,18 @@ type GetProjectId = (node: FigmaNode) => string
  */
 type SetNodeId = (node: FigmaNode, projectId: string, nodeId: string) => void
 
+type Matrix = [[number, number, number], [number, number, number]]
+function matrixOrDefault(matrix: Matrix): Matrix {
+  if (matrix[0][0] == null) {
+    return [
+      [1, 0, 0],
+      [0, 1, 0],
+    ]
+  }
+
+  return matrix
+}
+
 /// mappers
 
 /**
@@ -196,7 +208,7 @@ const mapPaint = (
           visibleInViewport: paint.visible ?? true,
           propertiesExpanded: false,
           opacity: paint.opacity ?? 1,
-          gradientTransform: paint.gradientTransform,
+          gradientTransform: matrixOrDefault(paint.gradientTransform),
           paintType: 'GRADIENT_LINEAR',
         },
       } satisfies LinearGradientPaint)
@@ -221,7 +233,7 @@ const mapPaint = (
           visibleInViewport: paint.visible ?? true,
           propertiesExpanded: false,
           opacity: paint.opacity ?? 1,
-          gradientTransform: paint.gradientTransform,
+          gradientTransform: matrixOrDefault(paint.gradientTransform),
           paintType: 'GRADIENT_RADIAL',
         },
       } satisfies RadialGradientPaint)
