@@ -134,6 +134,8 @@ export type RenderSuffix = string
  */
 export type RenderScale = number
 export type Version = number
+export type Expression = ExpressionV1
+export type Enabled = boolean
 export type Ellipse = EllipseV1 | EllipseV2
 export type StartAngle = number
 export type EndAngle = number
@@ -334,6 +336,7 @@ export type PaintType =
   | 'GRADIENT_LINEAR'
   | 'GRADIENT_RADIAL'
   | 'IMAGE'
+  | 'VIDEO'
 export type Hash = string
 export type ScaleType = 'FILL' | 'FIT' | 'CROP' | 'TILE'
 /**
@@ -356,6 +359,15 @@ export type GradientTransform = [
 ]
 export type RadialGradientPaint = RadialGradientPaintV1
 export type SolidPaint = SolidPaintV1
+export type VideoPaint = VideoPaintV1
+/**
+ * @minItems 2
+ * @maxItems 2
+ */
+export type VideoTransform = [
+  [number, number, number],
+  [number, number, number],
+]
 export type StyledTextSegment = StyledTextSegmentV1
 /**
  * The characters in the range of text with the same styles.
@@ -439,6 +451,7 @@ export interface AninixSnapshot {
       | SpatialPoint2DKey
       | CurveStyle
       | ExportPreset
+      | Expression
       | Ellipse
       | Frame
       | Group
@@ -455,6 +468,7 @@ export interface AninixSnapshot {
       | LinearGradientPaint
       | RadialGradientPaint
       | SolidPaint
+      | VideoPaint
       | StyledTextSegment
   }
   [k: string]: unknown
@@ -741,6 +755,28 @@ export interface ExportPresetV2 {
     renderScale: RenderScale
     renderType: RenderType
     renderSuffix: RenderSuffix
+    version: Version
+    [k: string]: unknown
+  }
+  [k: string]: unknown
+}
+export interface ExpressionV1 {
+  /**
+   * Unique entity identifier
+   */
+  id: string
+  /**
+   * Type of the entity
+   */
+  tag: 'expression'
+  /**
+   * Current schema version of the entity
+   */
+  schemaVersion: 1
+  components: {
+    entityType: EntityType
+    expression: Expression
+    enabled: Enabled
     version: Version
     [k: string]: unknown
   }
@@ -2075,6 +2111,35 @@ export interface SolidPaintV1 {
     propertiesExpanded: PropertiesExpanded
     rgba: Rgba
     paintType: PaintType
+    [k: string]: unknown
+  }
+  [k: string]: unknown
+}
+export interface VideoPaintV1 {
+  /**
+   * Unique entity identifier
+   */
+  id: string
+  /**
+   * Type of the entity
+   */
+  tag: 'videoPaint'
+  /**
+   * Current schema version of the entity
+   */
+  schemaVersion: 1
+  components: {
+    entityType: EntityType
+    blendMode: BlendMode
+    visibleInViewport: VisibleInViewport
+    propertiesExpanded: PropertiesExpanded
+    paintType: PaintType
+    hash: Hash
+    scaleType: ScaleType
+    videoTransform: VideoTransform
+    scalingFactor: ScalingFactor
+    rotation: Rotation
+    opacity: Opacity
     [k: string]: unknown
   }
   [k: string]: unknown
