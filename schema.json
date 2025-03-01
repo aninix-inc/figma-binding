@@ -1,0 +1,6475 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://static.aninix.com/schemas/snapshot-v2.json",
+  "title": "Aninix Snapshot",
+  "description": "Aninix's snapshot types schema definition",
+  "type": "object",
+  "required": [
+    "id",
+    "schemaVersion",
+    "entities"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "type": "number",
+      "enum": [
+        2
+      ]
+    },
+    "entities": {
+      "type": "object",
+      "patternProperties": {
+        "^[a-zA-Z0-9]+$": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/backgroundBlur"
+            },
+            {
+              "$ref": "#/$defs/dropShadow"
+            },
+            {
+              "$ref": "#/$defs/innerShadow"
+            },
+            {
+              "$ref": "#/$defs/layerBlur"
+            },
+            {
+              "$ref": "#/$defs/matrixTransformKey"
+            },
+            {
+              "$ref": "#/$defs/numberKey"
+            },
+            {
+              "$ref": "#/$defs/point2dKey"
+            },
+            {
+              "$ref": "#/$defs/rgbaKey"
+            },
+            {
+              "$ref": "#/$defs/spatialPoint2dKey"
+            },
+            {
+              "$ref": "#/$defs/curveStyle"
+            },
+            {
+              "$ref": "#/$defs/exportPreset"
+            },
+            {
+              "$ref": "#/$defs/expression"
+            },
+            {
+              "$ref": "#/$defs/ellipse"
+            },
+            {
+              "$ref": "#/$defs/frame"
+            },
+            {
+              "$ref": "#/$defs/group"
+            },
+            {
+              "$ref": "#/$defs/instance"
+            },
+            {
+              "$ref": "#/$defs/line"
+            },
+            {
+              "$ref": "#/$defs/polygon"
+            },
+            {
+              "$ref": "#/$defs/rectangle"
+            },
+            {
+              "$ref": "#/$defs/root"
+            },
+            {
+              "$ref": "#/$defs/star"
+            },
+            {
+              "$ref": "#/$defs/text"
+            },
+            {
+              "$ref": "#/$defs/vector"
+            },
+            {
+              "$ref": "#/$defs/colorStop"
+            },
+            {
+              "$ref": "#/$defs/imagePaint"
+            },
+            {
+              "$ref": "#/$defs/linearGradientPaint"
+            },
+            {
+              "$ref": "#/$defs/radialGradientPaint"
+            },
+            {
+              "$ref": "#/$defs/solidPaint"
+            },
+            {
+              "$ref": "#/$defs/videoPaint"
+            },
+            {
+              "$ref": "#/$defs/styledTextSegment"
+            }
+          ]
+        }
+      }
+    }
+  },
+  "$defs": {
+    "anchorPoint": {
+      "type": "array",
+      "items": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "number"
+        }
+      ],
+      "minItems": 2,
+      "maxItems": 2,
+      "description": "Determine anchor point of the layer and how it should behave\nin terms of scale, size or rotation transformations.",
+      "example": [
+        50,
+        50
+      ]
+    },
+    "autoRename": {
+      "type": "boolean",
+      "description": "Whether updating the characters in the text node should update the name of the node. If this is set to true, name will be auto-derived from characters."
+    },
+    "blendMode": {
+      "type": "string",
+      "enum": [
+        "PASS_THROUGH",
+        "NORMAL",
+        "DARKEN",
+        "MULTIPLY",
+        "LINEAR_BURN",
+        "COLOR_BURN",
+        "LIGHTEN",
+        "SCREEN",
+        "LINEAR_DODGE",
+        "COLOR_DODGE",
+        "OVERLAY",
+        "SOFT_LIGHT",
+        "HARD_LIGHT",
+        "DIFFERENCE",
+        "EXCLUSION",
+        "HUE",
+        "SATURATION",
+        "COLOR",
+        "LUMINOSITY"
+      ]
+    },
+    "blurRadius": {
+      "type": "number"
+    },
+    "bottomLeftCornerRadius": {
+      "type": "number"
+    },
+    "bottomRightCornerRadius": {
+      "type": "number"
+    },
+    "characters": {
+      "type": "string",
+      "description": "The characters in the range of text with the same styles."
+    },
+    "childrenExpanded": {
+      "type": "boolean"
+    },
+    "clipContent": {
+      "type": "boolean"
+    },
+    "cornerRadius": {
+      "type": "number"
+    },
+    "coverTime": {
+      "type": "number"
+    },
+    "dash": {
+      "type": "number"
+    },
+    "dashOffset": {
+      "type": "number"
+    },
+    "duration": {
+      "type": "number"
+    },
+    "effectType": {
+      "type": "string",
+      "enum": [
+        "DROP_SHADOW",
+        "LAYER_BLUR",
+        "BACKGROUND_BLUR",
+        "INNER_SHADOW"
+      ]
+    },
+    "enabled": {
+      "type": "boolean"
+    },
+    "endAngle": {
+      "type": "number"
+    },
+    "endIndex": {
+      "type": "number",
+      "description": "End index (exclusive) of the range of characters."
+    },
+    "entityType": {
+      "type": "string",
+      "description": "[DEPRECATED] Was used in model v0. Check if we can remove it."
+    },
+    "entry": {
+      "type": "boolean",
+      "description": "Determine if frame is an entry point of a render tree"
+    },
+    "expression": {
+      "type": "object",
+      "oneOf": [
+        {
+          "$ref": "#/$defs/expressionV1"
+        }
+      ]
+    },
+    "fontName": {
+      "type": "string",
+      "description": "The font family (e.g. \"Inter\")."
+    },
+    "fontSize": {
+      "type": "number",
+      "description": "The size of the font. Has minimum value of 1."
+    },
+    "fontStyle": {
+      "type": "string",
+      "description": "Font style (e.g. \"Regular\")."
+    },
+    "fontWeight": {
+      "type": "number",
+      "description": "The weight of the font (e.g. 400 for \"Regular\", 700 for \"Bold\")."
+    },
+    "fps": {
+      "type": "number"
+    },
+    "gap": {
+      "type": "number"
+    },
+    "gradientTransform": {
+      "type": "array",
+      "items": [
+        {
+          "type": "array",
+          "items": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "number"
+            },
+            {
+              "type": "number"
+            }
+          ],
+          "minItems": 3,
+          "maxItems": 3
+        },
+        {
+          "type": "array",
+          "items": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "number"
+            },
+            {
+              "type": "number"
+            }
+          ],
+          "minItems": 3,
+          "maxItems": 3
+        }
+      ],
+      "minItems": 2,
+      "maxItems": 2
+    },
+    "hangingList": {
+      "type": "boolean",
+      "description": "Whether numbered list counters or unordered list bullets hang outside the text box."
+    },
+    "hangingPunctuation": {
+      "type": "boolean",
+      "description": "Whether punctuation, like quotation marks, hangs outside the text box."
+    },
+    "hash": {
+      "type": "string"
+    },
+    "imageTransform": {
+      "type": "array",
+      "items": [
+        {
+          "type": "array",
+          "items": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "number"
+            },
+            {
+              "type": "number"
+            }
+          ],
+          "minItems": 3,
+          "maxItems": 3
+        },
+        {
+          "type": "array",
+          "items": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "number"
+            },
+            {
+              "type": "number"
+            }
+          ],
+          "minItems": 3,
+          "maxItems": 3
+        }
+      ],
+      "minItems": 2,
+      "maxItems": 2
+    },
+    "indetation": {
+      "type": "number",
+      "description": "The indentation."
+    },
+    "individualCornerRadius": {
+      "type": "boolean"
+    },
+    "individualStrokeWeight": {
+      "type": "boolean"
+    },
+    "initialNodeId": {
+      "type": "string",
+      "description": "Holds initial node id so data can be copied on project creation"
+    },
+    "innerRadius": {
+      "type": "number"
+    },
+    "leadingTrim": {
+      "type": "string",
+      "enum": [
+        "NONE",
+        "CAP_HEIGHT"
+      ]
+    },
+    "letterSpacingUnit": {
+      "type": "string",
+      "enum": [
+        "PIXELS",
+        "PERCENT"
+      ]
+    },
+    "letterSpacingValue": {
+      "type": "number",
+      "description": "The spacing between the individual characters."
+    },
+    "lineHeightUnit": {
+      "type": "string",
+      "enum": [
+        "AUTO",
+        "PIXELS",
+        "PERCENT"
+      ],
+      "description": "When line height unit is not applied to entity then line height treat as `AUTO` which similar to how CSS works"
+    },
+    "lineHeightValue": {
+      "type": "number",
+      "description": "The spacing between the lines in a paragraph of text."
+    },
+    "listSpacing": {
+      "type": "number",
+      "description": "The vertical distance between lines of a list."
+    },
+    "locked": {
+      "type": "boolean"
+    },
+    "mainNodeComponentId": {
+      "type": "string",
+      "description": "ID of the main node, stores the Aninix ID. Works similar to `mainComponent` property in Figma."
+    },
+    "mask": {
+      "type": "boolean",
+      "description": "Determine if current entity is mask or not"
+    },
+    "maxLines": {
+      "type": "number",
+      "description": "The maximum number of lines a text node can reach before it truncates. Only applicable when `textTruncation` is set to \"ENDING\"."
+    },
+    "metadata": {
+      "type": "string",
+      "description": "Stores as stringified json. Used to set additional data to entities.",
+      "example": "{}"
+    },
+    "name": {
+      "type": "string",
+      "example": "Unknown"
+    },
+    "nodeColor": {
+      "type": "string",
+      "enum": [
+        "BLUE",
+        "PURPLE",
+        "PINK",
+        "GREEN",
+        "TURQOUISE",
+        "RED",
+        "ORANGE",
+        "YELLOW",
+        "GREY",
+        "NONE"
+      ]
+    },
+    "nodeType": {
+      "type": "string",
+      "enum": [
+        "GENERIC",
+        "BOOLEAN_OPERATION",
+        "COMPONENT",
+        "ELLIPSE",
+        "INSTANCE",
+        "FRAME",
+        "GROUP",
+        "LINE",
+        "POLYGON",
+        "RECTANGLE",
+        "STAR",
+        "TEXT",
+        "VECTOR"
+      ]
+    },
+    "opacity": {
+      "type": "number"
+    },
+    "paintType": {
+      "type": "string",
+      "enum": [
+        "SOLID",
+        "GRADIENT_LINEAR",
+        "GRADIENT_RADIAL",
+        "IMAGE",
+        "VIDEO"
+      ]
+    },
+    "paragraphIndent": {
+      "type": "number",
+      "description": "The indentation of paragraphs (offset of the first line from the left)."
+    },
+    "paragraphSpacing": {
+      "type": "number",
+      "description": "The vertical distance between paragraphs."
+    },
+    "pathReversed": {
+      "type": "boolean"
+    },
+    "pointCount": {
+      "type": "number"
+    },
+    "position": {
+      "type": "array",
+      "items": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "number"
+        },
+        {
+          "type": "number"
+        },
+        {
+          "type": "number"
+        },
+        {
+          "type": "number"
+        },
+        {
+          "type": "number"
+        }
+      ],
+      "minItems": 6,
+      "maxItems": 6
+    },
+    "presetId": {
+      "type": "string",
+      "description": "Holds ID of the animation preset to further work. Probably in future would be changed to reference instead of plain string."
+    },
+    "progress": {
+      "type": "number"
+    },
+    "propertiesExpanded": {
+      "type": "boolean"
+    },
+    "renderScale": {
+      "type": "number",
+      "description": "Used to determine exporting file scaling factor"
+    },
+    "renderScaleType": {
+      "type": "string",
+      "enum": [
+        "0.5x",
+        "0.75x",
+        "1x",
+        "1.5x",
+        "2x",
+        "3x",
+        "4x"
+      ],
+      "description": "[DEPRECATED] Use RenderScaleComponent instead. In the next version we are supporting any render scales (eg using numbers).\nUsed to determine exporting file scaling factor"
+    },
+    "renderSuffix": {
+      "type": "string",
+      "description": "Define custom suffix for rendered file",
+      "example": "@2x"
+    },
+    "renderType": {
+      "type": "string",
+      "enum": [
+        "mp4",
+        "webm",
+        "ogv",
+        "lottie",
+        "dotlottie",
+        "tgs",
+        "svg",
+        "gif",
+        "png"
+      ],
+      "description": "Used to determine exporting file format"
+    },
+    "rotation": {
+      "type": "number"
+    },
+    "scale": {
+      "type": "array",
+      "items": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "number"
+        }
+      ],
+      "minItems": 2,
+      "maxItems": 2
+    },
+    "scaleLocked": {
+      "type": "boolean"
+    },
+    "scaleType": {
+      "type": "string",
+      "enum": [
+        "FILL",
+        "FIT",
+        "CROP",
+        "TILE"
+      ]
+    },
+    "scalingFactor": {
+      "type": "number"
+    },
+    "shadowColor": {
+      "type": "array",
+      "items": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "number"
+        },
+        {
+          "type": "number"
+        },
+        {
+          "type": "number"
+        }
+      ],
+      "minItems": 4,
+      "maxItems": 4
+    },
+    "shadowOffset": {
+      "type": "array",
+      "items": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "number"
+        }
+      ],
+      "minItems": 2,
+      "maxItems": 2
+    },
+    "shadowRadius": {
+      "type": "number"
+    },
+    "shadowSpread": {
+      "type": "number"
+    },
+    "sizeBehaviour": {
+      "type": "string",
+      "enum": [
+        "FILL",
+        "IGNORE"
+      ]
+    },
+    "size": {
+      "type": "array",
+      "items": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "number"
+        }
+      ],
+      "minItems": 2,
+      "maxItems": 2
+    },
+    "sizeLocked": {
+      "type": "boolean"
+    },
+    "skew": {
+      "type": "array",
+      "items": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "number"
+        }
+      ],
+      "minItems": 2,
+      "maxItems": 2
+    },
+    "smoothCornerRadius": {
+      "type": "boolean"
+    },
+    "solo": {
+      "type": "string",
+      "enum": [
+        "NONE",
+        "VIEWPORT",
+        "TIMELINE",
+        "BOTH"
+      ]
+    },
+    "springCurve": {
+      "type": "array",
+      "items": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "number"
+        },
+        {
+          "type": "number"
+        }
+      ],
+      "minItems": 3,
+      "maxItems": 3
+    },
+    "startAngle": {
+      "type": "number"
+    },
+    "startIndex": {
+      "type": "number",
+      "description": "Start index (inclusive) of the range of characters."
+    },
+    "startTime": {
+      "type": "number"
+    },
+    "strokeAlign": {
+      "type": "string",
+      "enum": [
+        "CENTER",
+        "INSIDE",
+        "OUTSIDE"
+      ]
+    },
+    "strokeBottomWeight": {
+      "type": "number"
+    },
+    "strokeCapEnd": {
+      "type": "string",
+      "enum": [
+        "NONE",
+        "ROUND",
+        "SQUARE",
+        "ARROW_LINES",
+        "ARROW_EQUILATERAL",
+        "TRIANGLE_FILLED",
+        "DIAMOND_FILLED",
+        "CIRCLE_FILLED"
+      ]
+    },
+    "strokeCapStart": {
+      "type": "string",
+      "enum": [
+        "NONE",
+        "ROUND",
+        "SQUARE",
+        "ARROW_LINES",
+        "ARROW_EQUILATERAL",
+        "TRIANGLE_FILLED",
+        "DIAMOND_FILLED",
+        "CIRCLE_FILLED"
+      ]
+    },
+    "strokeJoin": {
+      "type": "string",
+      "enum": [
+        "MITER",
+        "BEVEL",
+        "ROUND"
+      ]
+    },
+    "strokeLeftWeight": {
+      "type": "number"
+    },
+    "strokeRightWeight": {
+      "type": "number"
+    },
+    "strokeTopWeight": {
+      "type": "number"
+    },
+    "strokeWeight": {
+      "type": "number"
+    },
+    "textAlignHorizontal": {
+      "type": "string",
+      "enum": [
+        "LEFT",
+        "CENTER",
+        "RIGHT",
+        "JUSTIFIED"
+      ],
+      "description": "The horizontal alignment of the text with respect to the textbox."
+    },
+    "textAlignVertical": {
+      "type": "string",
+      "enum": [
+        "TOP",
+        "CENTER",
+        "BOTTOM"
+      ],
+      "description": "The vertical alignment of the text with respect to the textbox."
+    },
+    "textAutoResize": {
+      "type": "string",
+      "enum": [
+        "NONE",
+        "WIDTH_AND_HEIGHT",
+        "HEIGHT",
+        "TRUNCATE"
+      ],
+      "description": "The behavior of how the size of the text box adjusts to fit the characters."
+    },
+    "textCase": {
+      "type": "string",
+      "enum": [
+        "ORIGINAL",
+        "UPPER",
+        "LOWER",
+        "TITLE",
+        "SMALL_CAPS",
+        "SMALL_CAPS_FORCED"
+      ],
+      "description": "Overrides the case of the raw characters in the text node."
+    },
+    "textDecoration": {
+      "type": "string",
+      "enum": [
+        "NONE",
+        "UNDERLINE",
+        "STRIKETHROUGH"
+      ],
+      "description": "Whether the text is underlined or has a strikethrough."
+    },
+    "textListOptions": {
+      "type": "string",
+      "enum": [
+        "NONE",
+        "ORDERED",
+        "UNORDERED"
+      ],
+      "description": "The list settings."
+    },
+    "textTruncation": {
+      "type": "string",
+      "enum": [
+        "DISABLED",
+        "ENDING"
+      ],
+      "description": "Whether this text node will truncate with an ellipsis when the text node size is smaller than the text inside."
+    },
+    "time": {
+      "type": "number"
+    },
+    "timingCurve": {
+      "type": "array",
+      "items": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "number"
+        },
+        {
+          "type": "number"
+        },
+        {
+          "type": "number"
+        }
+      ],
+      "minItems": 4,
+      "maxItems": 4
+    },
+    "topLeftCornerRadius": {
+      "type": "number"
+    },
+    "topRightCornerRadius": {
+      "type": "number"
+    },
+    "trimEnd": {
+      "type": "number"
+    },
+    "trimOffset": {
+      "type": "number"
+    },
+    "trimStart": {
+      "type": "number"
+    },
+    "vectorPaths": {
+      "type": "array",
+      "items": [
+        {
+          "type": "object",
+          "properties": {
+            "windingRule": {
+              "type": "string",
+              "enum": [
+                "NONZERO",
+                "EVENODD",
+                "NONE"
+              ]
+            },
+            "data": {
+              "type": "string"
+            }
+          }
+        }
+      ],
+      "minItems": 1,
+      "maxItems": 1
+    },
+    "version": {
+      "type": "number"
+    },
+    "videoTransform": {
+      "type": "array",
+      "items": [
+        {
+          "type": "array",
+          "items": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "number"
+            },
+            {
+              "type": "number"
+            }
+          ],
+          "minItems": 3,
+          "maxItems": 3
+        },
+        {
+          "type": "array",
+          "items": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "number"
+            },
+            {
+              "type": "number"
+            }
+          ],
+          "minItems": 3,
+          "maxItems": 3
+        }
+      ],
+      "minItems": 2,
+      "maxItems": 2
+    },
+    "visibleInViewport": {
+      "type": "boolean"
+    },
+    "matrixTransform": {
+      "type": "array",
+      "items": [
+        {
+          "type": "array",
+          "items": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "number"
+            },
+            {
+              "type": "number"
+            }
+          ],
+          "minItems": 3,
+          "maxItems": 3
+        },
+        {
+          "type": "array",
+          "items": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "number"
+            },
+            {
+              "type": "number"
+            }
+          ],
+          "minItems": 3,
+          "maxItems": 3
+        }
+      ],
+      "minItems": 2,
+      "maxItems": 2
+    },
+    "number": {
+      "type": "number"
+    },
+    "point2d": {
+      "type": "array",
+      "items": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "number"
+        }
+      ],
+      "minItems": 2,
+      "maxItems": 2
+    },
+    "rgba": {
+      "type": "array",
+      "items": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "number"
+        },
+        {
+          "type": "number"
+        },
+        {
+          "type": "number"
+        }
+      ],
+      "minItems": 4,
+      "maxItems": 4
+    },
+    "spatialPoint2d": {
+      "type": "array",
+      "items": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "number"
+        },
+        {
+          "type": "number"
+        },
+        {
+          "type": "number"
+        },
+        {
+          "type": "number"
+        },
+        {
+          "type": "number"
+        }
+      ],
+      "minItems": 6,
+      "maxItems": 6
+    },
+    "backgroundBlur": {
+      "type": "object",
+      "oneOf": [
+        {
+          "$ref": "#/$defs/backgroundBlurV1"
+        }
+      ]
+    },
+    "backgroundBlurV1": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique entity identifier"
+        },
+        "tag": {
+          "type": "string",
+          "enum": [
+            "backgroundBlur"
+          ],
+          "description": "Type of the entity"
+        },
+        "schemaVersion": {
+          "type": "number",
+          "description": "Current schema version of the entity",
+          "enum": [
+            1
+          ]
+        },
+        "components": {
+          "type": "object",
+          "properties": {
+            "entityType": {
+              "$ref": "#/$defs/entityType"
+            },
+            "visibleInViewport": {
+              "$ref": "#/$defs/visibleInViewport"
+            },
+            "propertiesExpanded": {
+              "$ref": "#/$defs/propertiesExpanded"
+            },
+            "blurRadius": {
+              "$ref": "#/$defs/blurRadius"
+            },
+            "effectType": {
+              "$ref": "#/$defs/effectType"
+            }
+          },
+          "additionalProperties": {},
+          "required": [
+            "entityType",
+            "visibleInViewport",
+            "propertiesExpanded",
+            "blurRadius",
+            "effectType"
+          ]
+        }
+      },
+      "required": [
+        "id",
+        "tag",
+        "schemaVersion",
+        "components"
+      ]
+    },
+    "dropShadow": {
+      "type": "object",
+      "oneOf": [
+        {
+          "$ref": "#/$defs/dropShadowV1"
+        }
+      ]
+    },
+    "dropShadowV1": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique entity identifier"
+        },
+        "tag": {
+          "type": "string",
+          "enum": [
+            "dropShadow"
+          ],
+          "description": "Type of the entity"
+        },
+        "schemaVersion": {
+          "type": "number",
+          "description": "Current schema version of the entity",
+          "enum": [
+            1
+          ]
+        },
+        "components": {
+          "type": "object",
+          "properties": {
+            "entityType": {
+              "$ref": "#/$defs/entityType"
+            },
+            "visibleInViewport": {
+              "$ref": "#/$defs/visibleInViewport"
+            },
+            "propertiesExpanded": {
+              "$ref": "#/$defs/propertiesExpanded"
+            },
+            "shadowRadius": {
+              "$ref": "#/$defs/shadowRadius"
+            },
+            "shadowColor": {
+              "$ref": "#/$defs/shadowColor"
+            },
+            "shadowOffset": {
+              "$ref": "#/$defs/shadowOffset"
+            },
+            "shadowSpread": {
+              "$ref": "#/$defs/shadowSpread"
+            },
+            "effectType": {
+              "$ref": "#/$defs/effectType"
+            },
+            "blendMode": {
+              "$ref": "#/$defs/blendMode"
+            }
+          },
+          "additionalProperties": {},
+          "required": [
+            "entityType",
+            "visibleInViewport",
+            "propertiesExpanded",
+            "shadowRadius",
+            "shadowColor",
+            "shadowOffset",
+            "shadowSpread",
+            "effectType",
+            "blendMode"
+          ]
+        }
+      },
+      "required": [
+        "id",
+        "tag",
+        "schemaVersion",
+        "components"
+      ]
+    },
+    "innerShadow": {
+      "type": "object",
+      "oneOf": [
+        {
+          "$ref": "#/$defs/innerShadowV1"
+        }
+      ]
+    },
+    "innerShadowV1": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique entity identifier"
+        },
+        "tag": {
+          "type": "string",
+          "enum": [
+            "innerShadow"
+          ],
+          "description": "Type of the entity"
+        },
+        "schemaVersion": {
+          "type": "number",
+          "description": "Current schema version of the entity",
+          "enum": [
+            1
+          ]
+        },
+        "components": {
+          "type": "object",
+          "properties": {
+            "entityType": {
+              "$ref": "#/$defs/entityType"
+            },
+            "visibleInViewport": {
+              "$ref": "#/$defs/visibleInViewport"
+            },
+            "propertiesExpanded": {
+              "$ref": "#/$defs/propertiesExpanded"
+            },
+            "shadowRadius": {
+              "$ref": "#/$defs/shadowRadius"
+            },
+            "shadowColor": {
+              "$ref": "#/$defs/shadowColor"
+            },
+            "shadowOffset": {
+              "$ref": "#/$defs/shadowOffset"
+            },
+            "shadowSpread": {
+              "$ref": "#/$defs/shadowSpread"
+            },
+            "effectType": {
+              "$ref": "#/$defs/effectType"
+            },
+            "blendMode": {
+              "$ref": "#/$defs/blendMode"
+            }
+          },
+          "additionalProperties": {},
+          "required": [
+            "entityType",
+            "visibleInViewport",
+            "propertiesExpanded",
+            "shadowRadius",
+            "shadowColor",
+            "shadowOffset",
+            "shadowSpread",
+            "effectType",
+            "blendMode"
+          ]
+        }
+      },
+      "required": [
+        "id",
+        "tag",
+        "schemaVersion",
+        "components"
+      ]
+    },
+    "layerBlur": {
+      "type": "object",
+      "oneOf": [
+        {
+          "$ref": "#/$defs/layerBlurV1"
+        }
+      ]
+    },
+    "layerBlurV1": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique entity identifier"
+        },
+        "tag": {
+          "type": "string",
+          "enum": [
+            "layerBlur"
+          ],
+          "description": "Type of the entity"
+        },
+        "schemaVersion": {
+          "type": "number",
+          "description": "Current schema version of the entity",
+          "enum": [
+            1
+          ]
+        },
+        "components": {
+          "type": "object",
+          "properties": {
+            "entityType": {
+              "$ref": "#/$defs/entityType"
+            },
+            "visibleInViewport": {
+              "$ref": "#/$defs/visibleInViewport"
+            },
+            "propertiesExpanded": {
+              "$ref": "#/$defs/propertiesExpanded"
+            },
+            "blurRadius": {
+              "$ref": "#/$defs/blurRadius"
+            },
+            "effectType": {
+              "$ref": "#/$defs/effectType"
+            }
+          },
+          "additionalProperties": {},
+          "required": [
+            "entityType",
+            "visibleInViewport",
+            "propertiesExpanded",
+            "blurRadius",
+            "effectType"
+          ]
+        }
+      },
+      "required": [
+        "id",
+        "tag",
+        "schemaVersion",
+        "components"
+      ]
+    },
+    "matrixTransformKey": {
+      "type": "object",
+      "oneOf": [
+        {
+          "$ref": "#/$defs/matrixTransformKeyV1"
+        }
+      ]
+    },
+    "matrixTransformKeyV1": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique entity identifier"
+        },
+        "tag": {
+          "type": "string",
+          "enum": [
+            "matrixTransformKey"
+          ],
+          "description": "Type of the entity"
+        },
+        "schemaVersion": {
+          "type": "number",
+          "description": "Current schema version of the entity",
+          "enum": [
+            1
+          ]
+        },
+        "components": {
+          "type": "object",
+          "properties": {
+            "entityType": {
+              "$ref": "#/$defs/entityType"
+            },
+            "time": {
+              "$ref": "#/$defs/time"
+            },
+            "matrixTransform": {
+              "$ref": "#/$defs/matrixTransform"
+            },
+            "timingCurve": {
+              "$ref": "#/$defs/timingCurve"
+            },
+            "springCurve": {
+              "$ref": "#/$defs/springCurve"
+            },
+            "presetId": {
+              "$ref": "#/$defs/presetId"
+            }
+          },
+          "additionalProperties": {},
+          "required": [
+            "entityType",
+            "time",
+            "matrixTransform"
+          ]
+        }
+      },
+      "required": [
+        "id",
+        "tag",
+        "schemaVersion",
+        "components"
+      ]
+    },
+    "numberKey": {
+      "type": "object",
+      "oneOf": [
+        {
+          "$ref": "#/$defs/numberKeyV1"
+        }
+      ]
+    },
+    "numberKeyV1": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique entity identifier"
+        },
+        "tag": {
+          "type": "string",
+          "enum": [
+            "numberKey"
+          ],
+          "description": "Type of the entity"
+        },
+        "schemaVersion": {
+          "type": "number",
+          "description": "Current schema version of the entity",
+          "enum": [
+            1
+          ]
+        },
+        "components": {
+          "type": "object",
+          "properties": {
+            "entityType": {
+              "$ref": "#/$defs/entityType"
+            },
+            "time": {
+              "$ref": "#/$defs/time"
+            },
+            "number": {
+              "$ref": "#/$defs/number"
+            },
+            "timingCurve": {
+              "$ref": "#/$defs/timingCurve"
+            },
+            "springCurve": {
+              "$ref": "#/$defs/springCurve"
+            },
+            "presetId": {
+              "$ref": "#/$defs/presetId"
+            }
+          },
+          "additionalProperties": {},
+          "required": [
+            "entityType",
+            "time",
+            "number"
+          ]
+        }
+      },
+      "required": [
+        "id",
+        "tag",
+        "schemaVersion",
+        "components"
+      ]
+    },
+    "point2dKey": {
+      "type": "object",
+      "oneOf": [
+        {
+          "$ref": "#/$defs/point2dKeyV1"
+        }
+      ]
+    },
+    "point2dKeyV1": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique entity identifier"
+        },
+        "tag": {
+          "type": "string",
+          "enum": [
+            "point2dKey"
+          ],
+          "description": "Type of the entity"
+        },
+        "schemaVersion": {
+          "type": "number",
+          "description": "Current schema version of the entity",
+          "enum": [
+            1
+          ]
+        },
+        "components": {
+          "type": "object",
+          "properties": {
+            "entityType": {
+              "$ref": "#/$defs/entityType"
+            },
+            "time": {
+              "$ref": "#/$defs/time"
+            },
+            "point2d": {
+              "$ref": "#/$defs/point2d"
+            },
+            "timingCurve": {
+              "$ref": "#/$defs/timingCurve"
+            },
+            "springCurve": {
+              "$ref": "#/$defs/springCurve"
+            },
+            "presetId": {
+              "$ref": "#/$defs/presetId"
+            }
+          },
+          "additionalProperties": {},
+          "required": [
+            "entityType",
+            "time",
+            "point2d"
+          ]
+        }
+      },
+      "required": [
+        "id",
+        "tag",
+        "schemaVersion",
+        "components"
+      ]
+    },
+    "rgbaKey": {
+      "type": "object",
+      "oneOf": [
+        {
+          "$ref": "#/$defs/rgbaKeyV1"
+        }
+      ]
+    },
+    "rgbaKeyV1": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique entity identifier"
+        },
+        "tag": {
+          "type": "string",
+          "enum": [
+            "rgbaKey"
+          ],
+          "description": "Type of the entity"
+        },
+        "schemaVersion": {
+          "type": "number",
+          "description": "Current schema version of the entity",
+          "enum": [
+            1
+          ]
+        },
+        "components": {
+          "type": "object",
+          "properties": {
+            "entityType": {
+              "$ref": "#/$defs/entityType"
+            },
+            "time": {
+              "$ref": "#/$defs/time"
+            },
+            "rgba": {
+              "$ref": "#/$defs/rgba"
+            },
+            "timingCurve": {
+              "$ref": "#/$defs/timingCurve"
+            },
+            "springCurve": {
+              "$ref": "#/$defs/springCurve"
+            },
+            "presetId": {
+              "$ref": "#/$defs/presetId"
+            }
+          },
+          "additionalProperties": {},
+          "required": [
+            "entityType",
+            "time",
+            "rgba"
+          ]
+        }
+      },
+      "required": [
+        "id",
+        "tag",
+        "schemaVersion",
+        "components"
+      ]
+    },
+    "spatialPoint2dKey": {
+      "type": "object",
+      "oneOf": [
+        {
+          "$ref": "#/$defs/spatialPoint2dKeyV1"
+        }
+      ]
+    },
+    "spatialPoint2dKeyV1": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique entity identifier"
+        },
+        "tag": {
+          "type": "string",
+          "enum": [
+            "spatialPoint2dKey"
+          ],
+          "description": "Type of the entity"
+        },
+        "schemaVersion": {
+          "type": "number",
+          "description": "Current schema version of the entity",
+          "enum": [
+            1
+          ]
+        },
+        "components": {
+          "type": "object",
+          "properties": {
+            "entityType": {
+              "$ref": "#/$defs/entityType"
+            },
+            "time": {
+              "$ref": "#/$defs/time"
+            },
+            "spatialPoint2d": {
+              "$ref": "#/$defs/spatialPoint2d"
+            },
+            "timingCurve": {
+              "$ref": "#/$defs/timingCurve"
+            },
+            "springCurve": {
+              "$ref": "#/$defs/springCurve"
+            },
+            "presetId": {
+              "$ref": "#/$defs/presetId"
+            }
+          },
+          "additionalProperties": {},
+          "required": [
+            "entityType",
+            "time",
+            "spatialPoint2d"
+          ]
+        }
+      },
+      "required": [
+        "id",
+        "tag",
+        "schemaVersion",
+        "components"
+      ]
+    },
+    "curveStyle": {
+      "type": "object",
+      "oneOf": [
+        {
+          "$ref": "#/$defs/curveStyleV1"
+        }
+      ]
+    },
+    "curveStyleV1": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique entity identifier"
+        },
+        "tag": {
+          "type": "string",
+          "enum": [
+            "curveStyle"
+          ],
+          "description": "Type of the entity"
+        },
+        "schemaVersion": {
+          "type": "number",
+          "description": "Current schema version of the entity",
+          "enum": [
+            1
+          ]
+        },
+        "components": {
+          "type": "object",
+          "properties": {
+            "entityType": {
+              "$ref": "#/$defs/entityType"
+            },
+            "name": {
+              "$ref": "#/$defs/name"
+            },
+            "timingCurve": {
+              "$ref": "#/$defs/timingCurve"
+            },
+            "springCurve": {
+              "$ref": "#/$defs/springCurve"
+            }
+          },
+          "additionalProperties": {},
+          "required": [
+            "entityType",
+            "name"
+          ]
+        }
+      },
+      "required": [
+        "id",
+        "tag",
+        "schemaVersion",
+        "components"
+      ]
+    },
+    "exportPreset": {
+      "type": "object",
+      "oneOf": [
+        {
+          "$ref": "#/$defs/exportPresetV1"
+        },
+        {
+          "$ref": "#/$defs/exportPresetV2"
+        }
+      ]
+    },
+    "exportPresetV1": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique entity identifier"
+        },
+        "tag": {
+          "type": "string",
+          "enum": [
+            "exportPreset"
+          ],
+          "description": "Type of the entity"
+        },
+        "schemaVersion": {
+          "type": "number",
+          "description": "Current schema version of the entity",
+          "enum": [
+            1
+          ]
+        },
+        "components": {
+          "type": "object",
+          "properties": {
+            "entityType": {
+              "$ref": "#/$defs/entityType"
+            },
+            "renderScaleType": {
+              "$ref": "#/$defs/renderScaleType"
+            },
+            "renderType": {
+              "$ref": "#/$defs/renderType"
+            },
+            "renderSuffix": {
+              "$ref": "#/$defs/renderSuffix"
+            }
+          },
+          "additionalProperties": {},
+          "required": [
+            "entityType",
+            "renderScaleType",
+            "renderType",
+            "renderSuffix"
+          ]
+        }
+      },
+      "required": [
+        "id",
+        "tag",
+        "schemaVersion",
+        "components"
+      ]
+    },
+    "exportPresetV2": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique entity identifier"
+        },
+        "tag": {
+          "type": "string",
+          "enum": [
+            "exportPreset"
+          ],
+          "description": "Type of the entity"
+        },
+        "schemaVersion": {
+          "type": "number",
+          "description": "Current schema version of the entity",
+          "enum": [
+            2
+          ]
+        },
+        "components": {
+          "type": "object",
+          "properties": {
+            "entityType": {
+              "$ref": "#/$defs/entityType"
+            },
+            "renderScale": {
+              "$ref": "#/$defs/renderScale"
+            },
+            "renderType": {
+              "$ref": "#/$defs/renderType"
+            },
+            "renderSuffix": {
+              "$ref": "#/$defs/renderSuffix"
+            },
+            "version": {
+              "$ref": "#/$defs/version"
+            }
+          },
+          "additionalProperties": {},
+          "required": [
+            "entityType",
+            "renderScale",
+            "renderType",
+            "renderSuffix",
+            "version"
+          ]
+        }
+      },
+      "required": [
+        "id",
+        "tag",
+        "schemaVersion",
+        "components"
+      ]
+    },
+    "expressionV1": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique entity identifier"
+        },
+        "tag": {
+          "type": "string",
+          "enum": [
+            "expression"
+          ],
+          "description": "Type of the entity"
+        },
+        "schemaVersion": {
+          "type": "number",
+          "description": "Current schema version of the entity",
+          "enum": [
+            1
+          ]
+        },
+        "components": {
+          "type": "object",
+          "properties": {
+            "entityType": {
+              "$ref": "#/$defs/entityType"
+            },
+            "expression": {
+              "$ref": "#/$defs/expression"
+            },
+            "enabled": {
+              "$ref": "#/$defs/enabled"
+            },
+            "version": {
+              "$ref": "#/$defs/version"
+            }
+          },
+          "additionalProperties": {},
+          "required": [
+            "entityType",
+            "expression",
+            "enabled",
+            "version"
+          ]
+        }
+      },
+      "required": [
+        "id",
+        "tag",
+        "schemaVersion",
+        "components"
+      ]
+    },
+    "ellipse": {
+      "type": "object",
+      "oneOf": [
+        {
+          "$ref": "#/$defs/ellipseV1"
+        },
+        {
+          "$ref": "#/$defs/ellipseV2"
+        }
+      ]
+    },
+    "ellipseV1": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique entity identifier"
+        },
+        "tag": {
+          "type": "string",
+          "enum": [
+            "ellipse"
+          ],
+          "description": "Type of the entity"
+        },
+        "schemaVersion": {
+          "type": "number",
+          "description": "Current schema version of the entity",
+          "enum": [
+            1
+          ]
+        },
+        "components": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "$ref": "#/$defs/name"
+            },
+            "entityType": {
+              "$ref": "#/$defs/entityType"
+            },
+            "startAngle": {
+              "$ref": "#/$defs/startAngle"
+            },
+            "endAngle": {
+              "$ref": "#/$defs/endAngle"
+            },
+            "innerRadius": {
+              "$ref": "#/$defs/innerRadius"
+            },
+            "nodeType": {
+              "$ref": "#/$defs/nodeType"
+            },
+            "nodeColor": {
+              "$ref": "#/$defs/nodeColor"
+            },
+            "solo": {
+              "$ref": "#/$defs/solo"
+            },
+            "locked": {
+              "$ref": "#/$defs/locked"
+            },
+            "visibleInViewport": {
+              "$ref": "#/$defs/visibleInViewport"
+            },
+            "propertiesExpanded": {
+              "$ref": "#/$defs/propertiesExpanded"
+            },
+            "blendMode": {
+              "$ref": "#/$defs/blendMode"
+            },
+            "mask": {
+              "$ref": "#/$defs/mask"
+            },
+            "strokeAlign": {
+              "$ref": "#/$defs/strokeAlign"
+            },
+            "strokeCapStart": {
+              "$ref": "#/$defs/strokeCapStart"
+            },
+            "strokeCapEnd": {
+              "$ref": "#/$defs/strokeCapEnd"
+            },
+            "strokeJoin": {
+              "$ref": "#/$defs/strokeJoin"
+            },
+            "strokeWeight": {
+              "$ref": "#/$defs/strokeWeight"
+            },
+            "dash": {
+              "$ref": "#/$defs/dash"
+            },
+            "dashOffset": {
+              "$ref": "#/$defs/dashOffset"
+            },
+            "gap": {
+              "$ref": "#/$defs/gap"
+            },
+            "smoothCornerRadius": {
+              "$ref": "#/$defs/smoothCornerRadius"
+            },
+            "cornerRadius": {
+              "$ref": "#/$defs/cornerRadius"
+            },
+            "anchorPoint": {
+              "$ref": "#/$defs/anchorPoint"
+            },
+            "position": {
+              "$ref": "#/$defs/position"
+            },
+            "rotation": {
+              "$ref": "#/$defs/rotation"
+            },
+            "opacity": {
+              "$ref": "#/$defs/opacity"
+            },
+            "scale": {
+              "$ref": "#/$defs/scale"
+            },
+            "scaleLocked": {
+              "$ref": "#/$defs/scaleLocked"
+            },
+            "size": {
+              "$ref": "#/$defs/size"
+            },
+            "sizeLocked": {
+              "$ref": "#/$defs/sizeLocked"
+            },
+            "skew": {
+              "$ref": "#/$defs/skew"
+            },
+            "startTime": {
+              "$ref": "#/$defs/startTime"
+            },
+            "duration": {
+              "$ref": "#/$defs/duration"
+            },
+            "trimStart": {
+              "$ref": "#/$defs/trimStart"
+            },
+            "trimEnd": {
+              "$ref": "#/$defs/trimEnd"
+            },
+            "trimOffset": {
+              "$ref": "#/$defs/trimOffset"
+            },
+            "pathReversed": {
+              "$ref": "#/$defs/pathReversed"
+            },
+            "initialNodeId": {
+              "$ref": "#/$defs/initialNodeId"
+            },
+            "metadata": {
+              "$ref": "#/$defs/metadata"
+            }
+          },
+          "additionalProperties": {},
+          "required": [
+            "name",
+            "entityType",
+            "startAngle",
+            "endAngle",
+            "innerRadius",
+            "nodeType",
+            "nodeColor",
+            "solo",
+            "locked",
+            "visibleInViewport",
+            "propertiesExpanded",
+            "blendMode",
+            "mask",
+            "strokeAlign",
+            "strokeCapStart",
+            "strokeCapEnd",
+            "strokeJoin",
+            "strokeWeight",
+            "dash",
+            "dashOffset",
+            "gap",
+            "smoothCornerRadius",
+            "cornerRadius",
+            "anchorPoint",
+            "position",
+            "rotation",
+            "opacity",
+            "scale",
+            "scaleLocked",
+            "size",
+            "sizeLocked",
+            "skew"
+          ]
+        }
+      },
+      "required": [
+        "id",
+        "tag",
+        "schemaVersion",
+        "components"
+      ]
+    },
+    "ellipseV2": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique entity identifier"
+        },
+        "tag": {
+          "type": "string",
+          "enum": [
+            "ellipse"
+          ],
+          "description": "Type of the entity"
+        },
+        "schemaVersion": {
+          "type": "number",
+          "description": "Current schema version of the entity",
+          "enum": [
+            2
+          ]
+        },
+        "components": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "$ref": "#/$defs/name"
+            },
+            "entityType": {
+              "$ref": "#/$defs/entityType"
+            },
+            "startAngle": {
+              "$ref": "#/$defs/startAngle"
+            },
+            "endAngle": {
+              "$ref": "#/$defs/endAngle"
+            },
+            "innerRadius": {
+              "$ref": "#/$defs/innerRadius"
+            },
+            "nodeType": {
+              "$ref": "#/$defs/nodeType"
+            },
+            "nodeColor": {
+              "$ref": "#/$defs/nodeColor"
+            },
+            "solo": {
+              "$ref": "#/$defs/solo"
+            },
+            "locked": {
+              "$ref": "#/$defs/locked"
+            },
+            "visibleInViewport": {
+              "$ref": "#/$defs/visibleInViewport"
+            },
+            "propertiesExpanded": {
+              "$ref": "#/$defs/propertiesExpanded"
+            },
+            "blendMode": {
+              "$ref": "#/$defs/blendMode"
+            },
+            "mask": {
+              "$ref": "#/$defs/mask"
+            },
+            "strokeAlign": {
+              "$ref": "#/$defs/strokeAlign"
+            },
+            "strokeCapStart": {
+              "$ref": "#/$defs/strokeCapStart"
+            },
+            "strokeCapEnd": {
+              "$ref": "#/$defs/strokeCapEnd"
+            },
+            "strokeJoin": {
+              "$ref": "#/$defs/strokeJoin"
+            },
+            "strokeWeight": {
+              "$ref": "#/$defs/strokeWeight"
+            },
+            "dash": {
+              "$ref": "#/$defs/dash"
+            },
+            "dashOffset": {
+              "$ref": "#/$defs/dashOffset"
+            },
+            "gap": {
+              "$ref": "#/$defs/gap"
+            },
+            "smoothCornerRadius": {
+              "$ref": "#/$defs/smoothCornerRadius"
+            },
+            "cornerRadius": {
+              "$ref": "#/$defs/cornerRadius"
+            },
+            "anchorPoint": {
+              "$ref": "#/$defs/anchorPoint"
+            },
+            "position": {
+              "$ref": "#/$defs/position"
+            },
+            "rotation": {
+              "$ref": "#/$defs/rotation"
+            },
+            "opacity": {
+              "$ref": "#/$defs/opacity"
+            },
+            "scale": {
+              "$ref": "#/$defs/scale"
+            },
+            "scaleLocked": {
+              "$ref": "#/$defs/scaleLocked"
+            },
+            "size": {
+              "$ref": "#/$defs/size"
+            },
+            "sizeLocked": {
+              "$ref": "#/$defs/sizeLocked"
+            },
+            "skew": {
+              "$ref": "#/$defs/skew"
+            },
+            "version": {
+              "$ref": "#/$defs/version"
+            },
+            "startTime": {
+              "$ref": "#/$defs/startTime"
+            },
+            "duration": {
+              "$ref": "#/$defs/duration"
+            },
+            "trimStart": {
+              "$ref": "#/$defs/trimStart"
+            },
+            "trimEnd": {
+              "$ref": "#/$defs/trimEnd"
+            },
+            "trimOffset": {
+              "$ref": "#/$defs/trimOffset"
+            },
+            "pathReversed": {
+              "$ref": "#/$defs/pathReversed"
+            },
+            "initialNodeId": {
+              "$ref": "#/$defs/initialNodeId"
+            },
+            "metadata": {
+              "$ref": "#/$defs/metadata"
+            }
+          },
+          "additionalProperties": {},
+          "required": [
+            "name",
+            "entityType",
+            "startAngle",
+            "endAngle",
+            "innerRadius",
+            "nodeType",
+            "nodeColor",
+            "solo",
+            "locked",
+            "visibleInViewport",
+            "propertiesExpanded",
+            "blendMode",
+            "mask",
+            "strokeAlign",
+            "strokeCapStart",
+            "strokeCapEnd",
+            "strokeJoin",
+            "strokeWeight",
+            "dash",
+            "dashOffset",
+            "gap",
+            "smoothCornerRadius",
+            "cornerRadius",
+            "anchorPoint",
+            "position",
+            "rotation",
+            "opacity",
+            "scale",
+            "scaleLocked",
+            "size",
+            "sizeLocked",
+            "skew",
+            "version"
+          ]
+        }
+      },
+      "required": [
+        "id",
+        "tag",
+        "schemaVersion",
+        "components"
+      ]
+    },
+    "frame": {
+      "type": "object",
+      "oneOf": [
+        {
+          "$ref": "#/$defs/frameV1"
+        },
+        {
+          "$ref": "#/$defs/frameV2"
+        }
+      ]
+    },
+    "frameV1": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique entity identifier"
+        },
+        "tag": {
+          "type": "string",
+          "enum": [
+            "frame"
+          ],
+          "description": "Type of the entity"
+        },
+        "schemaVersion": {
+          "type": "number",
+          "description": "Current schema version of the entity",
+          "enum": [
+            1
+          ]
+        },
+        "components": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "$ref": "#/$defs/name"
+            },
+            "entityType": {
+              "$ref": "#/$defs/entityType"
+            },
+            "clipContent": {
+              "$ref": "#/$defs/clipContent"
+            },
+            "nodeType": {
+              "$ref": "#/$defs/nodeType"
+            },
+            "nodeColor": {
+              "$ref": "#/$defs/nodeColor"
+            },
+            "solo": {
+              "$ref": "#/$defs/solo"
+            },
+            "locked": {
+              "$ref": "#/$defs/locked"
+            },
+            "visibleInViewport": {
+              "$ref": "#/$defs/visibleInViewport"
+            },
+            "propertiesExpanded": {
+              "$ref": "#/$defs/propertiesExpanded"
+            },
+            "childrenExpanded": {
+              "$ref": "#/$defs/childrenExpanded"
+            },
+            "blendMode": {
+              "$ref": "#/$defs/blendMode"
+            },
+            "mask": {
+              "$ref": "#/$defs/mask"
+            },
+            "strokeAlign": {
+              "$ref": "#/$defs/strokeAlign"
+            },
+            "strokeCapStart": {
+              "$ref": "#/$defs/strokeCapStart"
+            },
+            "strokeCapEnd": {
+              "$ref": "#/$defs/strokeCapEnd"
+            },
+            "strokeJoin": {
+              "$ref": "#/$defs/strokeJoin"
+            },
+            "strokeWeight": {
+              "$ref": "#/$defs/strokeWeight"
+            },
+            "individualStrokeWeight": {
+              "$ref": "#/$defs/individualStrokeWeight"
+            },
+            "strokeTopWeight": {
+              "$ref": "#/$defs/strokeTopWeight"
+            },
+            "strokeRightWeight": {
+              "$ref": "#/$defs/strokeRightWeight"
+            },
+            "strokeBottomWeight": {
+              "$ref": "#/$defs/strokeBottomWeight"
+            },
+            "strokeLeftWeight": {
+              "$ref": "#/$defs/strokeLeftWeight"
+            },
+            "dash": {
+              "$ref": "#/$defs/dash"
+            },
+            "dashOffset": {
+              "$ref": "#/$defs/dashOffset"
+            },
+            "gap": {
+              "$ref": "#/$defs/gap"
+            },
+            "smoothCornerRadius": {
+              "$ref": "#/$defs/smoothCornerRadius"
+            },
+            "cornerRadius": {
+              "$ref": "#/$defs/cornerRadius"
+            },
+            "individualCornerRadius": {
+              "$ref": "#/$defs/individualCornerRadius"
+            },
+            "anchorPoint": {
+              "$ref": "#/$defs/anchorPoint"
+            },
+            "position": {
+              "$ref": "#/$defs/position"
+            },
+            "rotation": {
+              "$ref": "#/$defs/rotation"
+            },
+            "opacity": {
+              "$ref": "#/$defs/opacity"
+            },
+            "scale": {
+              "$ref": "#/$defs/scale"
+            },
+            "scaleLocked": {
+              "$ref": "#/$defs/scaleLocked"
+            },
+            "size": {
+              "$ref": "#/$defs/size"
+            },
+            "sizeLocked": {
+              "$ref": "#/$defs/sizeLocked"
+            },
+            "skew": {
+              "$ref": "#/$defs/skew"
+            },
+            "entry": {
+              "$ref": "#/$defs/entry"
+            },
+            "topLeftCornerRadius": {
+              "$ref": "#/$defs/topLeftCornerRadius"
+            },
+            "topRightCornerRadius": {
+              "$ref": "#/$defs/topRightCornerRadius"
+            },
+            "bottomRightCornerRadius": {
+              "$ref": "#/$defs/bottomRightCornerRadius"
+            },
+            "bottomLeftCornerRadius": {
+              "$ref": "#/$defs/bottomLeftCornerRadius"
+            },
+            "startTime": {
+              "$ref": "#/$defs/startTime"
+            },
+            "duration": {
+              "$ref": "#/$defs/duration"
+            },
+            "trimStart": {
+              "$ref": "#/$defs/trimStart"
+            },
+            "trimEnd": {
+              "$ref": "#/$defs/trimEnd"
+            },
+            "trimOffset": {
+              "$ref": "#/$defs/trimOffset"
+            },
+            "pathReversed": {
+              "$ref": "#/$defs/pathReversed"
+            },
+            "initialNodeId": {
+              "$ref": "#/$defs/initialNodeId"
+            },
+            "metadata": {
+              "$ref": "#/$defs/metadata"
+            }
+          },
+          "additionalProperties": {},
+          "required": [
+            "name",
+            "entityType",
+            "clipContent",
+            "nodeType",
+            "nodeColor",
+            "solo",
+            "locked",
+            "visibleInViewport",
+            "propertiesExpanded",
+            "childrenExpanded",
+            "blendMode",
+            "mask",
+            "strokeAlign",
+            "strokeCapStart",
+            "strokeCapEnd",
+            "strokeJoin",
+            "strokeWeight",
+            "individualStrokeWeight",
+            "strokeTopWeight",
+            "strokeRightWeight",
+            "strokeBottomWeight",
+            "strokeLeftWeight",
+            "dash",
+            "dashOffset",
+            "gap",
+            "smoothCornerRadius",
+            "cornerRadius",
+            "individualCornerRadius",
+            "anchorPoint",
+            "position",
+            "rotation",
+            "opacity",
+            "scale",
+            "scaleLocked",
+            "size",
+            "sizeLocked",
+            "skew"
+          ]
+        }
+      },
+      "required": [
+        "id",
+        "tag",
+        "schemaVersion",
+        "components"
+      ]
+    },
+    "frameV2": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique entity identifier"
+        },
+        "tag": {
+          "type": "string",
+          "enum": [
+            "frame"
+          ],
+          "description": "Type of the entity"
+        },
+        "schemaVersion": {
+          "type": "number",
+          "description": "Current schema version of the entity",
+          "enum": [
+            2
+          ]
+        },
+        "components": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "$ref": "#/$defs/name"
+            },
+            "entityType": {
+              "$ref": "#/$defs/entityType"
+            },
+            "clipContent": {
+              "$ref": "#/$defs/clipContent"
+            },
+            "nodeType": {
+              "$ref": "#/$defs/nodeType"
+            },
+            "nodeColor": {
+              "$ref": "#/$defs/nodeColor"
+            },
+            "solo": {
+              "$ref": "#/$defs/solo"
+            },
+            "locked": {
+              "$ref": "#/$defs/locked"
+            },
+            "visibleInViewport": {
+              "$ref": "#/$defs/visibleInViewport"
+            },
+            "propertiesExpanded": {
+              "$ref": "#/$defs/propertiesExpanded"
+            },
+            "childrenExpanded": {
+              "$ref": "#/$defs/childrenExpanded"
+            },
+            "blendMode": {
+              "$ref": "#/$defs/blendMode"
+            },
+            "mask": {
+              "$ref": "#/$defs/mask"
+            },
+            "strokeAlign": {
+              "$ref": "#/$defs/strokeAlign"
+            },
+            "strokeCapStart": {
+              "$ref": "#/$defs/strokeCapStart"
+            },
+            "strokeCapEnd": {
+              "$ref": "#/$defs/strokeCapEnd"
+            },
+            "strokeJoin": {
+              "$ref": "#/$defs/strokeJoin"
+            },
+            "strokeWeight": {
+              "$ref": "#/$defs/strokeWeight"
+            },
+            "individualStrokeWeight": {
+              "$ref": "#/$defs/individualStrokeWeight"
+            },
+            "strokeTopWeight": {
+              "$ref": "#/$defs/strokeTopWeight"
+            },
+            "strokeRightWeight": {
+              "$ref": "#/$defs/strokeRightWeight"
+            },
+            "strokeBottomWeight": {
+              "$ref": "#/$defs/strokeBottomWeight"
+            },
+            "strokeLeftWeight": {
+              "$ref": "#/$defs/strokeLeftWeight"
+            },
+            "dash": {
+              "$ref": "#/$defs/dash"
+            },
+            "dashOffset": {
+              "$ref": "#/$defs/dashOffset"
+            },
+            "gap": {
+              "$ref": "#/$defs/gap"
+            },
+            "smoothCornerRadius": {
+              "$ref": "#/$defs/smoothCornerRadius"
+            },
+            "cornerRadius": {
+              "$ref": "#/$defs/cornerRadius"
+            },
+            "individualCornerRadius": {
+              "$ref": "#/$defs/individualCornerRadius"
+            },
+            "anchorPoint": {
+              "$ref": "#/$defs/anchorPoint"
+            },
+            "position": {
+              "$ref": "#/$defs/position"
+            },
+            "rotation": {
+              "$ref": "#/$defs/rotation"
+            },
+            "opacity": {
+              "$ref": "#/$defs/opacity"
+            },
+            "scale": {
+              "$ref": "#/$defs/scale"
+            },
+            "scaleLocked": {
+              "$ref": "#/$defs/scaleLocked"
+            },
+            "size": {
+              "$ref": "#/$defs/size"
+            },
+            "sizeLocked": {
+              "$ref": "#/$defs/sizeLocked"
+            },
+            "skew": {
+              "$ref": "#/$defs/skew"
+            },
+            "version": {
+              "$ref": "#/$defs/version"
+            },
+            "entry": {
+              "$ref": "#/$defs/entry"
+            },
+            "topLeftCornerRadius": {
+              "$ref": "#/$defs/topLeftCornerRadius"
+            },
+            "topRightCornerRadius": {
+              "$ref": "#/$defs/topRightCornerRadius"
+            },
+            "bottomRightCornerRadius": {
+              "$ref": "#/$defs/bottomRightCornerRadius"
+            },
+            "bottomLeftCornerRadius": {
+              "$ref": "#/$defs/bottomLeftCornerRadius"
+            },
+            "startTime": {
+              "$ref": "#/$defs/startTime"
+            },
+            "duration": {
+              "$ref": "#/$defs/duration"
+            },
+            "trimStart": {
+              "$ref": "#/$defs/trimStart"
+            },
+            "trimEnd": {
+              "$ref": "#/$defs/trimEnd"
+            },
+            "trimOffset": {
+              "$ref": "#/$defs/trimOffset"
+            },
+            "pathReversed": {
+              "$ref": "#/$defs/pathReversed"
+            },
+            "initialNodeId": {
+              "$ref": "#/$defs/initialNodeId"
+            },
+            "metadata": {
+              "$ref": "#/$defs/metadata"
+            }
+          },
+          "additionalProperties": {},
+          "required": [
+            "name",
+            "entityType",
+            "clipContent",
+            "nodeType",
+            "nodeColor",
+            "solo",
+            "locked",
+            "visibleInViewport",
+            "propertiesExpanded",
+            "childrenExpanded",
+            "blendMode",
+            "mask",
+            "strokeAlign",
+            "strokeCapStart",
+            "strokeCapEnd",
+            "strokeJoin",
+            "strokeWeight",
+            "individualStrokeWeight",
+            "strokeTopWeight",
+            "strokeRightWeight",
+            "strokeBottomWeight",
+            "strokeLeftWeight",
+            "dash",
+            "dashOffset",
+            "gap",
+            "smoothCornerRadius",
+            "cornerRadius",
+            "individualCornerRadius",
+            "anchorPoint",
+            "position",
+            "rotation",
+            "opacity",
+            "scale",
+            "scaleLocked",
+            "size",
+            "sizeLocked",
+            "skew",
+            "version"
+          ]
+        }
+      },
+      "required": [
+        "id",
+        "tag",
+        "schemaVersion",
+        "components"
+      ]
+    },
+    "group": {
+      "type": "object",
+      "oneOf": [
+        {
+          "$ref": "#/$defs/groupV1"
+        },
+        {
+          "$ref": "#/$defs/groupV2"
+        }
+      ]
+    },
+    "groupV1": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique entity identifier"
+        },
+        "tag": {
+          "type": "string",
+          "enum": [
+            "group"
+          ],
+          "description": "Type of the entity"
+        },
+        "schemaVersion": {
+          "type": "number",
+          "description": "Current schema version of the entity",
+          "enum": [
+            1
+          ]
+        },
+        "components": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "$ref": "#/$defs/name"
+            },
+            "entityType": {
+              "$ref": "#/$defs/entityType"
+            },
+            "nodeType": {
+              "$ref": "#/$defs/nodeType"
+            },
+            "nodeColor": {
+              "$ref": "#/$defs/nodeColor"
+            },
+            "solo": {
+              "$ref": "#/$defs/solo"
+            },
+            "locked": {
+              "$ref": "#/$defs/locked"
+            },
+            "visibleInViewport": {
+              "$ref": "#/$defs/visibleInViewport"
+            },
+            "propertiesExpanded": {
+              "$ref": "#/$defs/propertiesExpanded"
+            },
+            "childrenExpanded": {
+              "$ref": "#/$defs/childrenExpanded"
+            },
+            "blendMode": {
+              "$ref": "#/$defs/blendMode"
+            },
+            "mask": {
+              "$ref": "#/$defs/mask"
+            },
+            "anchorPoint": {
+              "$ref": "#/$defs/anchorPoint"
+            },
+            "position": {
+              "$ref": "#/$defs/position"
+            },
+            "rotation": {
+              "$ref": "#/$defs/rotation"
+            },
+            "opacity": {
+              "$ref": "#/$defs/opacity"
+            },
+            "scale": {
+              "$ref": "#/$defs/scale"
+            },
+            "scaleLocked": {
+              "$ref": "#/$defs/scaleLocked"
+            },
+            "size": {
+              "$ref": "#/$defs/size"
+            },
+            "sizeLocked": {
+              "$ref": "#/$defs/sizeLocked"
+            },
+            "skew": {
+              "$ref": "#/$defs/skew"
+            },
+            "startTime": {
+              "$ref": "#/$defs/startTime"
+            },
+            "duration": {
+              "$ref": "#/$defs/duration"
+            },
+            "initialNodeId": {
+              "$ref": "#/$defs/initialNodeId"
+            },
+            "metadata": {
+              "$ref": "#/$defs/metadata"
+            }
+          },
+          "additionalProperties": {},
+          "required": [
+            "name",
+            "entityType",
+            "nodeType",
+            "nodeColor",
+            "solo",
+            "locked",
+            "visibleInViewport",
+            "propertiesExpanded",
+            "childrenExpanded",
+            "blendMode",
+            "mask",
+            "anchorPoint",
+            "position",
+            "rotation",
+            "opacity",
+            "scale",
+            "scaleLocked",
+            "size",
+            "sizeLocked",
+            "skew"
+          ]
+        }
+      },
+      "required": [
+        "id",
+        "tag",
+        "schemaVersion",
+        "components"
+      ]
+    },
+    "groupV2": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique entity identifier"
+        },
+        "tag": {
+          "type": "string",
+          "enum": [
+            "group"
+          ],
+          "description": "Type of the entity"
+        },
+        "schemaVersion": {
+          "type": "number",
+          "description": "Current schema version of the entity",
+          "enum": [
+            2
+          ]
+        },
+        "components": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "$ref": "#/$defs/name"
+            },
+            "entityType": {
+              "$ref": "#/$defs/entityType"
+            },
+            "nodeType": {
+              "$ref": "#/$defs/nodeType"
+            },
+            "nodeColor": {
+              "$ref": "#/$defs/nodeColor"
+            },
+            "solo": {
+              "$ref": "#/$defs/solo"
+            },
+            "locked": {
+              "$ref": "#/$defs/locked"
+            },
+            "visibleInViewport": {
+              "$ref": "#/$defs/visibleInViewport"
+            },
+            "propertiesExpanded": {
+              "$ref": "#/$defs/propertiesExpanded"
+            },
+            "childrenExpanded": {
+              "$ref": "#/$defs/childrenExpanded"
+            },
+            "blendMode": {
+              "$ref": "#/$defs/blendMode"
+            },
+            "mask": {
+              "$ref": "#/$defs/mask"
+            },
+            "anchorPoint": {
+              "$ref": "#/$defs/anchorPoint"
+            },
+            "position": {
+              "$ref": "#/$defs/position"
+            },
+            "rotation": {
+              "$ref": "#/$defs/rotation"
+            },
+            "opacity": {
+              "$ref": "#/$defs/opacity"
+            },
+            "scale": {
+              "$ref": "#/$defs/scale"
+            },
+            "scaleLocked": {
+              "$ref": "#/$defs/scaleLocked"
+            },
+            "size": {
+              "$ref": "#/$defs/size"
+            },
+            "sizeLocked": {
+              "$ref": "#/$defs/sizeLocked"
+            },
+            "skew": {
+              "$ref": "#/$defs/skew"
+            },
+            "version": {
+              "$ref": "#/$defs/version"
+            },
+            "startTime": {
+              "$ref": "#/$defs/startTime"
+            },
+            "duration": {
+              "$ref": "#/$defs/duration"
+            },
+            "initialNodeId": {
+              "$ref": "#/$defs/initialNodeId"
+            },
+            "metadata": {
+              "$ref": "#/$defs/metadata"
+            }
+          },
+          "additionalProperties": {},
+          "required": [
+            "name",
+            "entityType",
+            "nodeType",
+            "nodeColor",
+            "solo",
+            "locked",
+            "visibleInViewport",
+            "propertiesExpanded",
+            "childrenExpanded",
+            "blendMode",
+            "mask",
+            "anchorPoint",
+            "position",
+            "rotation",
+            "opacity",
+            "scale",
+            "scaleLocked",
+            "size",
+            "sizeLocked",
+            "skew",
+            "version"
+          ]
+        }
+      },
+      "required": [
+        "id",
+        "tag",
+        "schemaVersion",
+        "components"
+      ]
+    },
+    "instance": {
+      "type": "object",
+      "oneOf": [
+        {
+          "$ref": "#/$defs/instanceV1"
+        },
+        {
+          "$ref": "#/$defs/instanceV2"
+        }
+      ]
+    },
+    "instanceV1": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique entity identifier"
+        },
+        "tag": {
+          "type": "string",
+          "enum": [
+            "instance"
+          ],
+          "description": "Type of the entity"
+        },
+        "schemaVersion": {
+          "type": "number",
+          "description": "Current schema version of the entity",
+          "enum": [
+            1
+          ]
+        },
+        "components": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "$ref": "#/$defs/name"
+            },
+            "entityType": {
+              "$ref": "#/$defs/entityType"
+            },
+            "childrenExpanded": {
+              "$ref": "#/$defs/childrenExpanded"
+            },
+            "clipContent": {
+              "$ref": "#/$defs/clipContent"
+            },
+            "nodeType": {
+              "$ref": "#/$defs/nodeType"
+            },
+            "nodeColor": {
+              "$ref": "#/$defs/nodeColor"
+            },
+            "solo": {
+              "$ref": "#/$defs/solo"
+            },
+            "locked": {
+              "$ref": "#/$defs/locked"
+            },
+            "visibleInViewport": {
+              "$ref": "#/$defs/visibleInViewport"
+            },
+            "propertiesExpanded": {
+              "$ref": "#/$defs/propertiesExpanded"
+            },
+            "blendMode": {
+              "$ref": "#/$defs/blendMode"
+            },
+            "mask": {
+              "$ref": "#/$defs/mask"
+            },
+            "strokeAlign": {
+              "$ref": "#/$defs/strokeAlign"
+            },
+            "strokeCapStart": {
+              "$ref": "#/$defs/strokeCapStart"
+            },
+            "strokeCapEnd": {
+              "$ref": "#/$defs/strokeCapEnd"
+            },
+            "strokeJoin": {
+              "$ref": "#/$defs/strokeJoin"
+            },
+            "strokeWeight": {
+              "$ref": "#/$defs/strokeWeight"
+            },
+            "individualStrokeWeight": {
+              "$ref": "#/$defs/individualStrokeWeight"
+            },
+            "strokeTopWeight": {
+              "$ref": "#/$defs/strokeTopWeight"
+            },
+            "strokeRightWeight": {
+              "$ref": "#/$defs/strokeRightWeight"
+            },
+            "strokeBottomWeight": {
+              "$ref": "#/$defs/strokeBottomWeight"
+            },
+            "strokeLeftWeight": {
+              "$ref": "#/$defs/strokeLeftWeight"
+            },
+            "dash": {
+              "$ref": "#/$defs/dash"
+            },
+            "dashOffset": {
+              "$ref": "#/$defs/dashOffset"
+            },
+            "gap": {
+              "$ref": "#/$defs/gap"
+            },
+            "smoothCornerRadius": {
+              "$ref": "#/$defs/smoothCornerRadius"
+            },
+            "cornerRadius": {
+              "$ref": "#/$defs/cornerRadius"
+            },
+            "individualCornerRadius": {
+              "$ref": "#/$defs/individualCornerRadius"
+            },
+            "anchorPoint": {
+              "$ref": "#/$defs/anchorPoint"
+            },
+            "position": {
+              "$ref": "#/$defs/position"
+            },
+            "rotation": {
+              "$ref": "#/$defs/rotation"
+            },
+            "opacity": {
+              "$ref": "#/$defs/opacity"
+            },
+            "scale": {
+              "$ref": "#/$defs/scale"
+            },
+            "scaleLocked": {
+              "$ref": "#/$defs/scaleLocked"
+            },
+            "size": {
+              "$ref": "#/$defs/size"
+            },
+            "sizeLocked": {
+              "$ref": "#/$defs/sizeLocked"
+            },
+            "skew": {
+              "$ref": "#/$defs/skew"
+            },
+            "mainNodeComponentId": {
+              "$ref": "#/$defs/mainNodeComponentId"
+            },
+            "topLeftCornerRadius": {
+              "$ref": "#/$defs/topLeftCornerRadius"
+            },
+            "topRightCornerRadius": {
+              "$ref": "#/$defs/topRightCornerRadius"
+            },
+            "bottomRightCornerRadius": {
+              "$ref": "#/$defs/bottomRightCornerRadius"
+            },
+            "bottomLeftCornerRadius": {
+              "$ref": "#/$defs/bottomLeftCornerRadius"
+            },
+            "startTime": {
+              "$ref": "#/$defs/startTime"
+            },
+            "duration": {
+              "$ref": "#/$defs/duration"
+            },
+            "trimStart": {
+              "$ref": "#/$defs/trimStart"
+            },
+            "trimEnd": {
+              "$ref": "#/$defs/trimEnd"
+            },
+            "trimOffset": {
+              "$ref": "#/$defs/trimOffset"
+            },
+            "pathReversed": {
+              "$ref": "#/$defs/pathReversed"
+            },
+            "initialNodeId": {
+              "$ref": "#/$defs/initialNodeId"
+            },
+            "metadata": {
+              "$ref": "#/$defs/metadata"
+            }
+          },
+          "additionalProperties": {},
+          "required": [
+            "name",
+            "entityType",
+            "childrenExpanded",
+            "clipContent",
+            "nodeType",
+            "nodeColor",
+            "solo",
+            "locked",
+            "visibleInViewport",
+            "propertiesExpanded",
+            "blendMode",
+            "mask",
+            "strokeAlign",
+            "strokeCapStart",
+            "strokeCapEnd",
+            "strokeJoin",
+            "strokeWeight",
+            "individualStrokeWeight",
+            "strokeTopWeight",
+            "strokeRightWeight",
+            "strokeBottomWeight",
+            "strokeLeftWeight",
+            "dash",
+            "dashOffset",
+            "gap",
+            "smoothCornerRadius",
+            "cornerRadius",
+            "individualCornerRadius",
+            "anchorPoint",
+            "position",
+            "rotation",
+            "opacity",
+            "scale",
+            "scaleLocked",
+            "size",
+            "sizeLocked",
+            "skew",
+            "mainNodeComponentId"
+          ]
+        }
+      },
+      "required": [
+        "id",
+        "tag",
+        "schemaVersion",
+        "components"
+      ]
+    },
+    "instanceV2": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique entity identifier"
+        },
+        "tag": {
+          "type": "string",
+          "enum": [
+            "instance"
+          ],
+          "description": "Type of the entity"
+        },
+        "schemaVersion": {
+          "type": "number",
+          "description": "Current schema version of the entity",
+          "enum": [
+            2
+          ]
+        },
+        "components": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "$ref": "#/$defs/name"
+            },
+            "entityType": {
+              "$ref": "#/$defs/entityType"
+            },
+            "childrenExpanded": {
+              "$ref": "#/$defs/childrenExpanded"
+            },
+            "clipContent": {
+              "$ref": "#/$defs/clipContent"
+            },
+            "nodeType": {
+              "$ref": "#/$defs/nodeType"
+            },
+            "nodeColor": {
+              "$ref": "#/$defs/nodeColor"
+            },
+            "solo": {
+              "$ref": "#/$defs/solo"
+            },
+            "locked": {
+              "$ref": "#/$defs/locked"
+            },
+            "visibleInViewport": {
+              "$ref": "#/$defs/visibleInViewport"
+            },
+            "propertiesExpanded": {
+              "$ref": "#/$defs/propertiesExpanded"
+            },
+            "blendMode": {
+              "$ref": "#/$defs/blendMode"
+            },
+            "mask": {
+              "$ref": "#/$defs/mask"
+            },
+            "strokeAlign": {
+              "$ref": "#/$defs/strokeAlign"
+            },
+            "strokeCapStart": {
+              "$ref": "#/$defs/strokeCapStart"
+            },
+            "strokeCapEnd": {
+              "$ref": "#/$defs/strokeCapEnd"
+            },
+            "strokeJoin": {
+              "$ref": "#/$defs/strokeJoin"
+            },
+            "strokeWeight": {
+              "$ref": "#/$defs/strokeWeight"
+            },
+            "individualStrokeWeight": {
+              "$ref": "#/$defs/individualStrokeWeight"
+            },
+            "strokeTopWeight": {
+              "$ref": "#/$defs/strokeTopWeight"
+            },
+            "strokeRightWeight": {
+              "$ref": "#/$defs/strokeRightWeight"
+            },
+            "strokeBottomWeight": {
+              "$ref": "#/$defs/strokeBottomWeight"
+            },
+            "strokeLeftWeight": {
+              "$ref": "#/$defs/strokeLeftWeight"
+            },
+            "dash": {
+              "$ref": "#/$defs/dash"
+            },
+            "dashOffset": {
+              "$ref": "#/$defs/dashOffset"
+            },
+            "gap": {
+              "$ref": "#/$defs/gap"
+            },
+            "smoothCornerRadius": {
+              "$ref": "#/$defs/smoothCornerRadius"
+            },
+            "cornerRadius": {
+              "$ref": "#/$defs/cornerRadius"
+            },
+            "individualCornerRadius": {
+              "$ref": "#/$defs/individualCornerRadius"
+            },
+            "anchorPoint": {
+              "$ref": "#/$defs/anchorPoint"
+            },
+            "position": {
+              "$ref": "#/$defs/position"
+            },
+            "rotation": {
+              "$ref": "#/$defs/rotation"
+            },
+            "opacity": {
+              "$ref": "#/$defs/opacity"
+            },
+            "scale": {
+              "$ref": "#/$defs/scale"
+            },
+            "scaleLocked": {
+              "$ref": "#/$defs/scaleLocked"
+            },
+            "size": {
+              "$ref": "#/$defs/size"
+            },
+            "sizeLocked": {
+              "$ref": "#/$defs/sizeLocked"
+            },
+            "skew": {
+              "$ref": "#/$defs/skew"
+            },
+            "mainNodeComponentId": {
+              "$ref": "#/$defs/mainNodeComponentId"
+            },
+            "version": {
+              "$ref": "#/$defs/version"
+            },
+            "topLeftCornerRadius": {
+              "$ref": "#/$defs/topLeftCornerRadius"
+            },
+            "topRightCornerRadius": {
+              "$ref": "#/$defs/topRightCornerRadius"
+            },
+            "bottomRightCornerRadius": {
+              "$ref": "#/$defs/bottomRightCornerRadius"
+            },
+            "bottomLeftCornerRadius": {
+              "$ref": "#/$defs/bottomLeftCornerRadius"
+            },
+            "startTime": {
+              "$ref": "#/$defs/startTime"
+            },
+            "duration": {
+              "$ref": "#/$defs/duration"
+            },
+            "trimStart": {
+              "$ref": "#/$defs/trimStart"
+            },
+            "trimEnd": {
+              "$ref": "#/$defs/trimEnd"
+            },
+            "trimOffset": {
+              "$ref": "#/$defs/trimOffset"
+            },
+            "pathReversed": {
+              "$ref": "#/$defs/pathReversed"
+            },
+            "initialNodeId": {
+              "$ref": "#/$defs/initialNodeId"
+            },
+            "metadata": {
+              "$ref": "#/$defs/metadata"
+            }
+          },
+          "additionalProperties": {},
+          "required": [
+            "name",
+            "entityType",
+            "childrenExpanded",
+            "clipContent",
+            "nodeType",
+            "nodeColor",
+            "solo",
+            "locked",
+            "visibleInViewport",
+            "propertiesExpanded",
+            "blendMode",
+            "mask",
+            "strokeAlign",
+            "strokeCapStart",
+            "strokeCapEnd",
+            "strokeJoin",
+            "strokeWeight",
+            "individualStrokeWeight",
+            "strokeTopWeight",
+            "strokeRightWeight",
+            "strokeBottomWeight",
+            "strokeLeftWeight",
+            "dash",
+            "dashOffset",
+            "gap",
+            "smoothCornerRadius",
+            "cornerRadius",
+            "individualCornerRadius",
+            "anchorPoint",
+            "position",
+            "rotation",
+            "opacity",
+            "scale",
+            "scaleLocked",
+            "size",
+            "sizeLocked",
+            "skew",
+            "mainNodeComponentId",
+            "version"
+          ]
+        }
+      },
+      "required": [
+        "id",
+        "tag",
+        "schemaVersion",
+        "components"
+      ]
+    },
+    "line": {
+      "type": "object",
+      "oneOf": [
+        {
+          "$ref": "#/$defs/lineV1"
+        },
+        {
+          "$ref": "#/$defs/lineV2"
+        }
+      ]
+    },
+    "lineV1": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique entity identifier"
+        },
+        "tag": {
+          "type": "string",
+          "enum": [
+            "line"
+          ],
+          "description": "Type of the entity"
+        },
+        "schemaVersion": {
+          "type": "number",
+          "description": "Current schema version of the entity",
+          "enum": [
+            1
+          ]
+        },
+        "components": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "$ref": "#/$defs/name"
+            },
+            "entityType": {
+              "$ref": "#/$defs/entityType"
+            },
+            "nodeType": {
+              "$ref": "#/$defs/nodeType"
+            },
+            "nodeColor": {
+              "$ref": "#/$defs/nodeColor"
+            },
+            "solo": {
+              "$ref": "#/$defs/solo"
+            },
+            "locked": {
+              "$ref": "#/$defs/locked"
+            },
+            "visibleInViewport": {
+              "$ref": "#/$defs/visibleInViewport"
+            },
+            "propertiesExpanded": {
+              "$ref": "#/$defs/propertiesExpanded"
+            },
+            "blendMode": {
+              "$ref": "#/$defs/blendMode"
+            },
+            "mask": {
+              "$ref": "#/$defs/mask"
+            },
+            "strokeAlign": {
+              "$ref": "#/$defs/strokeAlign"
+            },
+            "strokeCapStart": {
+              "$ref": "#/$defs/strokeCapStart"
+            },
+            "strokeCapEnd": {
+              "$ref": "#/$defs/strokeCapEnd"
+            },
+            "strokeJoin": {
+              "$ref": "#/$defs/strokeJoin"
+            },
+            "strokeWeight": {
+              "$ref": "#/$defs/strokeWeight"
+            },
+            "dash": {
+              "$ref": "#/$defs/dash"
+            },
+            "dashOffset": {
+              "$ref": "#/$defs/dashOffset"
+            },
+            "gap": {
+              "$ref": "#/$defs/gap"
+            },
+            "anchorPoint": {
+              "$ref": "#/$defs/anchorPoint"
+            },
+            "position": {
+              "$ref": "#/$defs/position"
+            },
+            "rotation": {
+              "$ref": "#/$defs/rotation"
+            },
+            "opacity": {
+              "$ref": "#/$defs/opacity"
+            },
+            "scale": {
+              "$ref": "#/$defs/scale"
+            },
+            "scaleLocked": {
+              "$ref": "#/$defs/scaleLocked"
+            },
+            "size": {
+              "$ref": "#/$defs/size"
+            },
+            "sizeLocked": {
+              "$ref": "#/$defs/sizeLocked"
+            },
+            "skew": {
+              "$ref": "#/$defs/skew"
+            },
+            "startTime": {
+              "$ref": "#/$defs/startTime"
+            },
+            "duration": {
+              "$ref": "#/$defs/duration"
+            },
+            "trimStart": {
+              "$ref": "#/$defs/trimStart"
+            },
+            "trimEnd": {
+              "$ref": "#/$defs/trimEnd"
+            },
+            "trimOffset": {
+              "$ref": "#/$defs/trimOffset"
+            },
+            "pathReversed": {
+              "$ref": "#/$defs/pathReversed"
+            },
+            "initialNodeId": {
+              "$ref": "#/$defs/initialNodeId"
+            },
+            "metadata": {
+              "$ref": "#/$defs/metadata"
+            }
+          },
+          "additionalProperties": {},
+          "required": [
+            "name",
+            "entityType",
+            "nodeType",
+            "nodeColor",
+            "solo",
+            "locked",
+            "visibleInViewport",
+            "propertiesExpanded",
+            "blendMode",
+            "mask",
+            "strokeAlign",
+            "strokeCapStart",
+            "strokeCapEnd",
+            "strokeJoin",
+            "strokeWeight",
+            "dash",
+            "dashOffset",
+            "gap",
+            "anchorPoint",
+            "position",
+            "rotation",
+            "opacity",
+            "scale",
+            "scaleLocked",
+            "size",
+            "sizeLocked",
+            "skew"
+          ]
+        }
+      },
+      "required": [
+        "id",
+        "tag",
+        "schemaVersion",
+        "components"
+      ]
+    },
+    "lineV2": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique entity identifier"
+        },
+        "tag": {
+          "type": "string",
+          "enum": [
+            "line"
+          ],
+          "description": "Type of the entity"
+        },
+        "schemaVersion": {
+          "type": "number",
+          "description": "Current schema version of the entity",
+          "enum": [
+            2
+          ]
+        },
+        "components": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "$ref": "#/$defs/name"
+            },
+            "entityType": {
+              "$ref": "#/$defs/entityType"
+            },
+            "nodeType": {
+              "$ref": "#/$defs/nodeType"
+            },
+            "nodeColor": {
+              "$ref": "#/$defs/nodeColor"
+            },
+            "solo": {
+              "$ref": "#/$defs/solo"
+            },
+            "locked": {
+              "$ref": "#/$defs/locked"
+            },
+            "visibleInViewport": {
+              "$ref": "#/$defs/visibleInViewport"
+            },
+            "propertiesExpanded": {
+              "$ref": "#/$defs/propertiesExpanded"
+            },
+            "blendMode": {
+              "$ref": "#/$defs/blendMode"
+            },
+            "mask": {
+              "$ref": "#/$defs/mask"
+            },
+            "strokeAlign": {
+              "$ref": "#/$defs/strokeAlign"
+            },
+            "strokeCapStart": {
+              "$ref": "#/$defs/strokeCapStart"
+            },
+            "strokeCapEnd": {
+              "$ref": "#/$defs/strokeCapEnd"
+            },
+            "strokeJoin": {
+              "$ref": "#/$defs/strokeJoin"
+            },
+            "strokeWeight": {
+              "$ref": "#/$defs/strokeWeight"
+            },
+            "dash": {
+              "$ref": "#/$defs/dash"
+            },
+            "dashOffset": {
+              "$ref": "#/$defs/dashOffset"
+            },
+            "gap": {
+              "$ref": "#/$defs/gap"
+            },
+            "anchorPoint": {
+              "$ref": "#/$defs/anchorPoint"
+            },
+            "position": {
+              "$ref": "#/$defs/position"
+            },
+            "rotation": {
+              "$ref": "#/$defs/rotation"
+            },
+            "opacity": {
+              "$ref": "#/$defs/opacity"
+            },
+            "scale": {
+              "$ref": "#/$defs/scale"
+            },
+            "scaleLocked": {
+              "$ref": "#/$defs/scaleLocked"
+            },
+            "size": {
+              "$ref": "#/$defs/size"
+            },
+            "sizeLocked": {
+              "$ref": "#/$defs/sizeLocked"
+            },
+            "skew": {
+              "$ref": "#/$defs/skew"
+            },
+            "version": {
+              "$ref": "#/$defs/version"
+            },
+            "startTime": {
+              "$ref": "#/$defs/startTime"
+            },
+            "duration": {
+              "$ref": "#/$defs/duration"
+            },
+            "trimStart": {
+              "$ref": "#/$defs/trimStart"
+            },
+            "trimEnd": {
+              "$ref": "#/$defs/trimEnd"
+            },
+            "trimOffset": {
+              "$ref": "#/$defs/trimOffset"
+            },
+            "pathReversed": {
+              "$ref": "#/$defs/pathReversed"
+            },
+            "initialNodeId": {
+              "$ref": "#/$defs/initialNodeId"
+            },
+            "metadata": {
+              "$ref": "#/$defs/metadata"
+            }
+          },
+          "additionalProperties": {},
+          "required": [
+            "name",
+            "entityType",
+            "nodeType",
+            "nodeColor",
+            "solo",
+            "locked",
+            "visibleInViewport",
+            "propertiesExpanded",
+            "blendMode",
+            "mask",
+            "strokeAlign",
+            "strokeCapStart",
+            "strokeCapEnd",
+            "strokeJoin",
+            "strokeWeight",
+            "dash",
+            "dashOffset",
+            "gap",
+            "anchorPoint",
+            "position",
+            "rotation",
+            "opacity",
+            "scale",
+            "scaleLocked",
+            "size",
+            "sizeLocked",
+            "skew",
+            "version"
+          ]
+        }
+      },
+      "required": [
+        "id",
+        "tag",
+        "schemaVersion",
+        "components"
+      ]
+    },
+    "polygon": {
+      "type": "object",
+      "oneOf": [
+        {
+          "$ref": "#/$defs/polygonV1"
+        },
+        {
+          "$ref": "#/$defs/polygonV2"
+        }
+      ]
+    },
+    "polygonV1": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique entity identifier"
+        },
+        "tag": {
+          "type": "string",
+          "enum": [
+            "polygon"
+          ],
+          "description": "Type of the entity"
+        },
+        "schemaVersion": {
+          "type": "number",
+          "description": "Current schema version of the entity",
+          "enum": [
+            1
+          ]
+        },
+        "components": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "$ref": "#/$defs/name"
+            },
+            "entityType": {
+              "$ref": "#/$defs/entityType"
+            },
+            "pointCount": {
+              "$ref": "#/$defs/pointCount"
+            },
+            "nodeType": {
+              "$ref": "#/$defs/nodeType"
+            },
+            "nodeColor": {
+              "$ref": "#/$defs/nodeColor"
+            },
+            "solo": {
+              "$ref": "#/$defs/solo"
+            },
+            "locked": {
+              "$ref": "#/$defs/locked"
+            },
+            "visibleInViewport": {
+              "$ref": "#/$defs/visibleInViewport"
+            },
+            "propertiesExpanded": {
+              "$ref": "#/$defs/propertiesExpanded"
+            },
+            "blendMode": {
+              "$ref": "#/$defs/blendMode"
+            },
+            "mask": {
+              "$ref": "#/$defs/mask"
+            },
+            "strokeAlign": {
+              "$ref": "#/$defs/strokeAlign"
+            },
+            "strokeCapStart": {
+              "$ref": "#/$defs/strokeCapStart"
+            },
+            "strokeCapEnd": {
+              "$ref": "#/$defs/strokeCapEnd"
+            },
+            "strokeJoin": {
+              "$ref": "#/$defs/strokeJoin"
+            },
+            "strokeWeight": {
+              "$ref": "#/$defs/strokeWeight"
+            },
+            "dash": {
+              "$ref": "#/$defs/dash"
+            },
+            "dashOffset": {
+              "$ref": "#/$defs/dashOffset"
+            },
+            "gap": {
+              "$ref": "#/$defs/gap"
+            },
+            "smoothCornerRadius": {
+              "$ref": "#/$defs/smoothCornerRadius"
+            },
+            "cornerRadius": {
+              "$ref": "#/$defs/cornerRadius"
+            },
+            "anchorPoint": {
+              "$ref": "#/$defs/anchorPoint"
+            },
+            "position": {
+              "$ref": "#/$defs/position"
+            },
+            "rotation": {
+              "$ref": "#/$defs/rotation"
+            },
+            "opacity": {
+              "$ref": "#/$defs/opacity"
+            },
+            "scale": {
+              "$ref": "#/$defs/scale"
+            },
+            "scaleLocked": {
+              "$ref": "#/$defs/scaleLocked"
+            },
+            "size": {
+              "$ref": "#/$defs/size"
+            },
+            "sizeLocked": {
+              "$ref": "#/$defs/sizeLocked"
+            },
+            "skew": {
+              "$ref": "#/$defs/skew"
+            },
+            "startTime": {
+              "$ref": "#/$defs/startTime"
+            },
+            "duration": {
+              "$ref": "#/$defs/duration"
+            },
+            "trimStart": {
+              "$ref": "#/$defs/trimStart"
+            },
+            "trimEnd": {
+              "$ref": "#/$defs/trimEnd"
+            },
+            "trimOffset": {
+              "$ref": "#/$defs/trimOffset"
+            },
+            "pathReversed": {
+              "$ref": "#/$defs/pathReversed"
+            },
+            "initialNodeId": {
+              "$ref": "#/$defs/initialNodeId"
+            },
+            "metadata": {
+              "$ref": "#/$defs/metadata"
+            }
+          },
+          "additionalProperties": {},
+          "required": [
+            "name",
+            "entityType",
+            "pointCount",
+            "nodeType",
+            "nodeColor",
+            "solo",
+            "locked",
+            "visibleInViewport",
+            "propertiesExpanded",
+            "blendMode",
+            "mask",
+            "strokeAlign",
+            "strokeCapStart",
+            "strokeCapEnd",
+            "strokeJoin",
+            "strokeWeight",
+            "dash",
+            "dashOffset",
+            "gap",
+            "smoothCornerRadius",
+            "cornerRadius",
+            "anchorPoint",
+            "position",
+            "rotation",
+            "opacity",
+            "scale",
+            "scaleLocked",
+            "size",
+            "sizeLocked",
+            "skew"
+          ]
+        }
+      },
+      "required": [
+        "id",
+        "tag",
+        "schemaVersion",
+        "components"
+      ]
+    },
+    "polygonV2": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique entity identifier"
+        },
+        "tag": {
+          "type": "string",
+          "enum": [
+            "polygon"
+          ],
+          "description": "Type of the entity"
+        },
+        "schemaVersion": {
+          "type": "number",
+          "description": "Current schema version of the entity",
+          "enum": [
+            2
+          ]
+        },
+        "components": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "$ref": "#/$defs/name"
+            },
+            "entityType": {
+              "$ref": "#/$defs/entityType"
+            },
+            "pointCount": {
+              "$ref": "#/$defs/pointCount"
+            },
+            "nodeType": {
+              "$ref": "#/$defs/nodeType"
+            },
+            "nodeColor": {
+              "$ref": "#/$defs/nodeColor"
+            },
+            "solo": {
+              "$ref": "#/$defs/solo"
+            },
+            "locked": {
+              "$ref": "#/$defs/locked"
+            },
+            "visibleInViewport": {
+              "$ref": "#/$defs/visibleInViewport"
+            },
+            "propertiesExpanded": {
+              "$ref": "#/$defs/propertiesExpanded"
+            },
+            "blendMode": {
+              "$ref": "#/$defs/blendMode"
+            },
+            "mask": {
+              "$ref": "#/$defs/mask"
+            },
+            "strokeAlign": {
+              "$ref": "#/$defs/strokeAlign"
+            },
+            "strokeCapStart": {
+              "$ref": "#/$defs/strokeCapStart"
+            },
+            "strokeCapEnd": {
+              "$ref": "#/$defs/strokeCapEnd"
+            },
+            "strokeJoin": {
+              "$ref": "#/$defs/strokeJoin"
+            },
+            "strokeWeight": {
+              "$ref": "#/$defs/strokeWeight"
+            },
+            "dash": {
+              "$ref": "#/$defs/dash"
+            },
+            "dashOffset": {
+              "$ref": "#/$defs/dashOffset"
+            },
+            "gap": {
+              "$ref": "#/$defs/gap"
+            },
+            "smoothCornerRadius": {
+              "$ref": "#/$defs/smoothCornerRadius"
+            },
+            "cornerRadius": {
+              "$ref": "#/$defs/cornerRadius"
+            },
+            "anchorPoint": {
+              "$ref": "#/$defs/anchorPoint"
+            },
+            "position": {
+              "$ref": "#/$defs/position"
+            },
+            "rotation": {
+              "$ref": "#/$defs/rotation"
+            },
+            "opacity": {
+              "$ref": "#/$defs/opacity"
+            },
+            "scale": {
+              "$ref": "#/$defs/scale"
+            },
+            "scaleLocked": {
+              "$ref": "#/$defs/scaleLocked"
+            },
+            "size": {
+              "$ref": "#/$defs/size"
+            },
+            "sizeLocked": {
+              "$ref": "#/$defs/sizeLocked"
+            },
+            "skew": {
+              "$ref": "#/$defs/skew"
+            },
+            "version": {
+              "$ref": "#/$defs/version"
+            },
+            "startTime": {
+              "$ref": "#/$defs/startTime"
+            },
+            "duration": {
+              "$ref": "#/$defs/duration"
+            },
+            "trimStart": {
+              "$ref": "#/$defs/trimStart"
+            },
+            "trimEnd": {
+              "$ref": "#/$defs/trimEnd"
+            },
+            "trimOffset": {
+              "$ref": "#/$defs/trimOffset"
+            },
+            "pathReversed": {
+              "$ref": "#/$defs/pathReversed"
+            },
+            "initialNodeId": {
+              "$ref": "#/$defs/initialNodeId"
+            },
+            "metadata": {
+              "$ref": "#/$defs/metadata"
+            }
+          },
+          "additionalProperties": {},
+          "required": [
+            "name",
+            "entityType",
+            "pointCount",
+            "nodeType",
+            "nodeColor",
+            "solo",
+            "locked",
+            "visibleInViewport",
+            "propertiesExpanded",
+            "blendMode",
+            "mask",
+            "strokeAlign",
+            "strokeCapStart",
+            "strokeCapEnd",
+            "strokeJoin",
+            "strokeWeight",
+            "dash",
+            "dashOffset",
+            "gap",
+            "smoothCornerRadius",
+            "cornerRadius",
+            "anchorPoint",
+            "position",
+            "rotation",
+            "opacity",
+            "scale",
+            "scaleLocked",
+            "size",
+            "sizeLocked",
+            "skew",
+            "version"
+          ]
+        }
+      },
+      "required": [
+        "id",
+        "tag",
+        "schemaVersion",
+        "components"
+      ]
+    },
+    "rectangle": {
+      "type": "object",
+      "oneOf": [
+        {
+          "$ref": "#/$defs/rectangleV1"
+        },
+        {
+          "$ref": "#/$defs/rectangleV2"
+        }
+      ]
+    },
+    "rectangleV1": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique entity identifier"
+        },
+        "tag": {
+          "type": "string",
+          "enum": [
+            "rectangle"
+          ],
+          "description": "Type of the entity"
+        },
+        "schemaVersion": {
+          "type": "number",
+          "description": "Current schema version of the entity",
+          "enum": [
+            1
+          ]
+        },
+        "components": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "$ref": "#/$defs/name"
+            },
+            "entityType": {
+              "$ref": "#/$defs/entityType"
+            },
+            "nodeType": {
+              "$ref": "#/$defs/nodeType"
+            },
+            "nodeColor": {
+              "$ref": "#/$defs/nodeColor"
+            },
+            "solo": {
+              "$ref": "#/$defs/solo"
+            },
+            "locked": {
+              "$ref": "#/$defs/locked"
+            },
+            "visibleInViewport": {
+              "$ref": "#/$defs/visibleInViewport"
+            },
+            "propertiesExpanded": {
+              "$ref": "#/$defs/propertiesExpanded"
+            },
+            "blendMode": {
+              "$ref": "#/$defs/blendMode"
+            },
+            "mask": {
+              "$ref": "#/$defs/mask"
+            },
+            "strokeAlign": {
+              "$ref": "#/$defs/strokeAlign"
+            },
+            "strokeCapStart": {
+              "$ref": "#/$defs/strokeCapStart"
+            },
+            "strokeCapEnd": {
+              "$ref": "#/$defs/strokeCapEnd"
+            },
+            "strokeJoin": {
+              "$ref": "#/$defs/strokeJoin"
+            },
+            "strokeWeight": {
+              "$ref": "#/$defs/strokeWeight"
+            },
+            "individualStrokeWeight": {
+              "$ref": "#/$defs/individualStrokeWeight"
+            },
+            "strokeTopWeight": {
+              "$ref": "#/$defs/strokeTopWeight"
+            },
+            "strokeRightWeight": {
+              "$ref": "#/$defs/strokeRightWeight"
+            },
+            "strokeBottomWeight": {
+              "$ref": "#/$defs/strokeBottomWeight"
+            },
+            "strokeLeftWeight": {
+              "$ref": "#/$defs/strokeLeftWeight"
+            },
+            "dash": {
+              "$ref": "#/$defs/dash"
+            },
+            "dashOffset": {
+              "$ref": "#/$defs/dashOffset"
+            },
+            "gap": {
+              "$ref": "#/$defs/gap"
+            },
+            "smoothCornerRadius": {
+              "$ref": "#/$defs/smoothCornerRadius"
+            },
+            "cornerRadius": {
+              "$ref": "#/$defs/cornerRadius"
+            },
+            "individualCornerRadius": {
+              "$ref": "#/$defs/individualCornerRadius"
+            },
+            "anchorPoint": {
+              "$ref": "#/$defs/anchorPoint"
+            },
+            "position": {
+              "$ref": "#/$defs/position"
+            },
+            "rotation": {
+              "$ref": "#/$defs/rotation"
+            },
+            "opacity": {
+              "$ref": "#/$defs/opacity"
+            },
+            "scale": {
+              "$ref": "#/$defs/scale"
+            },
+            "scaleLocked": {
+              "$ref": "#/$defs/scaleLocked"
+            },
+            "size": {
+              "$ref": "#/$defs/size"
+            },
+            "sizeLocked": {
+              "$ref": "#/$defs/sizeLocked"
+            },
+            "skew": {
+              "$ref": "#/$defs/skew"
+            },
+            "topLeftCornerRadius": {
+              "$ref": "#/$defs/topLeftCornerRadius"
+            },
+            "topRightCornerRadius": {
+              "$ref": "#/$defs/topRightCornerRadius"
+            },
+            "bottomRightCornerRadius": {
+              "$ref": "#/$defs/bottomRightCornerRadius"
+            },
+            "bottomLeftCornerRadius": {
+              "$ref": "#/$defs/bottomLeftCornerRadius"
+            },
+            "startTime": {
+              "$ref": "#/$defs/startTime"
+            },
+            "duration": {
+              "$ref": "#/$defs/duration"
+            },
+            "trimStart": {
+              "$ref": "#/$defs/trimStart"
+            },
+            "trimEnd": {
+              "$ref": "#/$defs/trimEnd"
+            },
+            "trimOffset": {
+              "$ref": "#/$defs/trimOffset"
+            },
+            "pathReversed": {
+              "$ref": "#/$defs/pathReversed"
+            },
+            "initialNodeId": {
+              "$ref": "#/$defs/initialNodeId"
+            },
+            "metadata": {
+              "$ref": "#/$defs/metadata"
+            }
+          },
+          "additionalProperties": {},
+          "required": [
+            "name",
+            "entityType",
+            "nodeType",
+            "nodeColor",
+            "solo",
+            "locked",
+            "visibleInViewport",
+            "propertiesExpanded",
+            "blendMode",
+            "mask",
+            "strokeAlign",
+            "strokeCapStart",
+            "strokeCapEnd",
+            "strokeJoin",
+            "strokeWeight",
+            "individualStrokeWeight",
+            "strokeTopWeight",
+            "strokeRightWeight",
+            "strokeBottomWeight",
+            "strokeLeftWeight",
+            "dash",
+            "dashOffset",
+            "gap",
+            "smoothCornerRadius",
+            "cornerRadius",
+            "individualCornerRadius",
+            "anchorPoint",
+            "position",
+            "rotation",
+            "opacity",
+            "scale",
+            "scaleLocked",
+            "size",
+            "sizeLocked",
+            "skew"
+          ]
+        }
+      },
+      "required": [
+        "id",
+        "tag",
+        "schemaVersion",
+        "components"
+      ]
+    },
+    "rectangleV2": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique entity identifier"
+        },
+        "tag": {
+          "type": "string",
+          "enum": [
+            "rectangle"
+          ],
+          "description": "Type of the entity"
+        },
+        "schemaVersion": {
+          "type": "number",
+          "description": "Current schema version of the entity",
+          "enum": [
+            2
+          ]
+        },
+        "components": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "$ref": "#/$defs/name"
+            },
+            "entityType": {
+              "$ref": "#/$defs/entityType"
+            },
+            "nodeType": {
+              "$ref": "#/$defs/nodeType"
+            },
+            "nodeColor": {
+              "$ref": "#/$defs/nodeColor"
+            },
+            "solo": {
+              "$ref": "#/$defs/solo"
+            },
+            "locked": {
+              "$ref": "#/$defs/locked"
+            },
+            "visibleInViewport": {
+              "$ref": "#/$defs/visibleInViewport"
+            },
+            "propertiesExpanded": {
+              "$ref": "#/$defs/propertiesExpanded"
+            },
+            "blendMode": {
+              "$ref": "#/$defs/blendMode"
+            },
+            "mask": {
+              "$ref": "#/$defs/mask"
+            },
+            "strokeAlign": {
+              "$ref": "#/$defs/strokeAlign"
+            },
+            "strokeCapStart": {
+              "$ref": "#/$defs/strokeCapStart"
+            },
+            "strokeCapEnd": {
+              "$ref": "#/$defs/strokeCapEnd"
+            },
+            "strokeJoin": {
+              "$ref": "#/$defs/strokeJoin"
+            },
+            "strokeWeight": {
+              "$ref": "#/$defs/strokeWeight"
+            },
+            "individualStrokeWeight": {
+              "$ref": "#/$defs/individualStrokeWeight"
+            },
+            "strokeTopWeight": {
+              "$ref": "#/$defs/strokeTopWeight"
+            },
+            "strokeRightWeight": {
+              "$ref": "#/$defs/strokeRightWeight"
+            },
+            "strokeBottomWeight": {
+              "$ref": "#/$defs/strokeBottomWeight"
+            },
+            "strokeLeftWeight": {
+              "$ref": "#/$defs/strokeLeftWeight"
+            },
+            "dash": {
+              "$ref": "#/$defs/dash"
+            },
+            "dashOffset": {
+              "$ref": "#/$defs/dashOffset"
+            },
+            "gap": {
+              "$ref": "#/$defs/gap"
+            },
+            "smoothCornerRadius": {
+              "$ref": "#/$defs/smoothCornerRadius"
+            },
+            "cornerRadius": {
+              "$ref": "#/$defs/cornerRadius"
+            },
+            "individualCornerRadius": {
+              "$ref": "#/$defs/individualCornerRadius"
+            },
+            "anchorPoint": {
+              "$ref": "#/$defs/anchorPoint"
+            },
+            "position": {
+              "$ref": "#/$defs/position"
+            },
+            "rotation": {
+              "$ref": "#/$defs/rotation"
+            },
+            "opacity": {
+              "$ref": "#/$defs/opacity"
+            },
+            "scale": {
+              "$ref": "#/$defs/scale"
+            },
+            "scaleLocked": {
+              "$ref": "#/$defs/scaleLocked"
+            },
+            "size": {
+              "$ref": "#/$defs/size"
+            },
+            "sizeLocked": {
+              "$ref": "#/$defs/sizeLocked"
+            },
+            "skew": {
+              "$ref": "#/$defs/skew"
+            },
+            "version": {
+              "$ref": "#/$defs/version"
+            },
+            "topLeftCornerRadius": {
+              "$ref": "#/$defs/topLeftCornerRadius"
+            },
+            "topRightCornerRadius": {
+              "$ref": "#/$defs/topRightCornerRadius"
+            },
+            "bottomRightCornerRadius": {
+              "$ref": "#/$defs/bottomRightCornerRadius"
+            },
+            "bottomLeftCornerRadius": {
+              "$ref": "#/$defs/bottomLeftCornerRadius"
+            },
+            "startTime": {
+              "$ref": "#/$defs/startTime"
+            },
+            "duration": {
+              "$ref": "#/$defs/duration"
+            },
+            "trimStart": {
+              "$ref": "#/$defs/trimStart"
+            },
+            "trimEnd": {
+              "$ref": "#/$defs/trimEnd"
+            },
+            "trimOffset": {
+              "$ref": "#/$defs/trimOffset"
+            },
+            "pathReversed": {
+              "$ref": "#/$defs/pathReversed"
+            },
+            "initialNodeId": {
+              "$ref": "#/$defs/initialNodeId"
+            },
+            "metadata": {
+              "$ref": "#/$defs/metadata"
+            }
+          },
+          "additionalProperties": {},
+          "required": [
+            "name",
+            "entityType",
+            "nodeType",
+            "nodeColor",
+            "solo",
+            "locked",
+            "visibleInViewport",
+            "propertiesExpanded",
+            "blendMode",
+            "mask",
+            "strokeAlign",
+            "strokeCapStart",
+            "strokeCapEnd",
+            "strokeJoin",
+            "strokeWeight",
+            "individualStrokeWeight",
+            "strokeTopWeight",
+            "strokeRightWeight",
+            "strokeBottomWeight",
+            "strokeLeftWeight",
+            "dash",
+            "dashOffset",
+            "gap",
+            "smoothCornerRadius",
+            "cornerRadius",
+            "individualCornerRadius",
+            "anchorPoint",
+            "position",
+            "rotation",
+            "opacity",
+            "scale",
+            "scaleLocked",
+            "size",
+            "sizeLocked",
+            "skew",
+            "version"
+          ]
+        }
+      },
+      "required": [
+        "id",
+        "tag",
+        "schemaVersion",
+        "components"
+      ]
+    },
+    "root": {
+      "type": "object",
+      "oneOf": [
+        {
+          "$ref": "#/$defs/rootV1"
+        }
+      ]
+    },
+    "rootV1": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique entity identifier"
+        },
+        "tag": {
+          "type": "string",
+          "enum": [
+            "root"
+          ],
+          "description": "Type of the entity"
+        },
+        "schemaVersion": {
+          "type": "number",
+          "description": "Current schema version of the entity",
+          "enum": [
+            1
+          ]
+        },
+        "components": {
+          "type": "object",
+          "properties": {
+            "entityType": {
+              "$ref": "#/$defs/entityType"
+            },
+            "startTime": {
+              "$ref": "#/$defs/startTime"
+            },
+            "duration": {
+              "$ref": "#/$defs/duration"
+            },
+            "name": {
+              "$ref": "#/$defs/name"
+            },
+            "fps": {
+              "$ref": "#/$defs/fps"
+            },
+            "visibleInViewport": {
+              "$ref": "#/$defs/visibleInViewport"
+            },
+            "rgba": {
+              "$ref": "#/$defs/rgba"
+            },
+            "initialNodeId": {
+              "$ref": "#/$defs/initialNodeId"
+            },
+            "coverTime": {
+              "$ref": "#/$defs/coverTime"
+            },
+            "metadata": {
+              "$ref": "#/$defs/metadata"
+            }
+          },
+          "additionalProperties": {},
+          "required": [
+            "entityType",
+            "startTime",
+            "duration",
+            "name",
+            "fps",
+            "visibleInViewport",
+            "rgba"
+          ]
+        }
+      },
+      "required": [
+        "id",
+        "tag",
+        "schemaVersion",
+        "components"
+      ]
+    },
+    "star": {
+      "type": "object",
+      "oneOf": [
+        {
+          "$ref": "#/$defs/starV1"
+        },
+        {
+          "$ref": "#/$defs/starV2"
+        }
+      ]
+    },
+    "starV1": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique entity identifier"
+        },
+        "tag": {
+          "type": "string",
+          "enum": [
+            "star"
+          ],
+          "description": "Type of the entity"
+        },
+        "schemaVersion": {
+          "type": "number",
+          "description": "Current schema version of the entity",
+          "enum": [
+            1
+          ]
+        },
+        "components": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "$ref": "#/$defs/name"
+            },
+            "entityType": {
+              "$ref": "#/$defs/entityType"
+            },
+            "pointCount": {
+              "$ref": "#/$defs/pointCount"
+            },
+            "innerRadius": {
+              "$ref": "#/$defs/innerRadius"
+            },
+            "nodeType": {
+              "$ref": "#/$defs/nodeType"
+            },
+            "nodeColor": {
+              "$ref": "#/$defs/nodeColor"
+            },
+            "solo": {
+              "$ref": "#/$defs/solo"
+            },
+            "locked": {
+              "$ref": "#/$defs/locked"
+            },
+            "visibleInViewport": {
+              "$ref": "#/$defs/visibleInViewport"
+            },
+            "propertiesExpanded": {
+              "$ref": "#/$defs/propertiesExpanded"
+            },
+            "blendMode": {
+              "$ref": "#/$defs/blendMode"
+            },
+            "mask": {
+              "$ref": "#/$defs/mask"
+            },
+            "strokeAlign": {
+              "$ref": "#/$defs/strokeAlign"
+            },
+            "strokeCapStart": {
+              "$ref": "#/$defs/strokeCapStart"
+            },
+            "strokeCapEnd": {
+              "$ref": "#/$defs/strokeCapEnd"
+            },
+            "strokeJoin": {
+              "$ref": "#/$defs/strokeJoin"
+            },
+            "strokeWeight": {
+              "$ref": "#/$defs/strokeWeight"
+            },
+            "dash": {
+              "$ref": "#/$defs/dash"
+            },
+            "dashOffset": {
+              "$ref": "#/$defs/dashOffset"
+            },
+            "gap": {
+              "$ref": "#/$defs/gap"
+            },
+            "smoothCornerRadius": {
+              "$ref": "#/$defs/smoothCornerRadius"
+            },
+            "cornerRadius": {
+              "$ref": "#/$defs/cornerRadius"
+            },
+            "anchorPoint": {
+              "$ref": "#/$defs/anchorPoint"
+            },
+            "position": {
+              "$ref": "#/$defs/position"
+            },
+            "rotation": {
+              "$ref": "#/$defs/rotation"
+            },
+            "opacity": {
+              "$ref": "#/$defs/opacity"
+            },
+            "scale": {
+              "$ref": "#/$defs/scale"
+            },
+            "scaleLocked": {
+              "$ref": "#/$defs/scaleLocked"
+            },
+            "size": {
+              "$ref": "#/$defs/size"
+            },
+            "sizeLocked": {
+              "$ref": "#/$defs/sizeLocked"
+            },
+            "skew": {
+              "$ref": "#/$defs/skew"
+            },
+            "startTime": {
+              "$ref": "#/$defs/startTime"
+            },
+            "duration": {
+              "$ref": "#/$defs/duration"
+            },
+            "trimStart": {
+              "$ref": "#/$defs/trimStart"
+            },
+            "trimEnd": {
+              "$ref": "#/$defs/trimEnd"
+            },
+            "trimOffset": {
+              "$ref": "#/$defs/trimOffset"
+            },
+            "pathReversed": {
+              "$ref": "#/$defs/pathReversed"
+            },
+            "initialNodeId": {
+              "$ref": "#/$defs/initialNodeId"
+            },
+            "metadata": {
+              "$ref": "#/$defs/metadata"
+            }
+          },
+          "additionalProperties": {},
+          "required": [
+            "name",
+            "entityType",
+            "pointCount",
+            "innerRadius",
+            "nodeType",
+            "nodeColor",
+            "solo",
+            "locked",
+            "visibleInViewport",
+            "propertiesExpanded",
+            "blendMode",
+            "mask",
+            "strokeAlign",
+            "strokeCapStart",
+            "strokeCapEnd",
+            "strokeJoin",
+            "strokeWeight",
+            "dash",
+            "dashOffset",
+            "gap",
+            "smoothCornerRadius",
+            "cornerRadius",
+            "anchorPoint",
+            "position",
+            "rotation",
+            "opacity",
+            "scale",
+            "scaleLocked",
+            "size",
+            "sizeLocked",
+            "skew"
+          ]
+        }
+      },
+      "required": [
+        "id",
+        "tag",
+        "schemaVersion",
+        "components"
+      ]
+    },
+    "starV2": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique entity identifier"
+        },
+        "tag": {
+          "type": "string",
+          "enum": [
+            "star"
+          ],
+          "description": "Type of the entity"
+        },
+        "schemaVersion": {
+          "type": "number",
+          "description": "Current schema version of the entity",
+          "enum": [
+            2
+          ]
+        },
+        "components": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "$ref": "#/$defs/name"
+            },
+            "entityType": {
+              "$ref": "#/$defs/entityType"
+            },
+            "pointCount": {
+              "$ref": "#/$defs/pointCount"
+            },
+            "innerRadius": {
+              "$ref": "#/$defs/innerRadius"
+            },
+            "nodeType": {
+              "$ref": "#/$defs/nodeType"
+            },
+            "nodeColor": {
+              "$ref": "#/$defs/nodeColor"
+            },
+            "solo": {
+              "$ref": "#/$defs/solo"
+            },
+            "locked": {
+              "$ref": "#/$defs/locked"
+            },
+            "visibleInViewport": {
+              "$ref": "#/$defs/visibleInViewport"
+            },
+            "propertiesExpanded": {
+              "$ref": "#/$defs/propertiesExpanded"
+            },
+            "blendMode": {
+              "$ref": "#/$defs/blendMode"
+            },
+            "mask": {
+              "$ref": "#/$defs/mask"
+            },
+            "strokeAlign": {
+              "$ref": "#/$defs/strokeAlign"
+            },
+            "strokeCapStart": {
+              "$ref": "#/$defs/strokeCapStart"
+            },
+            "strokeCapEnd": {
+              "$ref": "#/$defs/strokeCapEnd"
+            },
+            "strokeJoin": {
+              "$ref": "#/$defs/strokeJoin"
+            },
+            "strokeWeight": {
+              "$ref": "#/$defs/strokeWeight"
+            },
+            "dash": {
+              "$ref": "#/$defs/dash"
+            },
+            "dashOffset": {
+              "$ref": "#/$defs/dashOffset"
+            },
+            "gap": {
+              "$ref": "#/$defs/gap"
+            },
+            "smoothCornerRadius": {
+              "$ref": "#/$defs/smoothCornerRadius"
+            },
+            "cornerRadius": {
+              "$ref": "#/$defs/cornerRadius"
+            },
+            "anchorPoint": {
+              "$ref": "#/$defs/anchorPoint"
+            },
+            "position": {
+              "$ref": "#/$defs/position"
+            },
+            "rotation": {
+              "$ref": "#/$defs/rotation"
+            },
+            "opacity": {
+              "$ref": "#/$defs/opacity"
+            },
+            "scale": {
+              "$ref": "#/$defs/scale"
+            },
+            "scaleLocked": {
+              "$ref": "#/$defs/scaleLocked"
+            },
+            "size": {
+              "$ref": "#/$defs/size"
+            },
+            "sizeLocked": {
+              "$ref": "#/$defs/sizeLocked"
+            },
+            "skew": {
+              "$ref": "#/$defs/skew"
+            },
+            "version": {
+              "$ref": "#/$defs/version"
+            },
+            "startTime": {
+              "$ref": "#/$defs/startTime"
+            },
+            "duration": {
+              "$ref": "#/$defs/duration"
+            },
+            "trimStart": {
+              "$ref": "#/$defs/trimStart"
+            },
+            "trimEnd": {
+              "$ref": "#/$defs/trimEnd"
+            },
+            "trimOffset": {
+              "$ref": "#/$defs/trimOffset"
+            },
+            "pathReversed": {
+              "$ref": "#/$defs/pathReversed"
+            },
+            "initialNodeId": {
+              "$ref": "#/$defs/initialNodeId"
+            },
+            "metadata": {
+              "$ref": "#/$defs/metadata"
+            }
+          },
+          "additionalProperties": {},
+          "required": [
+            "name",
+            "entityType",
+            "pointCount",
+            "innerRadius",
+            "nodeType",
+            "nodeColor",
+            "solo",
+            "locked",
+            "visibleInViewport",
+            "propertiesExpanded",
+            "blendMode",
+            "mask",
+            "strokeAlign",
+            "strokeCapStart",
+            "strokeCapEnd",
+            "strokeJoin",
+            "strokeWeight",
+            "dash",
+            "dashOffset",
+            "gap",
+            "smoothCornerRadius",
+            "cornerRadius",
+            "anchorPoint",
+            "position",
+            "rotation",
+            "opacity",
+            "scale",
+            "scaleLocked",
+            "size",
+            "sizeLocked",
+            "skew",
+            "version"
+          ]
+        }
+      },
+      "required": [
+        "id",
+        "tag",
+        "schemaVersion",
+        "components"
+      ]
+    },
+    "text": {
+      "type": "object",
+      "oneOf": [
+        {
+          "$ref": "#/$defs/textV1"
+        },
+        {
+          "$ref": "#/$defs/textV2"
+        }
+      ]
+    },
+    "textV1": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique entity identifier"
+        },
+        "tag": {
+          "type": "string",
+          "enum": [
+            "text"
+          ],
+          "description": "Type of the entity"
+        },
+        "schemaVersion": {
+          "type": "number",
+          "description": "Current schema version of the entity",
+          "enum": [
+            1
+          ]
+        },
+        "components": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "$ref": "#/$defs/name"
+            },
+            "entityType": {
+              "$ref": "#/$defs/entityType"
+            },
+            "nodeType": {
+              "$ref": "#/$defs/nodeType"
+            },
+            "vectorPaths": {
+              "$ref": "#/$defs/vectorPaths"
+            },
+            "nodeColor": {
+              "$ref": "#/$defs/nodeColor"
+            },
+            "solo": {
+              "$ref": "#/$defs/solo"
+            },
+            "locked": {
+              "$ref": "#/$defs/locked"
+            },
+            "visibleInViewport": {
+              "$ref": "#/$defs/visibleInViewport"
+            },
+            "propertiesExpanded": {
+              "$ref": "#/$defs/propertiesExpanded"
+            },
+            "blendMode": {
+              "$ref": "#/$defs/blendMode"
+            },
+            "mask": {
+              "$ref": "#/$defs/mask"
+            },
+            "strokeAlign": {
+              "$ref": "#/$defs/strokeAlign"
+            },
+            "strokeCapStart": {
+              "$ref": "#/$defs/strokeCapStart"
+            },
+            "strokeCapEnd": {
+              "$ref": "#/$defs/strokeCapEnd"
+            },
+            "strokeJoin": {
+              "$ref": "#/$defs/strokeJoin"
+            },
+            "strokeWeight": {
+              "$ref": "#/$defs/strokeWeight"
+            },
+            "dash": {
+              "$ref": "#/$defs/dash"
+            },
+            "dashOffset": {
+              "$ref": "#/$defs/dashOffset"
+            },
+            "gap": {
+              "$ref": "#/$defs/gap"
+            },
+            "anchorPoint": {
+              "$ref": "#/$defs/anchorPoint"
+            },
+            "position": {
+              "$ref": "#/$defs/position"
+            },
+            "rotation": {
+              "$ref": "#/$defs/rotation"
+            },
+            "opacity": {
+              "$ref": "#/$defs/opacity"
+            },
+            "scale": {
+              "$ref": "#/$defs/scale"
+            },
+            "scaleLocked": {
+              "$ref": "#/$defs/scaleLocked"
+            },
+            "size": {
+              "$ref": "#/$defs/size"
+            },
+            "sizeLocked": {
+              "$ref": "#/$defs/sizeLocked"
+            },
+            "skew": {
+              "$ref": "#/$defs/skew"
+            },
+            "sizeBehaviour": {
+              "$ref": "#/$defs/sizeBehaviour"
+            },
+            "startTime": {
+              "$ref": "#/$defs/startTime"
+            },
+            "duration": {
+              "$ref": "#/$defs/duration"
+            },
+            "trimStart": {
+              "$ref": "#/$defs/trimStart"
+            },
+            "trimEnd": {
+              "$ref": "#/$defs/trimEnd"
+            },
+            "trimOffset": {
+              "$ref": "#/$defs/trimOffset"
+            },
+            "pathReversed": {
+              "$ref": "#/$defs/pathReversed"
+            },
+            "initialNodeId": {
+              "$ref": "#/$defs/initialNodeId"
+            },
+            "metadata": {
+              "$ref": "#/$defs/metadata"
+            }
+          },
+          "additionalProperties": {},
+          "required": [
+            "name",
+            "entityType",
+            "nodeType",
+            "vectorPaths",
+            "nodeColor",
+            "solo",
+            "locked",
+            "visibleInViewport",
+            "propertiesExpanded",
+            "blendMode",
+            "mask",
+            "strokeAlign",
+            "strokeCapStart",
+            "strokeCapEnd",
+            "strokeJoin",
+            "strokeWeight",
+            "dash",
+            "dashOffset",
+            "gap",
+            "anchorPoint",
+            "position",
+            "rotation",
+            "opacity",
+            "scale",
+            "scaleLocked",
+            "size",
+            "sizeLocked",
+            "skew",
+            "sizeBehaviour"
+          ]
+        }
+      },
+      "required": [
+        "id",
+        "tag",
+        "schemaVersion",
+        "components"
+      ]
+    },
+    "textV2": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique entity identifier"
+        },
+        "tag": {
+          "type": "string",
+          "enum": [
+            "text"
+          ],
+          "description": "Type of the entity"
+        },
+        "schemaVersion": {
+          "type": "number",
+          "description": "Current schema version of the entity",
+          "enum": [
+            2
+          ]
+        },
+        "components": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "$ref": "#/$defs/name"
+            },
+            "entityType": {
+              "$ref": "#/$defs/entityType"
+            },
+            "nodeType": {
+              "$ref": "#/$defs/nodeType"
+            },
+            "vectorPaths": {
+              "$ref": "#/$defs/vectorPaths"
+            },
+            "nodeColor": {
+              "$ref": "#/$defs/nodeColor"
+            },
+            "solo": {
+              "$ref": "#/$defs/solo"
+            },
+            "locked": {
+              "$ref": "#/$defs/locked"
+            },
+            "visibleInViewport": {
+              "$ref": "#/$defs/visibleInViewport"
+            },
+            "propertiesExpanded": {
+              "$ref": "#/$defs/propertiesExpanded"
+            },
+            "blendMode": {
+              "$ref": "#/$defs/blendMode"
+            },
+            "mask": {
+              "$ref": "#/$defs/mask"
+            },
+            "strokeAlign": {
+              "$ref": "#/$defs/strokeAlign"
+            },
+            "strokeCapStart": {
+              "$ref": "#/$defs/strokeCapStart"
+            },
+            "strokeCapEnd": {
+              "$ref": "#/$defs/strokeCapEnd"
+            },
+            "strokeJoin": {
+              "$ref": "#/$defs/strokeJoin"
+            },
+            "strokeWeight": {
+              "$ref": "#/$defs/strokeWeight"
+            },
+            "dash": {
+              "$ref": "#/$defs/dash"
+            },
+            "dashOffset": {
+              "$ref": "#/$defs/dashOffset"
+            },
+            "gap": {
+              "$ref": "#/$defs/gap"
+            },
+            "anchorPoint": {
+              "$ref": "#/$defs/anchorPoint"
+            },
+            "position": {
+              "$ref": "#/$defs/position"
+            },
+            "rotation": {
+              "$ref": "#/$defs/rotation"
+            },
+            "opacity": {
+              "$ref": "#/$defs/opacity"
+            },
+            "scale": {
+              "$ref": "#/$defs/scale"
+            },
+            "scaleLocked": {
+              "$ref": "#/$defs/scaleLocked"
+            },
+            "size": {
+              "$ref": "#/$defs/size"
+            },
+            "sizeLocked": {
+              "$ref": "#/$defs/sizeLocked"
+            },
+            "skew": {
+              "$ref": "#/$defs/skew"
+            },
+            "sizeBehaviour": {
+              "$ref": "#/$defs/sizeBehaviour"
+            },
+            "textAlignHorizontal": {
+              "$ref": "#/$defs/textAlignHorizontal"
+            },
+            "textAlignVertical": {
+              "$ref": "#/$defs/textAlignVertical"
+            },
+            "textAutoResize": {
+              "$ref": "#/$defs/textAutoResize"
+            },
+            "textTruncation": {
+              "$ref": "#/$defs/textTruncation"
+            },
+            "paragraphIndent": {
+              "$ref": "#/$defs/paragraphIndent"
+            },
+            "paragraphSpacing": {
+              "$ref": "#/$defs/paragraphSpacing"
+            },
+            "listSpacing": {
+              "$ref": "#/$defs/listSpacing"
+            },
+            "hangingPunctuation": {
+              "$ref": "#/$defs/hangingPunctuation"
+            },
+            "hangingList": {
+              "$ref": "#/$defs/hangingList"
+            },
+            "autoRename": {
+              "$ref": "#/$defs/autoRename"
+            },
+            "version": {
+              "$ref": "#/$defs/version"
+            },
+            "startTime": {
+              "$ref": "#/$defs/startTime"
+            },
+            "duration": {
+              "$ref": "#/$defs/duration"
+            },
+            "trimStart": {
+              "$ref": "#/$defs/trimStart"
+            },
+            "trimEnd": {
+              "$ref": "#/$defs/trimEnd"
+            },
+            "trimOffset": {
+              "$ref": "#/$defs/trimOffset"
+            },
+            "pathReversed": {
+              "$ref": "#/$defs/pathReversed"
+            },
+            "initialNodeId": {
+              "$ref": "#/$defs/initialNodeId"
+            },
+            "metadata": {
+              "$ref": "#/$defs/metadata"
+            }
+          },
+          "additionalProperties": {},
+          "required": [
+            "name",
+            "entityType",
+            "nodeType",
+            "vectorPaths",
+            "nodeColor",
+            "solo",
+            "locked",
+            "visibleInViewport",
+            "propertiesExpanded",
+            "blendMode",
+            "mask",
+            "strokeAlign",
+            "strokeCapStart",
+            "strokeCapEnd",
+            "strokeJoin",
+            "strokeWeight",
+            "dash",
+            "dashOffset",
+            "gap",
+            "anchorPoint",
+            "position",
+            "rotation",
+            "opacity",
+            "scale",
+            "scaleLocked",
+            "size",
+            "sizeLocked",
+            "skew",
+            "sizeBehaviour",
+            "textAlignHorizontal",
+            "textAlignVertical",
+            "textAutoResize",
+            "textTruncation",
+            "paragraphIndent",
+            "paragraphSpacing",
+            "listSpacing",
+            "hangingPunctuation",
+            "hangingList",
+            "autoRename",
+            "version"
+          ]
+        }
+      },
+      "required": [
+        "id",
+        "tag",
+        "schemaVersion",
+        "components"
+      ]
+    },
+    "vector": {
+      "type": "object",
+      "oneOf": [
+        {
+          "$ref": "#/$defs/vectorV1"
+        },
+        {
+          "$ref": "#/$defs/vectorV2"
+        }
+      ]
+    },
+    "vectorV1": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique entity identifier"
+        },
+        "tag": {
+          "type": "string",
+          "enum": [
+            "vector"
+          ],
+          "description": "Type of the entity"
+        },
+        "schemaVersion": {
+          "type": "number",
+          "description": "Current schema version of the entity",
+          "enum": [
+            1
+          ]
+        },
+        "components": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "$ref": "#/$defs/name"
+            },
+            "entityType": {
+              "$ref": "#/$defs/entityType"
+            },
+            "vectorPaths": {
+              "$ref": "#/$defs/vectorPaths"
+            },
+            "nodeType": {
+              "$ref": "#/$defs/nodeType"
+            },
+            "nodeColor": {
+              "$ref": "#/$defs/nodeColor"
+            },
+            "solo": {
+              "$ref": "#/$defs/solo"
+            },
+            "locked": {
+              "$ref": "#/$defs/locked"
+            },
+            "visibleInViewport": {
+              "$ref": "#/$defs/visibleInViewport"
+            },
+            "propertiesExpanded": {
+              "$ref": "#/$defs/propertiesExpanded"
+            },
+            "blendMode": {
+              "$ref": "#/$defs/blendMode"
+            },
+            "mask": {
+              "$ref": "#/$defs/mask"
+            },
+            "strokeAlign": {
+              "$ref": "#/$defs/strokeAlign"
+            },
+            "strokeCapStart": {
+              "$ref": "#/$defs/strokeCapStart"
+            },
+            "strokeCapEnd": {
+              "$ref": "#/$defs/strokeCapEnd"
+            },
+            "strokeJoin": {
+              "$ref": "#/$defs/strokeJoin"
+            },
+            "strokeWeight": {
+              "$ref": "#/$defs/strokeWeight"
+            },
+            "dash": {
+              "$ref": "#/$defs/dash"
+            },
+            "dashOffset": {
+              "$ref": "#/$defs/dashOffset"
+            },
+            "gap": {
+              "$ref": "#/$defs/gap"
+            },
+            "smoothCornerRadius": {
+              "$ref": "#/$defs/smoothCornerRadius"
+            },
+            "cornerRadius": {
+              "$ref": "#/$defs/cornerRadius"
+            },
+            "anchorPoint": {
+              "$ref": "#/$defs/anchorPoint"
+            },
+            "position": {
+              "$ref": "#/$defs/position"
+            },
+            "rotation": {
+              "$ref": "#/$defs/rotation"
+            },
+            "opacity": {
+              "$ref": "#/$defs/opacity"
+            },
+            "scale": {
+              "$ref": "#/$defs/scale"
+            },
+            "scaleLocked": {
+              "$ref": "#/$defs/scaleLocked"
+            },
+            "size": {
+              "$ref": "#/$defs/size"
+            },
+            "sizeLocked": {
+              "$ref": "#/$defs/sizeLocked"
+            },
+            "skew": {
+              "$ref": "#/$defs/skew"
+            },
+            "sizeBehaviour": {
+              "$ref": "#/$defs/sizeBehaviour"
+            },
+            "startTime": {
+              "$ref": "#/$defs/startTime"
+            },
+            "duration": {
+              "$ref": "#/$defs/duration"
+            },
+            "trimStart": {
+              "$ref": "#/$defs/trimStart"
+            },
+            "trimEnd": {
+              "$ref": "#/$defs/trimEnd"
+            },
+            "trimOffset": {
+              "$ref": "#/$defs/trimOffset"
+            },
+            "pathReversed": {
+              "$ref": "#/$defs/pathReversed"
+            },
+            "initialNodeId": {
+              "$ref": "#/$defs/initialNodeId"
+            },
+            "metadata": {
+              "$ref": "#/$defs/metadata"
+            }
+          },
+          "additionalProperties": {},
+          "required": [
+            "name",
+            "entityType",
+            "vectorPaths",
+            "nodeType",
+            "nodeColor",
+            "solo",
+            "locked",
+            "visibleInViewport",
+            "propertiesExpanded",
+            "blendMode",
+            "mask",
+            "strokeAlign",
+            "strokeCapStart",
+            "strokeCapEnd",
+            "strokeJoin",
+            "strokeWeight",
+            "dash",
+            "dashOffset",
+            "gap",
+            "smoothCornerRadius",
+            "cornerRadius",
+            "anchorPoint",
+            "position",
+            "rotation",
+            "opacity",
+            "scale",
+            "scaleLocked",
+            "size",
+            "sizeLocked",
+            "skew",
+            "sizeBehaviour"
+          ]
+        }
+      },
+      "required": [
+        "id",
+        "tag",
+        "schemaVersion",
+        "components"
+      ]
+    },
+    "vectorV2": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique entity identifier"
+        },
+        "tag": {
+          "type": "string",
+          "enum": [
+            "vector"
+          ],
+          "description": "Type of the entity"
+        },
+        "schemaVersion": {
+          "type": "number",
+          "description": "Current schema version of the entity",
+          "enum": [
+            2
+          ]
+        },
+        "components": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "$ref": "#/$defs/name"
+            },
+            "entityType": {
+              "$ref": "#/$defs/entityType"
+            },
+            "vectorPaths": {
+              "$ref": "#/$defs/vectorPaths"
+            },
+            "nodeType": {
+              "$ref": "#/$defs/nodeType"
+            },
+            "nodeColor": {
+              "$ref": "#/$defs/nodeColor"
+            },
+            "solo": {
+              "$ref": "#/$defs/solo"
+            },
+            "locked": {
+              "$ref": "#/$defs/locked"
+            },
+            "visibleInViewport": {
+              "$ref": "#/$defs/visibleInViewport"
+            },
+            "propertiesExpanded": {
+              "$ref": "#/$defs/propertiesExpanded"
+            },
+            "blendMode": {
+              "$ref": "#/$defs/blendMode"
+            },
+            "mask": {
+              "$ref": "#/$defs/mask"
+            },
+            "strokeAlign": {
+              "$ref": "#/$defs/strokeAlign"
+            },
+            "strokeCapStart": {
+              "$ref": "#/$defs/strokeCapStart"
+            },
+            "strokeCapEnd": {
+              "$ref": "#/$defs/strokeCapEnd"
+            },
+            "strokeJoin": {
+              "$ref": "#/$defs/strokeJoin"
+            },
+            "strokeWeight": {
+              "$ref": "#/$defs/strokeWeight"
+            },
+            "dash": {
+              "$ref": "#/$defs/dash"
+            },
+            "dashOffset": {
+              "$ref": "#/$defs/dashOffset"
+            },
+            "gap": {
+              "$ref": "#/$defs/gap"
+            },
+            "smoothCornerRadius": {
+              "$ref": "#/$defs/smoothCornerRadius"
+            },
+            "cornerRadius": {
+              "$ref": "#/$defs/cornerRadius"
+            },
+            "anchorPoint": {
+              "$ref": "#/$defs/anchorPoint"
+            },
+            "position": {
+              "$ref": "#/$defs/position"
+            },
+            "rotation": {
+              "$ref": "#/$defs/rotation"
+            },
+            "opacity": {
+              "$ref": "#/$defs/opacity"
+            },
+            "scale": {
+              "$ref": "#/$defs/scale"
+            },
+            "scaleLocked": {
+              "$ref": "#/$defs/scaleLocked"
+            },
+            "size": {
+              "$ref": "#/$defs/size"
+            },
+            "sizeLocked": {
+              "$ref": "#/$defs/sizeLocked"
+            },
+            "skew": {
+              "$ref": "#/$defs/skew"
+            },
+            "sizeBehaviour": {
+              "$ref": "#/$defs/sizeBehaviour"
+            },
+            "version": {
+              "$ref": "#/$defs/version"
+            },
+            "startTime": {
+              "$ref": "#/$defs/startTime"
+            },
+            "duration": {
+              "$ref": "#/$defs/duration"
+            },
+            "trimStart": {
+              "$ref": "#/$defs/trimStart"
+            },
+            "trimEnd": {
+              "$ref": "#/$defs/trimEnd"
+            },
+            "trimOffset": {
+              "$ref": "#/$defs/trimOffset"
+            },
+            "pathReversed": {
+              "$ref": "#/$defs/pathReversed"
+            },
+            "initialNodeId": {
+              "$ref": "#/$defs/initialNodeId"
+            },
+            "metadata": {
+              "$ref": "#/$defs/metadata"
+            }
+          },
+          "additionalProperties": {},
+          "required": [
+            "name",
+            "entityType",
+            "vectorPaths",
+            "nodeType",
+            "nodeColor",
+            "solo",
+            "locked",
+            "visibleInViewport",
+            "propertiesExpanded",
+            "blendMode",
+            "mask",
+            "strokeAlign",
+            "strokeCapStart",
+            "strokeCapEnd",
+            "strokeJoin",
+            "strokeWeight",
+            "dash",
+            "dashOffset",
+            "gap",
+            "smoothCornerRadius",
+            "cornerRadius",
+            "anchorPoint",
+            "position",
+            "rotation",
+            "opacity",
+            "scale",
+            "scaleLocked",
+            "size",
+            "sizeLocked",
+            "skew",
+            "sizeBehaviour",
+            "version"
+          ]
+        }
+      },
+      "required": [
+        "id",
+        "tag",
+        "schemaVersion",
+        "components"
+      ]
+    },
+    "colorStop": {
+      "type": "object",
+      "oneOf": [
+        {
+          "$ref": "#/$defs/colorStopV1"
+        }
+      ]
+    },
+    "colorStopV1": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique entity identifier"
+        },
+        "tag": {
+          "type": "string",
+          "enum": [
+            "colorStop"
+          ],
+          "description": "Type of the entity"
+        },
+        "schemaVersion": {
+          "type": "number",
+          "description": "Current schema version of the entity",
+          "enum": [
+            1
+          ]
+        },
+        "components": {
+          "type": "object",
+          "properties": {
+            "entityType": {
+              "$ref": "#/$defs/entityType"
+            },
+            "blendMode": {
+              "$ref": "#/$defs/blendMode"
+            },
+            "visibleInViewport": {
+              "$ref": "#/$defs/visibleInViewport"
+            },
+            "propertiesExpanded": {
+              "$ref": "#/$defs/propertiesExpanded"
+            },
+            "rgba": {
+              "$ref": "#/$defs/rgba"
+            },
+            "progress": {
+              "$ref": "#/$defs/progress"
+            }
+          },
+          "additionalProperties": {},
+          "required": [
+            "entityType",
+            "blendMode",
+            "visibleInViewport",
+            "propertiesExpanded",
+            "rgba",
+            "progress"
+          ]
+        }
+      },
+      "required": [
+        "id",
+        "tag",
+        "schemaVersion",
+        "components"
+      ]
+    },
+    "imagePaint": {
+      "type": "object",
+      "oneOf": [
+        {
+          "$ref": "#/$defs/imagePaintV1"
+        }
+      ]
+    },
+    "imagePaintV1": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique entity identifier"
+        },
+        "tag": {
+          "type": "string",
+          "enum": [
+            "imagePaint"
+          ],
+          "description": "Type of the entity"
+        },
+        "schemaVersion": {
+          "type": "number",
+          "description": "Current schema version of the entity",
+          "enum": [
+            1
+          ]
+        },
+        "components": {
+          "type": "object",
+          "properties": {
+            "entityType": {
+              "$ref": "#/$defs/entityType"
+            },
+            "blendMode": {
+              "$ref": "#/$defs/blendMode"
+            },
+            "visibleInViewport": {
+              "$ref": "#/$defs/visibleInViewport"
+            },
+            "propertiesExpanded": {
+              "$ref": "#/$defs/propertiesExpanded"
+            },
+            "paintType": {
+              "$ref": "#/$defs/paintType"
+            },
+            "hash": {
+              "$ref": "#/$defs/hash"
+            },
+            "scaleType": {
+              "$ref": "#/$defs/scaleType"
+            },
+            "imageTransform": {
+              "$ref": "#/$defs/imageTransform"
+            },
+            "scalingFactor": {
+              "$ref": "#/$defs/scalingFactor"
+            },
+            "rotation": {
+              "$ref": "#/$defs/rotation"
+            },
+            "opacity": {
+              "$ref": "#/$defs/opacity"
+            }
+          },
+          "additionalProperties": {},
+          "required": [
+            "entityType",
+            "blendMode",
+            "visibleInViewport",
+            "propertiesExpanded",
+            "paintType",
+            "hash",
+            "scaleType",
+            "imageTransform",
+            "scalingFactor",
+            "rotation",
+            "opacity"
+          ]
+        }
+      },
+      "required": [
+        "id",
+        "tag",
+        "schemaVersion",
+        "components"
+      ]
+    },
+    "linearGradientPaint": {
+      "type": "object",
+      "oneOf": [
+        {
+          "$ref": "#/$defs/linearGradientPaintV1"
+        }
+      ]
+    },
+    "linearGradientPaintV1": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique entity identifier"
+        },
+        "tag": {
+          "type": "string",
+          "enum": [
+            "linearGradientPaint"
+          ],
+          "description": "Type of the entity"
+        },
+        "schemaVersion": {
+          "type": "number",
+          "description": "Current schema version of the entity",
+          "enum": [
+            1
+          ]
+        },
+        "components": {
+          "type": "object",
+          "properties": {
+            "entityType": {
+              "$ref": "#/$defs/entityType"
+            },
+            "blendMode": {
+              "$ref": "#/$defs/blendMode"
+            },
+            "visibleInViewport": {
+              "$ref": "#/$defs/visibleInViewport"
+            },
+            "propertiesExpanded": {
+              "$ref": "#/$defs/propertiesExpanded"
+            },
+            "opacity": {
+              "$ref": "#/$defs/opacity"
+            },
+            "gradientTransform": {
+              "$ref": "#/$defs/gradientTransform"
+            },
+            "paintType": {
+              "$ref": "#/$defs/paintType"
+            }
+          },
+          "additionalProperties": {},
+          "required": [
+            "entityType",
+            "blendMode",
+            "visibleInViewport",
+            "propertiesExpanded",
+            "opacity",
+            "gradientTransform",
+            "paintType"
+          ]
+        }
+      },
+      "required": [
+        "id",
+        "tag",
+        "schemaVersion",
+        "components"
+      ]
+    },
+    "radialGradientPaint": {
+      "type": "object",
+      "oneOf": [
+        {
+          "$ref": "#/$defs/radialGradientPaintV1"
+        }
+      ]
+    },
+    "radialGradientPaintV1": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique entity identifier"
+        },
+        "tag": {
+          "type": "string",
+          "enum": [
+            "radialGradientPaint"
+          ],
+          "description": "Type of the entity"
+        },
+        "schemaVersion": {
+          "type": "number",
+          "description": "Current schema version of the entity",
+          "enum": [
+            1
+          ]
+        },
+        "components": {
+          "type": "object",
+          "properties": {
+            "entityType": {
+              "$ref": "#/$defs/entityType"
+            },
+            "blendMode": {
+              "$ref": "#/$defs/blendMode"
+            },
+            "visibleInViewport": {
+              "$ref": "#/$defs/visibleInViewport"
+            },
+            "propertiesExpanded": {
+              "$ref": "#/$defs/propertiesExpanded"
+            },
+            "opacity": {
+              "$ref": "#/$defs/opacity"
+            },
+            "gradientTransform": {
+              "$ref": "#/$defs/gradientTransform"
+            },
+            "paintType": {
+              "$ref": "#/$defs/paintType"
+            }
+          },
+          "additionalProperties": {},
+          "required": [
+            "entityType",
+            "blendMode",
+            "visibleInViewport",
+            "propertiesExpanded",
+            "opacity",
+            "gradientTransform",
+            "paintType"
+          ]
+        }
+      },
+      "required": [
+        "id",
+        "tag",
+        "schemaVersion",
+        "components"
+      ]
+    },
+    "solidPaint": {
+      "type": "object",
+      "oneOf": [
+        {
+          "$ref": "#/$defs/solidPaintV1"
+        }
+      ]
+    },
+    "solidPaintV1": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique entity identifier"
+        },
+        "tag": {
+          "type": "string",
+          "enum": [
+            "solidPaint"
+          ],
+          "description": "Type of the entity"
+        },
+        "schemaVersion": {
+          "type": "number",
+          "description": "Current schema version of the entity",
+          "enum": [
+            1
+          ]
+        },
+        "components": {
+          "type": "object",
+          "properties": {
+            "entityType": {
+              "$ref": "#/$defs/entityType"
+            },
+            "blendMode": {
+              "$ref": "#/$defs/blendMode"
+            },
+            "visibleInViewport": {
+              "$ref": "#/$defs/visibleInViewport"
+            },
+            "propertiesExpanded": {
+              "$ref": "#/$defs/propertiesExpanded"
+            },
+            "rgba": {
+              "$ref": "#/$defs/rgba"
+            },
+            "paintType": {
+              "$ref": "#/$defs/paintType"
+            }
+          },
+          "additionalProperties": {},
+          "required": [
+            "entityType",
+            "blendMode",
+            "visibleInViewport",
+            "propertiesExpanded",
+            "rgba",
+            "paintType"
+          ]
+        }
+      },
+      "required": [
+        "id",
+        "tag",
+        "schemaVersion",
+        "components"
+      ]
+    },
+    "videoPaint": {
+      "type": "object",
+      "oneOf": [
+        {
+          "$ref": "#/$defs/videoPaintV1"
+        }
+      ]
+    },
+    "videoPaintV1": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique entity identifier"
+        },
+        "tag": {
+          "type": "string",
+          "enum": [
+            "videoPaint"
+          ],
+          "description": "Type of the entity"
+        },
+        "schemaVersion": {
+          "type": "number",
+          "description": "Current schema version of the entity",
+          "enum": [
+            1
+          ]
+        },
+        "components": {
+          "type": "object",
+          "properties": {
+            "entityType": {
+              "$ref": "#/$defs/entityType"
+            },
+            "blendMode": {
+              "$ref": "#/$defs/blendMode"
+            },
+            "visibleInViewport": {
+              "$ref": "#/$defs/visibleInViewport"
+            },
+            "propertiesExpanded": {
+              "$ref": "#/$defs/propertiesExpanded"
+            },
+            "paintType": {
+              "$ref": "#/$defs/paintType"
+            },
+            "hash": {
+              "$ref": "#/$defs/hash"
+            },
+            "scaleType": {
+              "$ref": "#/$defs/scaleType"
+            },
+            "videoTransform": {
+              "$ref": "#/$defs/videoTransform"
+            },
+            "scalingFactor": {
+              "$ref": "#/$defs/scalingFactor"
+            },
+            "rotation": {
+              "$ref": "#/$defs/rotation"
+            },
+            "opacity": {
+              "$ref": "#/$defs/opacity"
+            }
+          },
+          "additionalProperties": {},
+          "required": [
+            "entityType",
+            "blendMode",
+            "visibleInViewport",
+            "propertiesExpanded",
+            "paintType",
+            "hash",
+            "scaleType",
+            "videoTransform",
+            "scalingFactor",
+            "rotation",
+            "opacity"
+          ]
+        }
+      },
+      "required": [
+        "id",
+        "tag",
+        "schemaVersion",
+        "components"
+      ]
+    },
+    "styledTextSegment": {
+      "type": "object",
+      "oneOf": [
+        {
+          "$ref": "#/$defs/styledTextSegmentV1"
+        }
+      ]
+    },
+    "styledTextSegmentV1": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique entity identifier"
+        },
+        "tag": {
+          "type": "string",
+          "enum": [
+            "styledTextSegment"
+          ],
+          "description": "Type of the entity"
+        },
+        "schemaVersion": {
+          "type": "number",
+          "description": "Current schema version of the entity",
+          "enum": [
+            1
+          ]
+        },
+        "components": {
+          "type": "object",
+          "properties": {
+            "entityType": {
+              "$ref": "#/$defs/entityType"
+            },
+            "characters": {
+              "$ref": "#/$defs/characters"
+            },
+            "startIndex": {
+              "$ref": "#/$defs/startIndex"
+            },
+            "endIndex": {
+              "$ref": "#/$defs/endIndex"
+            },
+            "fontSize": {
+              "$ref": "#/$defs/fontSize"
+            },
+            "fontName": {
+              "$ref": "#/$defs/fontName"
+            },
+            "fontStyle": {
+              "$ref": "#/$defs/fontStyle"
+            },
+            "textDecoration": {
+              "$ref": "#/$defs/textDecoration"
+            },
+            "textCase": {
+              "$ref": "#/$defs/textCase"
+            },
+            "letterSpacingUnit": {
+              "$ref": "#/$defs/letterSpacingUnit"
+            },
+            "letterSpacingValue": {
+              "$ref": "#/$defs/letterSpacingValue"
+            },
+            "textListOptions": {
+              "$ref": "#/$defs/textListOptions"
+            },
+            "indetation": {
+              "$ref": "#/$defs/indetation"
+            },
+            "metadata": {
+              "$ref": "#/$defs/metadata"
+            },
+            "lineHeightUnit": {
+              "$ref": "#/$defs/lineHeightUnit"
+            },
+            "lineHeightValue": {
+              "$ref": "#/$defs/lineHeightValue"
+            }
+          },
+          "additionalProperties": {},
+          "required": [
+            "entityType",
+            "characters",
+            "startIndex",
+            "endIndex",
+            "fontSize",
+            "fontName",
+            "fontStyle",
+            "textDecoration",
+            "textCase",
+            "letterSpacingUnit",
+            "letterSpacingValue",
+            "textListOptions",
+            "indetation"
+          ]
+        }
+      },
+      "required": [
+        "id",
+        "tag",
+        "schemaVersion",
+        "components"
+      ]
+    }
+  }
+}
