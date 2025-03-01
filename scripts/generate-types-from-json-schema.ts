@@ -3,10 +3,9 @@ import generateTypescriptFile from 'json-schema-to-typescript'
 import * as path from 'path'
 
 const run = async () => {
-  const jsonSchema = await fetch(
-    // @TODO: replace protocol with `https` once infrastracture is ready.
-    'http://static.aninix.com/schemas/snapshot-v2.json'
-  ).then((response) => response.json())
+  const jsonSchema = JSON.parse(
+    fs.readFileSync(path.join(__dirname, '..', 'schema.json'), 'utf-8')
+  )
   const filePath = path.join(__dirname, '../src', 'types.d.ts')
   fs.writeFileSync(
     filePath,
