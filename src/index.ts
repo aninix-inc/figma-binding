@@ -36,7 +36,7 @@ class Bind {
 
 export const bind = (node: SceneNode, options?: Options) =>
   new Bind(node, options)
-export * as Types from './types'
+export type * as Types from './types'
 export {
   ANINIX_NODE_KEY,
   ANINIX_PROJECT_KEY,
