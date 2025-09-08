@@ -14,7 +14,7 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - uses: oven-sh/setup-bun@v2
         with:
@@ -33,7 +33,7 @@ jobs:
         run: bun run build
 
       - name: Setup nodejs
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v5
         with:
           node-version: '20.x'
           registry-url: 'https://registry.npmjs.org/'
@@ -48,7 +48,7 @@ jobs:
       # @NOTE: publishing to private registry required to internal usage of Aninix team.
       # Otherwise we have conflicts with different registries when using mix of private/public packages.
       - name: Setup nodejs
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v5
         with:
           node-version: '20.x'
           registry-url: 'https://npm.pkg.github.com'
